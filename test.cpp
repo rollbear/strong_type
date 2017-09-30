@@ -18,6 +18,9 @@ using less_than_compare = decltype(std::declval<const T&>() < std::declval<const
 template <typename T, typename U>
 using subtract = decltype(std::declval<const T&>() - std::declval<const U&>());
 
+template <typename T, typename U>
+using add = decltype(std::declval<const T&>() + std::declval<const U&>());
+
 template <typename T>
 using ostream_insertion = decltype(std::declval<std::ostream&>() << std::declval<const T&>());
 
@@ -71,6 +74,9 @@ using is_hashable = is_detected<hash_type, T>;
 
 template <typename T, typename U = T>
 using is_subtractable = is_detected<subtract, T, U>;
+
+template <typename T, typename U = T>
+using is_addable = is_detected<add, T, U>;
 
 template <typename T, typename U>
 using is_indexable = is_detected<indexing, T, U>;
@@ -228,6 +234,28 @@ static_assert(!std::is_arithmetic<ihandle>{},"");
 static_assert(!is_hashable<ihandle>{},"");
 static_assert(is_indexable<ihandle, int>{}, "");
 
+using dhandle = strong::type<int, struct int_tag, strong::difference<handle>>;
+
+static_assert(std::is_nothrow_default_constructible<dhandle>{},"");
+static_assert(std::is_nothrow_constructible<dhandle, int>{},"");
+static_assert(std::is_copy_constructible<dhandle>{},"");
+static_assert(is_equal_comparable<dhandle>{}, "");
+static_assert(std::is_nothrow_assignable<dhandle, const dhandle&>{}, "");
+static_assert(std::is_nothrow_assignable<dhandle, dhandle&&>{}, "");
+static_assert(!is_less_than_comparable<dhandle>{},"");
+static_assert(!is_ostreamable<dhandle>{},"");
+static_assert(!is_istreamable<dhandle>{},"");
+static_assert(!std::is_constructible<bool, dhandle>{}, "");
+static_assert(!is_incrementable<dhandle>{},"");
+static_assert(!is_decrementable<dhandle>{},"");
+static_assert(!std::is_arithmetic<dhandle>{},"");
+static_assert(!is_hashable<dhandle>{},"");
+static_assert(!is_indexable<dhandle, int>{}, "");
+static_assert(is_subtractable<dhandle,handle>{}, "");
+static_assert(is_subtractable<dhandle,dhandle>{},"");
+static_assert(!is_addable<dhandle,dhandle>{},"");
+static_assert(is_addable<dhandle,handle>{},"");
+static_assert(is_addable<handle,dhandle>{},"");
 
 TEST_CASE("Construction from a value type lvalue copies it")
 {
@@ -639,4 +667,37 @@ TEST_CASE("difference types can be subtracted")
   auto d = t2 - t1;
   static_assert(std::is_same<decltype(d), D>{}, "");
   REQUIRE(d == D{5});
+}
+
+TEST_CASE("difference types can be added with the delta type")
+{
+  using D = strong::type<int, struct i_>;
+  using T = strong::type<int, struct i_, strong::difference<D>>;
+
+  T t1{8};
+  D d{3};
+
+  auto t2 = t1 + d;
+  static_assert(std::is_same<decltype(t2), T>{}, "");
+  REQUIRE(value(t2) == 11);
+  auto t3 = d + t1;
+  static_assert(std::is_same<decltype(t3), T>{}, "");
+  REQUIRE(value(t3) == 11);
+  t1 += d;
+  REQUIRE(t1 == T{11});
+}
+
+TEST_CASE("difference types can be subtracted with the delta type")
+{
+  using D = strong::type<int, struct i_>;
+  using T = strong::type<int, struct i_, strong::difference<D>>;
+
+  T t1{8};
+  D d{3};
+
+  auto t2 = t1 - d;
+  static_assert(std::is_same<decltype(t2), T>{}, "");
+  REQUIRE(value(t2) == 5);
+  t1 -= d;
+  REQUIRE(t1 == T{5});
 }
