@@ -1,6 +1,6 @@
 #define CATCH_CONFIG_MAIN
 #include <catch.hpp>
-#include "strong_type.hpp"
+#include <strong_type.hpp>
 #include <unordered_set>
 
 template <typename T, typename U>

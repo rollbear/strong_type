@@ -1,9 +1,13 @@
 cmake_minimum_required(VERSION 3.7)
 project(strong_type)
 
-set(CMAKE_CXX_STANDARD 14)
-set(SOURCE_FILES test.cpp strong_type.hpp)
+include(GNUInstallDirs)
+include(CMakePackageConfigHelpers)
 
+set(CMAKE_CXX_STANDARD 14)
+set(STRONG_TYPE_VERSION 0.0.1)
+set(SOURCE_FILES test.cpp include/strong_type.hpp)
+set(INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(MASTER_PROJECT OFF)
 if (${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
   set(MASTER_PROJECT ON)
@@ -33,21 +37,71 @@ if (MASTER_PROJECT AND CMAKE_BUILD_TYPE MATCHES Debug)
   endif()
 endif()
 
+write_basic_package_version_file(
+  "${CMAKE_CURRENT_BINARY_DIR}/strong_type/strong_type-config-version.cmake"
+  VERSION ${STRONG_TYPE_VERSION}
+  COMPATIBILITY AnyNewerVersion)
+
+add_library(strong_type INTERFACE)
+
+target_include_directories(
+  strong_type
+  INTERFACE
+  $<BUILD_INTERFACE:${INCLUDE_DIR}>
+)
+
+target_include_directories(
+  strong_type
+  INTERFACE
+  $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>
+)
+
 add_executable(
     self_test
   EXCLUDE_FROM_ALL
     test.cpp
+    include/strong_type.hpp
     )
 target_include_directories(
     self_test
   PRIVATE
     ${CATCH_DIR}
 )
+target_link_libraries(
+    self_test
+  PRIVATE
+    strong_type
+)
 
-#install(
-#  FILES
-#    strong_type.hpp
-#  DESTINATION
-#    ${CMAKE_INSTALL_INCLUDEDIR}
-#)
+install(
+  TARGETS
+    strong_type
+  EXPORT
+    strong_type-targets
+  INCLUDES DESTINATION
+    include
+)
+
+install(
+  EXPORT
+    strong_type-targets
+  DESTINATION
+    lib/cmake/strong_type
+)
+install(
+  FILES
+    strong_type-config.cmake
+    "${CMAKE_CURRENT_BINARY_DIR}/strong_type/strong_type-config-version.cmake"
+  DESTINATION
+    lib/cmake/strong_type
+  COMPONENT
+    Devel
+)
+
+install(
+  FILES
+    include/strong_type.hpp
+  DESTINATION
+    ${CMAKE_INSTALL_INCLUDEDIR}
+)
 
