@@ -68,8 +68,8 @@ Other modifiers are:
   the name, and maybe the ability to subtract instances should be separate from
   the ability to add/subtract deltas?
 
-* `strong::pointer` allows `operator*` and `operator->`, providing the
-  underlyin type supports it.
+* `strong::pointer` allows `operator*` and `operator->`, and comparisons with
+  `nullptr`providing the underlying type supports it.
 
 * `strong::unique` is movable but not copyable. Think `std::unique_ptr<>` as
   an example.
@@ -96,8 +96,10 @@ sense and becomes a burden. `iterator`? One for each iterator category?
 
 To build the self test program:
 
-`cmake <strong_type_dir> -DCMAKE_BUILD_TYPE=Debug`
-`cmake --build . --target self_test`
+```bash
+cmake <strong_type_dir> -DCMAKE_BUILD_TYPE=Debug
+cmake --build . --target self_test
+```
 
 Discussions, pull-requests, flames are welcome.
 
