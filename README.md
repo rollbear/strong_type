@@ -1,5 +1,5 @@
 # strong_type
-An experimental C++ stong typedef-ish thingie
+An experimental C++ strong typedef-ish thingie
 
 Highly experimental, for now.
 
