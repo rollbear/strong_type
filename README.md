@@ -6,13 +6,13 @@ Highly experimental, for now.
 Public domain. May change to something else if experimentation proves
 successful.
 
-Very much inspired by [`@foonathan`](https://twitter.com/foonathan)
+Very much inspired by [@foonathan's](https://twitter.com/foonathan)
 [`type_safe`](https://github.com/foonathan/type_safe) library, but aim is
 slightly different. Limit scope for type safety only. No runtime checks. Also
-strive for a higher level abstraciton of the needed functionality. The idea
+strive for a higher level abstraction of the needed functionality. The idea
 is to suffer no runtime penalty, but to capture misuse at compile time
-(for example accidentally subtracting from a handle, or swapping to parameters
-in a functiion call) while still being easy to use for inexperienced
+(for example accidentally subtracting from a handle, or swapping two parameters
+in a function call) while still being easy to use for inexperienced
 programmers.
 
 Example use:
@@ -31,7 +31,7 @@ using otherint = strong::type<int, struct other_int_>;
 ```
 
 `otherint` is a distinct type from `myint`. If a function takes an argument of
-type `myint`, you can't pass it an instance of `otherint`, and vise-versa. You
+type `myint`, you can't pass it an instance of `otherint`, and vice-versa. You
 also can't cross-assign, cross-create or cross-compare.
 
 To access more functionality, you add modifiers. For example:
@@ -46,13 +46,13 @@ can thus be used as key in `std::map`<> or `std::set<>`.
 
 Other modifiers are:
 
-* `strong::ostreamable`, `strong::istreamable`, strong::iostreamable`, which
-  provides the default iostreams integration (as handled by the underlying
+* `strong::ostreamable`, `strong::istreamable`, `strong::iostreamable`, which
+  provide the default iostream integrations (as handled by the underlying
   type.) Provide your own operators instead if you prefer that.
 
 * `strong::up_counter`, `strong::down_counter`, `strong::bidirectional_counter`.
-  Supports `operator++` and `operator--`. *not* happy about these, especially
-  the names. Suggestions for improvemests welcome.
+  Support `operator++` and `operator--`. *not* happy about these, especially
+  the names. Suggestions for improvements welcome.
 
 * `strong::boolean` provides `explicit operator bool() const`, providing the
   underlying type supports it.
@@ -69,7 +69,7 @@ Other modifiers are:
   the ability to add/subtract deltas?
 
 * `strong::pointer` allows `operator*` and `operator->`, and comparisons with
-  `nullptr`providing the underlying type supports it.
+  `nullptr` providing the underlying type supports it.
 
 * `strong::unique` is movable but not copyable. Think `std::unique_ptr<>` as
   an example.
@@ -77,24 +77,24 @@ Other modifiers are:
 * `strong::scoped` is not movable and certainly not copyable.
 
 * `strong::arithmetic` allows addition, subtraction, multiplication, division
-  and remainter of instances.
+  and remainder of instances.
 
 * `strong::bitarithmetic` allows bitwise `&`, bitwise `|`, bitwise `^` and
-  shift opetations.
+  shift operations.
 
-* `strong::indexed<D>` allows use af the subscript operator[] on type `D`.
+* `strong::indexed<D>` allows use of the subscript operator[] on type `D`.
   This also allows member function `at(D)`, providing the underlying type
-  supports it. A lame verison `indexed<>` allows subscript on any type that
+  supports it. A lame version `indexed<>` allows subscript on any type that
   works.
 
 
-For modifier `strong::arithmetic` the type trait `std::is_arithmetic<>` is true.
+For modifier `strong::arithmetic`, the type trait `std::is_arithmetic<>` is true.
 
 
-Which are the /right/ modifiers to have? Going into too fine detail makes no
+Which are the *right* modifiers to have? Going into too fine detail makes no
 sense and becomes a burden. `iterator`? One for each iterator category?
 
-To build the self test program:
+To build the self-test program:
 
 ```bash
 cmake <strong_type_dir> -DCMAKE_BUILD_TYPE=Debug
