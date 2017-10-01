@@ -4,7 +4,6 @@ project(strong_type)
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
-set(CMAKE_CXX_STANDARD 17)
 set(STRONG_TYPE_VERSION 0.0.1)
 set(SOURCE_FILES test.cpp include/strong_type.hpp)
 set(INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
@@ -14,6 +13,10 @@ if (${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
 endif()
 
 if (MASTER_PROJECT AND CMAKE_BUILD_TYPE MATCHES Debug)
+
+  set(CMAKE_CXX_STANDARD_REQUIRED YES)
+  set(CMAKE_CXX_EXTENSIONS OFF)
+
   set(CATCH_DIR ${CMAKE_CURRENT_BINARY_DIR}/catch)
   if(NOT EXISTS ${CATCH_DIR}/catch.hpp)
     if (NOT EXISTS ${CATCH_DIR})
