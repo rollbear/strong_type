@@ -269,6 +269,7 @@ struct up_counter
     constexpr
     T&
     operator++()
+    noexcept(noexcept(++std::declval<T&>().value()))
     {
       auto &self = impl::get<T>(*this);
       ++value(self);
@@ -295,6 +296,7 @@ struct down_counter
     constexpr
     T&
     operator--()
+    noexcept(noexcept(--std::declval<T&>().value()))
     {
       auto &self = impl::get<T>(*this);
       --value(self);
@@ -379,7 +381,6 @@ public:
   operator-(
     const modifier& lh,
     const modifier& rh)
-  noexcept(noexcept(std::declval<cref>() - std::declval<cref>()))
   -> decltype(std::declval<cref>() - std::declval<cref>())
   {
     return impl::access<type>(lh) - impl::access<type>(rh);
@@ -411,7 +412,6 @@ public:
   operator+(
     const modifier& lh,
     const D& d)
-  noexcept(noexcept(type(std::declval<cref>() + value(d))))
   {
     return type(impl::access<type>(lh) + value(d));
   }
@@ -423,7 +423,6 @@ public:
   operator+(
     const D& d,
     const modifier& rh)
-  noexcept(noexcept(type(value(d) + std::declval<cref>())))
   {
     return type(value(d) + impl::access<type>(rh));
   }
@@ -435,7 +434,6 @@ public:
   operator-(
     const modifier& lh,
     const D& d)
-  noexcept(noexcept(type(std::declval<cref>() - value(d))))
   {
     return type(impl::access<type>(lh) - value(d));
   }
@@ -457,7 +455,6 @@ public:
   operator-(
     const modifier& lh,
     const modifier& rh)
-  noexcept(noexcept(D(std::declval<const T&>() - std::declval<const T&>())))
   {
     return D(impl::access<type>(lh) - impl::access<type>(rh));
   }
@@ -486,7 +483,6 @@ public:
   operator+(
     const modifier& lh,
     const D& d)
-  noexcept(noexcept(type(std::declval<const T&>() + value(d))))
   {
     return type(impl::access<type>(lh) + value(d));
   }
@@ -497,7 +493,6 @@ public:
   operator+(
     const D& d,
     const modifier& rh)
-  noexcept(noexcept(type(value(d) + std::declval<const T&>())))
   {
     return type(value(d) + impl::access<type>(rh));
   }
@@ -508,7 +503,6 @@ public:
   operator-(
     const modifier& lh,
     const D& d)
-  noexcept(noexcept(type(std::declval<const T&>() - value(d))))
   {
     return type(impl::access<type>(lh) - value(d));
   }
@@ -533,6 +527,7 @@ public:
   operator==(
     const type& t,
     std::nullptr_t)
+  noexcept(noexcept(std::declval<const T&>() == nullptr))
   -> decltype(std::declval<const T&>() == nullptr)
   {
     return value(t) == nullptr;
@@ -546,6 +541,7 @@ public:
   operator==(
     std::nullptr_t,
     const type& t)
+  noexcept(noexcept(nullptr == std::declval<const T&>()))
   -> decltype(nullptr == std::declval<const T&>())
   {
     return value(t) == nullptr;
@@ -559,6 +555,7 @@ public:
   operator!=(
     const type& t,
     std::nullptr_t)
+  noexcept(noexcept(std::declval<const T&>() != nullptr))
   -> decltype(std::declval<const T&>() != nullptr)
   {
     return value(t) != nullptr;
@@ -572,6 +569,7 @@ public:
   operator!=(
     std::nullptr_t,
     const type& t)
+  noexcept(noexcept(nullptr != std::declval<const T&>()))
   -> decltype(nullptr != std::declval<const T&>())
   {
     return value(t) != nullptr;
@@ -660,8 +658,6 @@ struct arithmetic
     operator+(
       T lh,
       const T &rh)
-    noexcept(std::is_nothrow_move_constructible<T>{}
-             && noexcept(std::declval<T &>() += std::declval<const T &>()))
     {
       lh += rh;
       return lh;
@@ -674,8 +670,6 @@ struct arithmetic
     operator-(
       T lh,
       const T &rh)
-    noexcept(std::is_nothrow_move_constructible<T>{}
-             && noexcept(std::declval<T &>() -= std::declval<const T &>()))
     {
       lh -= rh;
       return lh;
@@ -688,8 +682,6 @@ struct arithmetic
     operator*(
       T lh,
       const T &rh)
-    noexcept(std::is_nothrow_move_constructible<T>{}
-             && noexcept(std::declval<T &>() *= std::declval<const T &>()))
     {
       lh *= rh;
       return lh;
@@ -702,8 +694,6 @@ struct arithmetic
     operator/(
       T lh,
       const T &rh)
-    noexcept(std::is_nothrow_move_constructible<T>{}
-             && noexcept(std::declval<T &>() /= std::declval<const T &>()))
     {
       lh /= rh;
       return lh;
@@ -799,8 +789,6 @@ struct bitarithmetic
     operator&(
       T lh,
       const T &rh)
-    noexcept(std::is_nothrow_move_constructible<T>{}
-             && noexcept(std::declval<T &>() &= std::declval<const T &>()))
     {
       lh &= rh;
       return lh;
@@ -813,8 +801,6 @@ struct bitarithmetic
     operator|(
       T lh,
       const T &rh)
-    noexcept(std::is_nothrow_move_constructible<T>{}
-             && noexcept(std::declval<T &>() |= std::declval<const T &>()))
     {
       lh |= rh;
       return lh;
@@ -827,8 +813,6 @@ struct bitarithmetic
     operator^(
       T lh,
       const T &rh)
-    noexcept(std::is_nothrow_move_constructible<T>{}
-             && noexcept(std::declval<T &>() ^= std::declval<const T &>()))
     {
       lh ^= rh;
       return lh;
@@ -842,12 +826,11 @@ struct bitarithmetic
     operator<<(
       T lh,
       C c)
-    noexcept(std::is_nothrow_move_constructible<T>{}
-             && noexcept(std::declval<T &>() <<= std::declval<C>()))
     {
       lh <<= c;
       return lh;
     }
+
     template <typename C>
     STRONG_NODISCARD
     friend
@@ -856,8 +839,6 @@ struct bitarithmetic
     operator>>(
       T lh,
       C c)
-    noexcept(std::is_nothrow_move_constructible<T>{}
-             && noexcept(std::declval<T &>() >>= std::declval<C>()))
     {
       lh >>= c;
       return lh;
@@ -921,7 +902,6 @@ public:
   at(
     const I& i)
   const &
-  noexcept(noexcept(std::declval<cref>().at(strong::value(i))))
   -> decltype(std::declval<cref>().at(strong::value(i)))
   {
     return impl::access<Type>(*this).at(strong::value(i));
@@ -932,7 +912,6 @@ public:
   at(
     const I& i)
   &
-  noexcept(noexcept(std::declval<ref>().at(strong::value(i))))
   -> decltype(std::declval<ref>().at(strong::value(i)))
   {
     return impl::access<Type>(*this).at(strong::value(i));
@@ -943,7 +922,6 @@ public:
   at(
     const I& i)
   &&
-  noexcept(noexcept(std::declval<rref>().at(strong::value(i))))
   -> decltype(std::declval<rref>().at(strong::value(i)))
   {
     return impl::access<Type>(*this).at(strong::value(i));
@@ -994,7 +972,6 @@ public:
   at(
     const I& i)
   const &
-  noexcept(noexcept(std::declval<const T&>().at(strong::value(i))))
   -> decltype(std::declval<const T&>().at(strong::value(i)))
   {
     return impl::access<type>(*this).at(strong::value(i));
@@ -1005,7 +982,6 @@ public:
   at(
     const I& i)
   &
-  noexcept(noexcept(std::declval<T&>().at(strong::value(i))))
   -> decltype(std::declval<T&>().at(strong::value(i)))
   {
     return impl::access<type>(*this).at(strong::value(i));
@@ -1016,7 +992,6 @@ public:
   at(
     const I& i)
   &&
-  noexcept(noexcept(std::declval<T&&>().at(strong::value(i))))
   -> decltype(std::declval<T&&>().at(strong::value(i)))
   {
     return impl::access<type>(*this).at(strong::value(i));

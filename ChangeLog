@@ -1,3 +1,5 @@
+        * More noexcept() specifiers
+
         * Removed strong::unique and strong::scoped. They are different
           beasts that don't feel quite at home here. Thanks Adi Shavit.
 
