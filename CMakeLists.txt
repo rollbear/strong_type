@@ -4,7 +4,7 @@ project(strong_type)
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(STRONG_TYPE_VERSION 0.0.1)
 set(SOURCE_FILES test.cpp include/strong_type.hpp)
 set(INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
