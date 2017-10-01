@@ -5,7 +5,6 @@ include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
 set(STRONG_TYPE_VERSION 0.0.1)
-set(SOURCE_FILES test.cpp include/strong_type.hpp)
 set(INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(MASTER_PROJECT OFF)
 if (${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
