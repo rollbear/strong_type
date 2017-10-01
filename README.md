@@ -96,6 +96,10 @@ cmake <strong_type_dir> -DCMAKE_BUILD_TYPE=Debug
 cmake --build . --target self_test
 ```
 
+N.B. It looks like Microsoft Visual Studio MSVC compiler *really* doesn't like
+this code. If you're familier with MSVC idiosyncracies and/or willing to file
+bug reports, please lend a hand.
+
 Discussions, pull-requests, flames are welcome.
 
 [@bjorn_fahller](https://twitter.com/bjorn_fahller)
