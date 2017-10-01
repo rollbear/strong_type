@@ -71,11 +71,6 @@ Other modifiers are:
 * `strong::pointer` allows `operator*` and `operator->`, and comparisons with
   `nullptr` providing the underlying type supports it.
 
-* `strong::unique` is movable but not copyable. Think `std::unique_ptr<>` as
-  an example.
-
-* `strong::scoped` is not movable and certainly not copyable.
-
 * `strong::arithmetic` allows addition, subtraction, multiplication, division
   and remainder of instances.
 

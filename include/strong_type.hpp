@@ -421,31 +421,6 @@ public:
   constexpr decltype(auto) operator->() const { return &operator*();}
 };
 
-struct unique
-{
-  template <typename T>
-  struct modifier
-  {
-  public:
-    modifier() = default;
-    modifier(modifier &&) = default;
-    modifier &operator=(modifier &&) = default;
-  };
-};
-
-
-struct scoped
-{
-  template <typename T>
-  class modifier
-  {
-  public:
-    modifier() = default;
-    modifier(modifier &&) = delete;
-    modifier &operator=(modifier &&) = delete;
-  };
-};
-
 struct arithmetic
 {
   template <typename T>

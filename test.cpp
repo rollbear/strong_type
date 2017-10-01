@@ -113,46 +113,6 @@ static_assert(!std::is_assignable<handle, const handle2&>{},"");
 static_assert(!std::is_assignable<handle, handle2&&>{},"");
 static_assert(!is_equal_comparable<handle, handle2>{},"");
 
-using uhandle = strong::type<int, struct uhandle_tag, strong::unique>;
-
-static_assert(std::is_nothrow_default_constructible<uhandle>{},"");
-static_assert(std::is_nothrow_constructible<uhandle, int&&>{},"");
-static_assert(std::is_nothrow_constructible<uhandle, const int&>{},"");
-static_assert(!std::is_copy_constructible<uhandle>{},"");
-static_assert(std::is_nothrow_move_constructible<uhandle>{},"");
-static_assert(is_equal_comparable<uhandle>{}, "");
-static_assert(!std::is_assignable<uhandle, const uhandle&>{}, "");
-static_assert(std::is_nothrow_assignable<uhandle, uhandle&&>{}, "");
-static_assert(!is_less_than_comparable<uhandle>{},"");
-static_assert(!is_ostreamable<uhandle>{},"");
-static_assert(!is_istreamable<uhandle>{},"");
-static_assert(!std::is_constructible<bool, uhandle>{}, "");
-static_assert(!is_incrementable<uhandle>{},"");
-static_assert(!is_decrementable<uhandle>{},"");
-static_assert(!std::is_arithmetic<uhandle>{},"");
-static_assert(!is_hashable<uhandle>{},"");
-static_assert(!is_indexable<uhandle, int>{}, "");
-
-using shandle = strong::type<int, struct shandle_tag, strong::scoped>;
-
-static_assert(std::is_nothrow_default_constructible<shandle>{},"");
-static_assert(std::is_nothrow_constructible<shandle, int&&>{},"");
-static_assert(std::is_nothrow_constructible<shandle, const int&>{},"");
-static_assert(!std::is_copy_constructible<shandle>{},"");
-static_assert(!std::is_move_constructible<shandle>{},"");
-static_assert(is_equal_comparable<shandle>{}, "");
-static_assert(!std::is_assignable<shandle, const shandle&>{}, "");
-static_assert(!std::is_assignable<shandle, shandle&&>{}, "");
-static_assert(!is_less_than_comparable<shandle>{},"");
-static_assert(!is_ostreamable<shandle>{},"");
-static_assert(!is_istreamable<shandle>{},"");
-static_assert(!std::is_constructible<bool, shandle>{}, "");
-static_assert(!is_incrementable<shandle>{},"");
-static_assert(!is_decrementable<shandle>{},"");
-static_assert(!std::is_arithmetic<shandle>{},"");
-static_assert(!is_hashable<shandle>{},"");
-static_assert(!is_indexable<shandle, int>{}, "");
-
 using bhandle = strong::type<int, struct bhandle_tag, strong::boolean>;
 
 static_assert(std::is_nothrow_default_constructible<bhandle>{},"");
