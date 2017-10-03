@@ -13,17 +13,20 @@
 
 namespace strong
 {
+template <typename M, typename T>
+using modifier = typename M::template modifier<T>;
+
 template <typename T, typename Tag, typename ... M>
-class type : public M::template modifier<type<T, Tag, M...>>...
+class type : public modifier<M, type<T, Tag, M...>>...
 {
 public:
   template <typename ... U,
-            typename = std::enable_if_t<std::is_constructible<T, U&&...>{}>>
+            typename = std::enable_if_t<std::is_constructible<T, U&&...>::value>>
   constexpr
   explicit
   type(
     U&& ... u)
-  noexcept(std::is_nothrow_constructible<T, U...>{})
+  noexcept(std::is_nothrow_constructible<T, U...>::value)
   : val(std::forward<U>(u)...)
   {}
 
@@ -72,7 +75,7 @@ struct is_safe_type : std::false_type {};
 template <typename T, typename Tag, typename ... M>
 struct is_safe_type<type<T, Tag, M...>> : std::true_type {};
 
-template <typename T, typename = std::enable_if_t<is_safe_type<std::decay_t<T>>{}>>
+template <typename T, typename = std::enable_if_t<is_safe_type<std::decay_t<T>>::value>>
 STRONG_NODISCARD
 decltype(auto) value(T&& t) noexcept
 {
@@ -80,7 +83,7 @@ decltype(auto) value(T&& t) noexcept
 }
 
 template <typename T>
-std::enable_if_t<!is_safe_type<std::decay_t<T>>{}, T&&> value(T&& t) noexcept
+std::enable_if_t<!is_safe_type<std::decay_t<T>>::value, T&&> value(T&& t) noexcept
 {
   return std::forward<T>(t);
 }
@@ -91,32 +94,32 @@ namespace impl
 template <typename T, typename U>
 static constexpr T &get(U &u) noexcept
 {
-  static_assert(is_safe_type<T>{}, "");
-  static_assert(std::is_base_of<U, T>{}, "");
+  static_assert(is_safe_type<T>::value, "");
+  static_assert(std::is_base_of<U, T>::value, "");
   return static_cast<T &>(u);
 }
 
 template <typename T, typename U>
 inline constexpr const T &get(const U &u) noexcept
 {
-  static_assert(is_safe_type<T>{}, "");
-  static_assert(std::is_base_of<U, T>{}, "");
+  static_assert(is_safe_type<T>::value, "");
+  static_assert(std::is_base_of<U, T>::value, "");
   return static_cast<const T &>(u);
 }
 
 template <typename T, typename U>
 inline constexpr T &&get(U &&u) noexcept
 {
-  static_assert(is_safe_type<T>{}, "");
-  static_assert(std::is_base_of<std::remove_reference_t<U>, T>{}, "");
+  static_assert(is_safe_type<T>::value, "");
+  static_assert(std::is_base_of<std::remove_reference_t<U>, T>::value, "");
   return static_cast<T &&>(static_cast<U&&>(u));
 }
 
 template <typename T, typename U>
 inline constexpr decltype(auto) access(U &&t) noexcept
 {
-  static_assert(is_safe_type<T>{}, "");
-  static_assert(std::is_base_of<std::remove_reference_t<U>, T>{}, "");
+  static_assert(is_safe_type<T>::value, "");
+  static_assert(std::is_base_of<std::remove_reference_t<U>, T>::value, "");
   return get<T>(std::forward<U>(t)).value();
 }
 
@@ -372,7 +375,7 @@ class difference<void>::modifier
   using ref = typename impl::type_of<type&>::type;
   using cref = typename impl::type_of<const type&>::type;
   using rref = typename impl::type_of<type&&>::type;
-  static_assert(impl::subtractable<cref>{}, "it must be possible to subtract instances of your underlying type");
+  static_assert(impl::subtractable<cref>::value, "it must be possible to subtract instances of your underlying type");
 public:
   template <typename LH, typename RH>
   STRONG_NODISCARD
@@ -382,7 +385,7 @@ public:
   operator-(
     const LH& lh,
     const RH& rh)
-  -> std::enable_if_t<std::is_base_of<modifier, LH>{} && std::is_base_of<modifier, RH>{},
+  -> std::enable_if_t<std::is_base_of<modifier, LH>::value && std::is_base_of<modifier, RH>::value,
                       decltype(std::declval<cref>() - std::declval<cref>())>
   {
     return impl::access<type>(lh) - impl::access<type>(rh);
@@ -429,7 +432,7 @@ public:
     return type(value(d) + impl::access<type>(rh));
   }
 
-  template <typename D, typename = std::enable_if_t<!std::is_base_of<modifier, D>{}>>
+  template <typename D, typename = std::enable_if_t<!std::is_base_of<modifier, D>::value>>
   STRONG_NODISCARD
   friend
   type
@@ -446,9 +449,9 @@ template <typename T, typename Tag, typename ... M>
 class difference<D>::modifier<::strong::type<T, Tag, M...>>
 {
   using type = ::strong::type<T, Tag, M...>;
-  static_assert(impl::subtractable<T>{}, "it must be possible to subtract instances of your underlying type");
+  static_assert(impl::subtractable<T>::value, "it must be possible to subtract instances of your underlying type");
   using diff_type = decltype(std::declval<const T&>() - std::declval<const T&>());
-  static_assert(std::is_constructible<D, diff_type>{},"");
+  static_assert(std::is_constructible<D, diff_type>::value,"");
 public:
   STRONG_NODISCARD
   friend
@@ -1037,7 +1040,7 @@ struct hash<::strong::type<T, Tag, M...>>
         ::strong::type<T, Tag, M...>
       >,
       ::strong::type<T, Tag, M...>
-    >{},
+    >::value,
     hash<T>,
     std::false_type>
 {
