@@ -1000,6 +1000,32 @@ public:
   }
 };
 
+class iterator
+{
+public:
+  template <typename I, typename category = typename std::iterator_traits<I>::iterator_category>
+  class modifier
+    : public pointer::modifier<I>
+      , public up_counter::modifier<I>
+  {
+  };
+
+  template <typename I>
+  class modifier<I, std::bidirectional_iterator_tag>
+    : public modifier<I, std::forward_iterator_tag>
+      , public down_counter::modifier<I>
+  {
+  };
+  template <typename I>
+  class modifier<I, std::random_access_iterator_tag>
+    : public modifier<I, std::bidirectional_iterator_tag>
+      , public difference<>::modifier<I>
+      , public indexed<>::modifier<I>
+      , public ordered::modifier<I>
+  {
+  };
+};
+
 }
 
 namespace std {
@@ -1030,5 +1056,17 @@ struct is_arithmetic<::strong::type<T, Tag, M...>>
                ::strong::type<T, Tag, M...>>
 {
 };
+
+template <typename T, typename Tag, typename ... M>
+struct iterator_traits<::strong::type<T, Tag, M...>>
+  : std::iterator_traits<T>
+{
+  using difference_type = typename std::iterator_traits<T>::difference_type;
+  using value_type = typename std::iterator_traits<T>::value_type;
+  using pointer = typename std::iterator_traits<T>::value_type;
+  using reference = typename std::iterator_traits<T>::reference;
+  using iterator_category = typename std::iterator_traits<T>::iterator_category;
+};
+
 }
 #endif //SAFE_TYPE_SAFE_TYPE_HPP

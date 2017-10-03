@@ -217,6 +217,51 @@ static_assert(!is_addable<dhandle,dhandle>{},"");
 static_assert(is_addable<dhandle,handle>{},"");
 static_assert(is_addable<handle,dhandle>{},"");
 
+using ri = strong::type<int*, struct ipt, strong::iterator>;
+
+static_assert(std::is_nothrow_default_constructible<ri>{},"");
+static_assert(std::is_nothrow_constructible<ri, int*>{},"");
+static_assert(std::is_copy_constructible<ri>{},"");
+static_assert(is_equal_comparable<ri>{}, "");
+static_assert(std::is_nothrow_assignable<ri, const ri&>{}, "");
+static_assert(std::is_nothrow_assignable<ri, ri&&>{}, "");
+static_assert(is_less_than_comparable<ri>{},"");
+static_assert(!is_ostreamable<ri>{},"");
+static_assert(!is_istreamable<ri>{},"");
+static_assert(!std::is_constructible<bool, ri>{}, "");
+static_assert(is_incrementable<ri>{},"");
+static_assert(is_decrementable<ri>{},"");
+static_assert(!std::is_arithmetic<ri>{},"");
+static_assert(!is_hashable<ri>{},"");
+static_assert(is_indexable<ri, int>{}, "");
+static_assert(is_subtractable<ri,ri>{}, "");
+static_assert(is_subtractable<ri,int>{},"");
+static_assert(!is_addable<ri,ri>{},"");
+static_assert(is_addable<ri,int>{},"");
+static_assert(is_addable<int,ri>{},"");
+
+using li = strong::type<std::unordered_set<int>::iterator, struct lit, strong::iterator>;
+
+static_assert(std::is_nothrow_default_constructible<li>{},"");
+static_assert(std::is_copy_constructible<li>{},"");
+static_assert(is_equal_comparable<li>{}, "");
+static_assert(std::is_nothrow_assignable<li, const li&>{}, "");
+static_assert(std::is_nothrow_assignable<li, li&&>{}, "");
+static_assert(!is_less_than_comparable<li>{},"");
+static_assert(!is_ostreamable<li>{},"");
+static_assert(!is_istreamable<li>{},"");
+static_assert(!std::is_constructible<bool, li>{}, "");
+static_assert(is_incrementable<li>{},"");
+static_assert(!is_decrementable<li>{},"");
+static_assert(!std::is_arithmetic<li>{},"");
+static_assert(!is_hashable<li>{},"");
+static_assert(!is_indexable<li, int>{}, "");
+static_assert(!is_subtractable<li,li>{}, "");
+static_assert(!is_subtractable<li,int>{},"");
+static_assert(!is_addable<li,li>{},"");
+static_assert(!is_addable<li,int>{},"");
+static_assert(!is_addable<int,li>{},"");
+
 TEST_CASE("Construction from a value type lvalue copies it")
 {
   auto orig = std::make_shared<int>(3);
@@ -660,4 +705,23 @@ TEST_CASE("difference types can be subtracted with the delta type")
   REQUIRE(value(t2) == 5);
   t1 -= d;
   REQUIRE(t1 == T{5});
+}
+
+TEST_CASE("iterators work with algorithms")
+{
+  std::unordered_set<int> is{3,2,8,4,11,9,22,23};
+  using si = strong::type<std::unordered_set<int>::iterator, struct si_, strong::iterator>;
+  si sb{is.begin()};
+  si se{is.end()};
+
+  std::vector<int> v;
+  std::copy(sb, se, std::back_inserter(v));
+
+  using vi = strong::type<std::vector<int>::iterator, struct vi_, strong::iterator>;
+
+  vi vb{v.begin()};
+  vi ve{v.end()};
+  std::sort(vb, ve);
+  REQUIRE(vb[0] == 2);
+  REQUIRE(vb[7] == 23);
 }

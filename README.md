@@ -82,9 +82,15 @@ Other modifiers are:
   supports it. A lame version `indexed<>` allows subscript on any type that
   works.
 
-
+* `strong::iterator` adds functionality needed depending on iterator category.
+  If the iterator type is a `random_access_iterator`, the strong type
+  is `strong::indexed<>` and `strong::difference<>`. It should be possible to
+  specify the index type and difference type.
+  
 For modifier `strong::arithmetic`, the type trait `std::is_arithmetic<>` is true.
 
+For modifier `strong::iterator`, the type trait `std::iterator_traits` mirrors
+the traits of the underlying iterator type.
 
 Which are the *right* modifiers to have? Going into too fine detail makes no
 sense and becomes a burden. `iterator`? One for each iterator category?
