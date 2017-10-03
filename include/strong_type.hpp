@@ -374,14 +374,16 @@ class difference<void>::modifier
   using rref = typename impl::type_of<type&&>::type;
   static_assert(impl::subtractable<cref>{}, "it must be possible to subtract instances of your underlying type");
 public:
+  template <typename LH, typename RH>
   STRONG_NODISCARD
   friend
   constexpr
   auto
   operator-(
-    const modifier& lh,
-    const modifier& rh)
-  -> decltype(std::declval<cref>() - std::declval<cref>())
+    const LH& lh,
+    const RH& rh)
+  -> std::enable_if_t<std::is_base_of<modifier, LH>{} && std::is_base_of<modifier, RH>{},
+                      decltype(std::declval<cref>() - std::declval<cref>())>
   {
     return impl::access<type>(lh) - impl::access<type>(rh);
   }
@@ -427,7 +429,7 @@ public:
     return type(value(d) + impl::access<type>(rh));
   }
 
-  template <typename D>
+  template <typename D, typename = std::enable_if_t<!std::is_base_of<modifier, D>{}>>
   STRONG_NODISCARD
   friend
   type
@@ -519,7 +521,7 @@ class pointer::modifier<::strong::type<T, Tag, M...>>
 {
   using type = strong::type<T, Tag, M...>;
 public:
-  template <typename U = type>
+  template <typename U = type, typename TT = T>
   STRONG_NODISCARD
   friend
   constexpr
@@ -527,13 +529,13 @@ public:
   operator==(
     const type& t,
     std::nullptr_t)
-  noexcept(noexcept(std::declval<const T&>() == nullptr))
-  -> decltype(std::declval<const T&>() == nullptr)
+  noexcept(noexcept(std::declval<const TT&>() == nullptr))
+  -> decltype(std::declval<const TT&>() == nullptr)
   {
     return value(t) == nullptr;
   }
 
-  template <typename U = type>
+  template <typename U = type, typename TT = T>
   STRONG_NODISCARD
   friend
   constexpr
@@ -541,13 +543,13 @@ public:
   operator==(
     std::nullptr_t,
     const type& t)
-  noexcept(noexcept(nullptr == std::declval<const T&>()))
-  -> decltype(nullptr == std::declval<const T&>())
+  noexcept(noexcept(nullptr == std::declval<const TT&>()))
+  -> decltype(nullptr == std::declval<const TT&>())
   {
     return value(t) == nullptr;
   }
 
-  template <typename U = type>
+  template <typename U = type, typename TT = T>
   STRONG_NODISCARD
   friend
   constexpr
@@ -555,13 +557,13 @@ public:
   operator!=(
     const type& t,
     std::nullptr_t)
-  noexcept(noexcept(std::declval<const T&>() != nullptr))
-  -> decltype(std::declval<const T&>() != nullptr)
+  noexcept(noexcept(std::declval<const TT&>() != nullptr))
+  -> decltype(std::declval<const TT&>() != nullptr)
   {
     return value(t) != nullptr;
   }
 
-  template <typename U = type>
+  template <typename U = type, typename TT = T>
   STRONG_NODISCARD
   friend
   constexpr
@@ -569,8 +571,8 @@ public:
   operator!=(
     std::nullptr_t,
     const type& t)
-  noexcept(noexcept(nullptr != std::declval<const T&>()))
-  -> decltype(nullptr != std::declval<const T&>())
+  noexcept(noexcept(nullptr != std::declval<const TT&>()))
+  -> decltype(nullptr != std::declval<const TT&>())
   {
     return value(t) != nullptr;
   }
@@ -896,33 +898,33 @@ public:
   {
     return impl::access<Type>(*this)[strong::value(i)];
   }
-  template <typename I>
+  template <typename I, typename C = cref>
   STRONG_NODISCARD
   auto
   at(
     const I& i)
   const &
-  -> decltype(std::declval<cref>().at(strong::value(i)))
+  -> decltype(std::declval<C>().at(strong::value(i)))
   {
     return impl::access<Type>(*this).at(strong::value(i));
   }
-  template <typename I>
+  template <typename I, typename R = ref>
   STRONG_NODISCARD
   auto
   at(
     const I& i)
   &
-  -> decltype(std::declval<ref>().at(strong::value(i)))
+  -> decltype(std::declval<R>().at(strong::value(i)))
   {
     return impl::access<Type>(*this).at(strong::value(i));
   }
-  template <typename I>
+  template <typename I, typename R = rref>
   STRONG_NODISCARD
   auto
   at(
     const I& i)
   &&
-  -> decltype(std::declval<rref>().at(strong::value(i)))
+  -> decltype(std::declval<R>().at(strong::value(i)))
   {
     return impl::access<Type>(*this).at(strong::value(i));
   }
@@ -1002,7 +1004,16 @@ public:
 
 namespace std {
 template <typename T, typename Tag, typename ... M>
-struct hash<::strong::type<T, Tag, M...>> : hash<T>
+struct hash<::strong::type<T, Tag, M...>>
+  : std::conditional_t<
+    std::is_base_of<
+      ::strong::hashable::modifier<
+        ::strong::type<T, Tag, M...>
+      >,
+      ::strong::type<T, Tag, M...>
+    >{},
+    hash<T>,
+    std::false_type>
 {
   using type = ::strong::type<T, Tag, M...>;
   decltype(auto)
