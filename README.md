@@ -86,7 +86,13 @@ Other modifiers are:
   If the iterator type is a `random_access_iterator`, the strong type
   is `strong::indexed<>` and `strong::difference<>`. It should be possible to
   specify the index type and difference type.
-  
+
+* `strong::range` adds the functionality needed to iterate over the elements.
+  the iterator types are using the same tag as using in the range. Only
+  implements types `iterator` and `const_iterator`, and thus `.begin()`,
+  `.end()`, `.cbegin()`, `.cend()`, `.begin() const` and `.end() const`.
+  Are reverse iterators important, and thus `rbegin()`, `rend()` and friends?
+    
 For modifier `strong::arithmetic`, the type trait `std::is_arithmetic<>` is true.
 
 For modifier `strong::iterator`, the type trait `std::iterator_traits` mirrors

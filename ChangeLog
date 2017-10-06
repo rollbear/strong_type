@@ -1,3 +1,5 @@
+        * Added strong::iterator and strong::range modifiers.
+
         * More noexcept() specifiers
 
         * Removed strong::unique and strong::scoped. They are different

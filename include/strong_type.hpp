@@ -20,6 +20,16 @@ template <typename T, typename Tag, typename ... M>
 class type : public modifier<M, type<T, Tag, M...>>...
 {
 public:
+  template <typename U,
+    typename = std::enable_if_t<std::is_constructible<T, std::initializer_list<U>>::value>>
+    explicit
+  type(
+    std::initializer_list<U> us
+  )
+    noexcept(noexcept(T(us)))
+  : val(us)
+  {
+  }
   template <typename ... U,
             typename = std::enable_if_t<std::is_constructible<T, U&&...>::value>>
   constexpr
@@ -1029,6 +1039,69 @@ public:
   };
 };
 
+class range
+{
+public:
+  template <typename R>
+  class modifier;
+};
+
+template <typename T, typename Tag, typename ... M>
+class range::modifier<type<T, Tag, M...>>
+{
+  using type = ::strong::type<T, Tag, M...>;
+  using r_iterator = decltype(std::declval<T&>().begin());
+  using r_const_iterator = decltype(std::declval<const T&>().begin());
+public:
+  using iterator = ::strong::type<r_iterator, Tag, strong::iterator>;
+  using const_iterator = ::strong::type<r_const_iterator, Tag, strong::iterator>;
+
+  iterator
+  begin()
+  noexcept(noexcept(std::declval<T&>().begin()))
+  {
+    return iterator{impl::access<type>(*this).begin()};
+  }
+
+  iterator
+  end()
+  noexcept(noexcept(std::declval<T&>().end()))
+  {
+    return iterator{impl::access<type>(*this).end()};
+  }
+
+  const_iterator
+  cbegin()
+    const
+  noexcept(noexcept(std::declval<const T&>().begin()))
+  {
+    return const_iterator{impl::access<type>(*this).begin()};
+  }
+
+  const_iterator
+  cend()
+    const
+  noexcept(noexcept(std::declval<const T&>().end()))
+  {
+    return const_iterator{impl::access<type>(*this).end()};
+  }
+
+  const_iterator
+  begin()
+  const
+  noexcept(noexcept(std::declval<const T&>().begin()))
+  {
+    return const_iterator{impl::access<type>(*this).begin()};
+  }
+
+  const_iterator
+  end()
+  const
+  noexcept(noexcept(std::declval<const T&>().end()))
+  {
+    return const_iterator{impl::access<type>(*this).end()};
+  }
+};
 }
 
 namespace std {

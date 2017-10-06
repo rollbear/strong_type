@@ -22,6 +22,12 @@ template <typename T, typename U>
 using add = decltype(std::declval<const T&>() + std::declval<const U&>());
 
 template <typename T>
+using begin_type = decltype(std::declval<T&>().begin());
+
+template <typename T>
+using end_type = decltype(std::declval<T&>().begin());
+
+template <typename T>
 using ostream_insertion = decltype(std::declval<std::ostream&>() << std::declval<const T&>());
 
 template <typename T>
@@ -81,6 +87,9 @@ using is_addable = is_detected<add, T, U>;
 template <typename T, typename U>
 using is_indexable = is_detected<indexing, T, U>;
 
+template <typename T>
+using is_range = std::integral_constant<bool, is_detected<begin_type, T>::value && is_detected<end_type, T>::value>;
+
 using handle = strong::type<int, struct handle_tag>;
 
 static_assert(std::is_lvalue_reference<decltype(value(std::declval<handle&>()))>{},"");
@@ -104,6 +113,7 @@ static_assert(!is_decrementable<handle>{},"");
 static_assert(!std::is_arithmetic<handle>{},"");
 static_assert(!is_hashable<handle>{},"");
 static_assert(!is_indexable<handle, int>{}, "");
+static_assert(!is_range<handle>{}, "");
 
 using handle2 = strong::type<int, struct handle2_tag>;
 
@@ -131,6 +141,7 @@ static_assert(!is_decrementable<bhandle>{},"");
 static_assert(!std::is_arithmetic<bhandle>{},"");
 static_assert(!is_hashable<bhandle>{},"");
 static_assert(!is_indexable<bhandle, int>{}, "");
+static_assert(!is_range<bhandle>{}, "");
 
 using ahandle = strong::type<int, struct ahandle_tag, strong::arithmetic>;
 
@@ -152,6 +163,7 @@ static_assert(!is_hashable<ahandle>{},"");
 static_assert(is_subtractable<ahandle>{}, "");
 static_assert(!is_subtractable<ahandle, bhandle>{},"");
 static_assert(!is_indexable<ahandle, int>{}, "");
+static_assert(!is_range<ahandle>{}, "");
 
 using ahandle2 = strong::type<int, struct ahandle2_tag, strong::arithmetic>;
 
@@ -175,6 +187,7 @@ static_assert(!is_decrementable<hhandle>{},"");
 static_assert(!std::is_arithmetic<hhandle>{},"");
 static_assert(is_hashable<hhandle>{},"");
 static_assert(!is_indexable<hhandle, int>{}, "");
+static_assert(!is_range<hhandle>{}, "");
 
 using ihandle = strong::type<std::string, struct string_tag, strong::indexed<int>>;
 
@@ -193,6 +206,7 @@ static_assert(!is_decrementable<ihandle>{},"");
 static_assert(!std::is_arithmetic<ihandle>{},"");
 static_assert(!is_hashable<ihandle>{},"");
 static_assert(is_indexable<ihandle, int>{}, "");
+static_assert(!is_range<ihandle>{}, "");
 
 using dhandle = strong::type<int, struct int_tag, strong::difference<handle>>;
 
@@ -216,6 +230,7 @@ static_assert(is_subtractable<dhandle,dhandle>{},"");
 static_assert(!is_addable<dhandle,dhandle>{},"");
 static_assert(is_addable<dhandle,handle>{},"");
 static_assert(is_addable<handle,dhandle>{},"");
+static_assert(!is_range<dhandle>{}, "");
 
 using ri = strong::type<int*, struct ipt, strong::iterator>;
 
@@ -239,6 +254,7 @@ static_assert(is_subtractable<ri,int>{},"");
 static_assert(!is_addable<ri,ri>{},"");
 static_assert(is_addable<ri,int>{},"");
 static_assert(is_addable<int,ri>{},"");
+static_assert(!is_range<ri>{}, "");
 
 using li = strong::type<std::unordered_set<int>::iterator, struct lit, strong::iterator>;
 
@@ -261,6 +277,47 @@ static_assert(!is_subtractable<li,int>{},"");
 static_assert(!is_addable<li,li>{},"");
 static_assert(!is_addable<li,int>{},"");
 static_assert(!is_addable<int,li>{},"");
+static_assert(!is_range<li>{}, "");
+
+using rhandle = strong::type<std::vector<int>, struct r_tag, strong::range>;
+
+static_assert(std::is_default_constructible<rhandle>{},"");
+static_assert(std::is_copy_constructible<rhandle>{},"");
+static_assert(is_equal_comparable<rhandle>{}, "");
+static_assert(!std::is_nothrow_assignable<rhandle, const rhandle&>{}, "");
+static_assert(std::is_nothrow_assignable<rhandle, rhandle&&>{}, "");
+static_assert(!is_less_than_comparable<rhandle>{},"");
+static_assert(!is_ostreamable<rhandle>{},"");
+static_assert(!is_istreamable<rhandle>{},"");
+static_assert(!std::is_constructible<bool, rhandle>{}, "");
+static_assert(!is_incrementable<rhandle>{},"");
+static_assert(!is_decrementable<rhandle>{},"");
+static_assert(!std::is_arithmetic<rhandle>{},"");
+static_assert(!is_hashable<rhandle>{},"");
+static_assert(!is_indexable<rhandle, int>{}, "");
+static_assert(!is_subtractable<rhandle,rhandle>{}, "");
+static_assert(!is_subtractable<rhandle,int>{},"");
+static_assert(!is_addable<rhandle,rhandle>{},"");
+static_assert(!is_addable<rhandle,int>{},"");
+static_assert(!is_addable<rhandle,li>{},"");
+static_assert(is_range<rhandle>{}, "");
+static_assert(is_range<const rhandle>{}, "");
+
+using rhi = rhandle::iterator;
+static_assert(std::is_nothrow_copy_constructible<rhi>{},"");
+static_assert(std::is_nothrow_move_constructible<rhi>{},"");
+static_assert(std::is_default_constructible<rhi>{},"");
+static_assert(std::is_nothrow_copy_assignable<rhi>{},"");
+static_assert(std::is_nothrow_move_assignable<rhi>{},"");
+static_assert(std::is_nothrow_destructible<rhi>{},"");
+
+using crhi = rhandle::const_iterator;
+static_assert(std::is_nothrow_copy_constructible<crhi>{},"");
+static_assert(std::is_nothrow_move_constructible<crhi>{},"");
+static_assert(std::is_default_constructible<crhi>{},"");
+static_assert(std::is_nothrow_copy_assignable<crhi>{},"");
+static_assert(std::is_nothrow_move_assignable<crhi>{},"");
+static_assert(std::is_nothrow_destructible<crhi>{},"");
 
 TEST_CASE("Construction from a value type lvalue copies it")
 {
@@ -724,4 +781,46 @@ TEST_CASE("iterators work with algorithms")
   std::sort(vb, ve);
   REQUIRE(vb[0] == 2);
   REQUIRE(vb[7] == 23);
+}
+
+TEST_CASE("a range can be used with range based for")
+{
+  using iv = strong::type<std::vector<int>, struct vi_, strong::range>;
+
+  iv v{3,2,1};
+  int n = 3;
+  for (auto& e : v)
+  {
+    REQUIRE(e-- == n--);
+  }
+  auto& cv = v;
+  n = 2;
+  for (auto& e : cv)
+  {
+    REQUIRE(e == n--);
+  }
+}
+
+TEST_CASE("iterator type can be used from range")
+{
+  using iv = strong::type<std::vector<int>, struct vi_, strong::range>;
+
+  iv v{3,2,1};
+  int n = 3;
+  for (iv::iterator i{v.begin()}; i != v.end(); ++i)
+  {
+    REQUIRE((*i)-- == n--);
+  }
+  const auto& cv = v;
+  n = 2;
+  for (iv::const_iterator i{cv.begin()}; i != cv.end(); ++i)
+  {
+    REQUIRE(*i == n--);
+  }
+  n = 2;
+  for (iv::const_iterator i{v.cbegin()}; i != v.cend(); ++i)
+  {
+    REQUIRE(*i == n--);
+  }
+
 }
