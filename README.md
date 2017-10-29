@@ -63,8 +63,9 @@ Other modifiers are:
 
 * `strong::unit` allows instances to be subtracted and added (yielding a
   `strong::unit`,) divideded (yielding the base type), or multiplied or
-  divided with the base type, yielding another `strong::unit`. I really
-  don't like this name. `distance`? `size`?
+  divided with the base type, yielding another `strong::unit`. A
+  `strong::unit` is also `strong::ordered` I really don't like this name.
+  `distance`? `size`?
 
 * `strong::difference<D>` allows instances to be subtracted (yielding a `D`) or
   to add or subtract a `D` to an instance. Think pointer and `ptrdiff_t`, or
@@ -88,8 +89,8 @@ Other modifiers are:
 
 * `strong::iterator` adds functionality needed depending on iterator category.
   If the iterator type is a `random_access_iterator`, the strong type
-  is `strong::indexed<>` and `strong::difference<>`. It should be possible to
-  specify the index type and difference type.
+  is `strong::indexed<>` and `strong::difference<difference_type>`. It should be
+  possible to specify the index type and difference type.
 
 * `strong::range` adds the functionality needed to iterate over the elements.
   the iterator types are using the same tag as using in the range. Only
