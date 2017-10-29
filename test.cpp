@@ -21,6 +21,12 @@ using subtract = decltype(std::declval<const T&>() - std::declval<const U&>());
 template <typename T, typename U>
 using add = decltype(std::declval<const T&>() + std::declval<const U&>());
 
+template <typename T, typename U>
+using multiply = decltype(std::declval<const T&>() * std::declval<const U&>());
+
+template <typename T, typename U>
+using divide = decltype(std::declval<const T&>() / std::declval<const U&>());
+
 template <typename T>
 using begin_type = decltype(std::declval<T&>().begin());
 
@@ -83,6 +89,12 @@ using is_subtractable = is_detected<subtract, T, U>;
 
 template <typename T, typename U = T>
 using is_addable = is_detected<add, T, U>;
+
+template <typename T, typename U = T>
+using is_divisible = is_detected<divide, T, U>;
+
+template <typename T, typename U = T>
+using is_multipliable = is_detected<multiply, T, U>;
 
 template <typename T, typename U>
 using is_indexable = is_detected<indexing, T, U>;
@@ -318,6 +330,36 @@ static_assert(std::is_default_constructible<crhi>{},"");
 static_assert(std::is_nothrow_copy_assignable<crhi>{},"");
 static_assert(std::is_nothrow_move_assignable<crhi>{},"");
 static_assert(std::is_nothrow_destructible<crhi>{},"");
+
+using uhandle = strong::type<int, struct uh_, strong::unit>;
+static_assert(std::is_default_constructible<uhandle>{},"");
+static_assert(std::is_copy_constructible<uhandle>{},"");
+static_assert(is_equal_comparable<uhandle>{}, "");
+static_assert(std::is_nothrow_assignable<uhandle, const uhandle&>{}, "");
+static_assert(std::is_nothrow_assignable<uhandle, uhandle&&>{}, "");
+static_assert(is_less_than_comparable<uhandle>{},"");
+static_assert(!is_ostreamable<uhandle>{},"");
+static_assert(!is_istreamable<uhandle>{},"");
+static_assert(!std::is_constructible<bool, uhandle>{}, "");
+static_assert(!is_incrementable<uhandle>{},"");
+static_assert(!is_decrementable<uhandle>{},"");
+static_assert(!std::is_arithmetic<uhandle>{},"");
+static_assert(!is_hashable<uhandle>{},"");
+static_assert(!is_indexable<uhandle, int>{}, "");
+static_assert(is_subtractable<uhandle,uhandle>{}, "");
+static_assert(!is_subtractable<uhandle,int>{},"");
+static_assert(is_addable<uhandle,uhandle>{},"");
+static_assert(!is_addable<uhandle,int>{},"");
+static_assert(!is_addable<int,uhandle>{},"");
+static_assert(is_divisible<uhandle, uhandle>{}, "");
+static_assert(is_divisible<uhandle, int>{}, "");
+static_assert(is_multipliable<uhandle, int>{}, "");
+static_assert(is_multipliable<int, uhandle>{}, "");
+static_assert(!is_multipliable<uhandle, uhandle>{}, "");
+static_assert(!is_addable<uhandle,li>{},"");
+static_assert(!is_range<uhandle>{}, "");
+static_assert(!is_range<const uhandle>{}, "");
+
 
 TEST_CASE("Construction from a value type lvalue copies it")
 {
@@ -762,6 +804,69 @@ TEST_CASE("difference types can be subtracted with the delta type")
   REQUIRE(value(t2) == 5);
   t1 -= d;
   REQUIRE(t1 == T{5});
+}
+
+TEST_CASE("adding unit types yields a unit type")
+{
+  using U = strong::type<int, struct u_, strong::unit>;
+
+  U u1{3};
+  U u2{4};
+
+  auto r = u1 + u2;
+  static_assert(std::is_same<decltype(r), U>{},"");
+  REQUIRE(value(r) == 7);
+}
+
+TEST_CASE("subtracting unit types yields a unit type")
+{
+  using U = strong::type<int, struct U_, strong::unit>;
+
+  U u1{8};
+  U u2{3};
+
+  auto r = u1 - u2;
+
+  static_assert(std::is_same<decltype(r), U>{}, "");
+  REQUIRE(value(r) == 5);
+}
+
+TEST_CASE("dividing unit types yields a base type")
+{
+  using U = strong::type<int, struct U_, strong::unit>;
+
+  U u1{8};
+  U u2{2};
+
+  auto r = u1/u2;
+  static_assert(std::is_same<decltype(r), int>{}, "");
+  REQUIRE(r == 4);
+}
+
+TEST_CASE("dividing a unit type with its base type yields a unit")
+{
+  using U = strong::type<int, struct U_, strong::unit>;
+
+  U u{8};
+
+  auto r = u/2;
+  static_assert(std::is_same<decltype(r), U>{}, "");
+  REQUIRE(value(r) == 4);
+}
+
+TEST_CASE("multiplying a unit with its base type yields a unit")
+{
+  using U = strong::type<int, struct U_, strong::unit>;
+
+  U u{3};
+
+  auto r1 = u * 2;
+  static_assert(std::is_same<decltype(r1), U>{}, "");
+  REQUIRE(value(r1) == 6);
+
+  auto r2 = 3 * u;
+  static_assert(std::is_same<decltype(r2), U>{}, "");
+  REQUIRE(value(r2) == 9);
 }
 
 TEST_CASE("iterators work with algorithms")

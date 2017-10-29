@@ -358,7 +358,89 @@ struct hashable
   class modifier{};
 };
 
-template <typename D = void>
+struct unit
+{
+  template <typename T>
+  class modifier;
+};
+
+template <typename T, typename Tag, typename ... M>
+class unit::modifier<::strong::type<T, Tag, M...>>
+: public ordered::modifier<::strong::type<T, Tag, M...>>
+{
+  using type = ::strong::type<T, Tag, M...>;
+
+  type& operator+=(const type& t)
+  noexcept(noexcept(std::declval<T&>() += value(t)))
+  {
+    impl::access<type>(*this) += value(t);
+    return impl::get<type>(*this);
+  }
+
+  type& operator-=(const type& t)
+    noexcept(noexcept(std::declval<T&>() -= value(t)))
+  {
+    impl::access<type>(*this) -= value(t);
+    return impl::get<type>(*this);
+  }
+
+  type& operator*=(const T& t)
+  noexcept(noexcept(std::declval<T&>() *= t))
+  {
+    impl::access<type>(*this) *= t;
+    return impl::get<type>(*this);
+  }
+
+  type& operator/=(const T& t)
+    noexcept(noexcept(std::declval<T&>() /= t))
+  {
+    impl::access<type>(*this) /= t;
+    return impl::get<type>(*this);
+  }
+
+  friend
+  type operator+(type lh, const type& rh)
+  {
+    lh += rh;
+    return lh;
+  }
+
+  friend
+  type operator-(type lh, const type& rh)
+  {
+    lh -= rh;
+    return lh;
+  }
+
+  friend
+  type operator*(type lh, const T& rh)
+  {
+    lh *= rh;
+    return lh;
+  }
+
+  friend
+  type operator*(const T& lh, type rh)
+  {
+    rh *= lh;
+    return rh;
+  }
+
+  friend
+  type operator/(type lh, const T& rh)
+  {
+    lh /= rh;
+    return lh;
+  }
+
+  friend
+  T operator/(const type& lh, const type& rh)
+  {
+    return value(lh) / value(rh);
+  }
+};
+
+template <typename D>
 struct difference
 {
   template <typename T>
@@ -378,81 +460,6 @@ namespace impl
   : std::true_type {};
 }
 
-template <>
-template <typename type>
-class difference<void>::modifier
-{
-  using ref = typename impl::type_of<type&>::type;
-  using cref = typename impl::type_of<const type&>::type;
-  using rref = typename impl::type_of<type&&>::type;
-  static_assert(impl::subtractable<cref>::value, "it must be possible to subtract instances of your underlying type");
-public:
-  template <typename LH, typename RH>
-  STRONG_NODISCARD
-  friend
-  constexpr
-  auto
-  operator-(
-    const LH& lh,
-    const RH& rh)
-  -> std::enable_if_t<std::is_base_of<modifier, LH>::value && std::is_base_of<modifier, RH>::value,
-                      decltype(std::declval<cref>() - std::declval<cref>())>
-  {
-    return impl::access<type>(lh) - impl::access<type>(rh);
-  }
-
-  template <typename D>
-  type&
-  operator+=(
-    const D& d)
-  noexcept(noexcept(std::declval<ref>() += value(d)))
-  {
-    impl::access<type>(*this) += value(d);
-    return impl::get<type>(*this);
-  }
-  template <typename D>
-  type&
-  operator-=(
-    const D& d)
-  noexcept(noexcept(std::declval<ref>() -= value(d)))
-  {
-    impl::access<type>(*this) -= value(d);
-    return impl::get<type>(*this);
-  }
-
-  template <typename D>
-  STRONG_NODISCARD
-  friend
-  type
-  operator+(
-    const modifier& lh,
-    const D& d)
-  {
-    return type(impl::access<type>(lh) + value(d));
-  }
-
-  template <typename D>
-  STRONG_NODISCARD
-  friend
-  type
-  operator+(
-    const D& d,
-    const modifier& rh)
-  {
-    return type(value(d) + impl::access<type>(rh));
-  }
-
-  template <typename D, typename = std::enable_if_t<!std::is_base_of<modifier, D>::value>>
-  STRONG_NODISCARD
-  friend
-  type
-  operator-(
-    const modifier& lh,
-    const D& d)
-  {
-    return type(impl::access<type>(lh) - value(d));
-  }
-};
 
 template <typename D>
 template <typename T, typename Tag, typename ... M>
@@ -1032,7 +1039,7 @@ public:
   template <typename I>
   class modifier<I, std::random_access_iterator_tag>
     : public modifier<I, std::bidirectional_iterator_tag>
-      , public difference<>::modifier<I>
+      , public difference<typename std::iterator_traits<I>::difference_type>::template modifier<I>
       , public indexed<>::modifier<I>
       , public ordered::modifier<I>
   {

@@ -61,12 +61,16 @@ Other modifiers are:
   underlying type,) to allow use in `std::unordered_set<>` and
   `std::unordered_map<>`
 
+* `strong::unit` allows instances to be subtracted and added (yielding a
+  `strong::unit`,) divideded (yielding the base type), or multiplied or
+  divided with the base type, yielding another `strong::unit`. I really
+  don't like this name. `distance`? `size`?
+
 * `strong::difference<D>` allows instances to be subtracted (yielding a `D`) or
-  to add or subtract a `D` to an instance. Think pointer and `ptrdiff_t`. It's
-  also possible to use a lamer `strong::difference<>`, which allows a delta of
-  any type that works. I think this functionality is OK, but I'm not happy with
-  the name, and maybe the ability to subtract instances should be separate from
-  the ability to add/subtract deltas?
+  to add or subtract a `D` to an instance. Think pointer and `ptrdiff_t`, or
+  `std::time_point<>` and `std::duration<>`. It is natural that `D` is
+  of a `strong::unit` type. I think this functionality is OK, but I'm not happy
+  with the name.
 
 * `strong::pointer` allows `operator*` and `operator->`, and comparisons with
   `nullptr` providing the underlying type supports it.
