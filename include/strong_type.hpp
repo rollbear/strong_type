@@ -369,7 +369,7 @@ class unit::modifier<::strong::type<T, Tag, M...>>
 : public ordered::modifier<::strong::type<T, Tag, M...>>
 {
   using type = ::strong::type<T, Tag, M...>;
-
+public:
   type& operator+=(const type& t)
   noexcept(noexcept(std::declval<T&>() += value(t)))
   {
