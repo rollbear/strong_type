@@ -61,16 +61,15 @@ Other modifiers are:
   underlying type,) to allow use in `std::unordered_set<>` and
   `std::unordered_map<>`
 
-* `strong::unit` allows instances to be subtracted and added (yielding a
-  `strong::unit`,) divideded (yielding the base type), or multiplied or
-  divided with the base type, yielding another `strong::unit`. A
-  `strong::unit` is also `strong::ordered` I really don't like this name.
-  `distance`? `size`?
+* `strong::distance` allows instances to be subtracted and added (yielding a
+  `strong::distance`,) divideded (yielding the base type), or multiplied or
+  divided with the base type, yielding another `strong::distance`. A
+  `strong::distance` is also `strong::ordered`
 
-* `strong::difference<D>` allows instances to be subtracted (yielding a `D`) or
+* `strong::data_point<D>` allows instances to be subtracted (yielding a `D`) or
   to add or subtract a `D` to an instance. Think pointer and `ptrdiff_t`, or
   `std::time_point<>` and `std::duration<>`. It is natural that `D` is
-  of a `strong::unit` type. I think this functionality is OK, but I'm not happy
+  of a `strong::distance` type. I think this functionality is OK, but I'm not happy
   with the name.
 
 * `strong::pointer` allows `operator*` and `operator->`, and comparisons with
@@ -89,8 +88,8 @@ Other modifiers are:
 
 * `strong::iterator` adds functionality needed depending on iterator category.
   If the iterator type is a `random_access_iterator`, the strong type
-  is `strong::indexed<>` and `strong::difference<difference_type>`. It should be
-  possible to specify the index type and difference type.
+  is `strong::indexed<>` and `strong::data_point<difference_type>`. It should be
+  possible to specify the index type and data_point type.
 
 * `strong::range` adds the functionality needed to iterate over the elements.
   the iterator types are using the same tag as using in the range. Only

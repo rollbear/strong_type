@@ -358,14 +358,14 @@ struct hashable
   class modifier{};
 };
 
-struct unit
+struct distance
 {
   template <typename T>
   class modifier;
 };
 
 template <typename T, typename Tag, typename ... M>
-class unit::modifier<::strong::type<T, Tag, M...>>
+class distance::modifier<::strong::type<T, Tag, M...>>
 : public ordered::modifier<::strong::type<T, Tag, M...>>
 {
   using type = ::strong::type<T, Tag, M...>;
@@ -441,7 +441,7 @@ public:
 };
 
 template <typename D>
-struct difference
+struct data_point
 {
   template <typename T>
   class modifier;
@@ -463,7 +463,7 @@ namespace impl
 
 template <typename D>
 template <typename T, typename Tag, typename ... M>
-class difference<D>::modifier<::strong::type<T, Tag, M...>>
+class data_point<D>::modifier<::strong::type<T, Tag, M...>>
 {
   using type = ::strong::type<T, Tag, M...>;
   static_assert(impl::subtractable<T>::value, "it must be possible to subtract instances of your underlying type");
@@ -1039,7 +1039,7 @@ public:
   template <typename I>
   class modifier<I, std::random_access_iterator_tag>
     : public modifier<I, std::bidirectional_iterator_tag>
-      , public difference<typename std::iterator_traits<I>::difference_type>::template modifier<I>
+      , public data_point<typename std::iterator_traits<I>::difference_type>::template modifier<I>
       , public indexed<>::modifier<I>
       , public ordered::modifier<I>
   {

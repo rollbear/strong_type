@@ -220,7 +220,7 @@ static_assert(!is_hashable<ihandle>{},"");
 static_assert(is_indexable<ihandle, int>{}, "");
 static_assert(!is_range<ihandle>{}, "");
 
-using dhandle = strong::type<int, struct int_tag, strong::difference<handle>>;
+using dhandle = strong::type<int, struct int_tag, strong::data_point<handle>>;
 
 static_assert(std::is_nothrow_default_constructible<dhandle>{},"");
 static_assert(std::is_nothrow_constructible<dhandle, int>{},"");
@@ -331,7 +331,7 @@ static_assert(std::is_nothrow_copy_assignable<crhi>{},"");
 static_assert(std::is_nothrow_move_assignable<crhi>{},"");
 static_assert(std::is_nothrow_destructible<crhi>{},"");
 
-using uhandle = strong::type<int, struct uh_, strong::unit>;
+using uhandle = strong::type<int, struct uh_, strong::distance>;
 static_assert(std::is_default_constructible<uhandle>{},"");
 static_assert(std::is_copy_constructible<uhandle>{},"");
 static_assert(is_equal_comparable<uhandle>{}, "");
@@ -761,10 +761,10 @@ TEST_CASE("indexed can be accessed using operator []")
   REQUIRE(acr == 'b');
 }
 
-TEST_CASE("difference types can be subtracted")
+TEST_CASE("data_point types can be subtracted")
 {
   using D = strong::type<int, struct i_>;
-  using T = strong::type<int, struct i_, strong::difference<D>>;
+  using T = strong::type<int, struct i_, strong::data_point<D>>;
 
   T t1{3};
   T t2{8};
@@ -773,10 +773,10 @@ TEST_CASE("difference types can be subtracted")
   REQUIRE(d == D{5});
 }
 
-TEST_CASE("difference types can be added with the delta type")
+TEST_CASE("data_point types can be added with the delta type")
 {
   using D = strong::type<int, struct i_>;
-  using T = strong::type<int, struct i_, strong::difference<D>>;
+  using T = strong::type<int, struct i_, strong::data_point<D>>;
 
   T t1{8};
   D d{3};
@@ -791,10 +791,10 @@ TEST_CASE("difference types can be added with the delta type")
   REQUIRE(t1 == T{11});
 }
 
-TEST_CASE("difference types can be subtracted with the delta type")
+TEST_CASE("data_point types can be subtracted with the delta type")
 {
   using D = strong::type<int, struct i_>;
-  using T = strong::type<int, struct i_, strong::difference<D>>;
+  using T = strong::type<int, struct i_, strong::data_point<D>>;
 
   T t1{8};
   D d{3};
@@ -806,9 +806,9 @@ TEST_CASE("difference types can be subtracted with the delta type")
   REQUIRE(t1 == T{5});
 }
 
-TEST_CASE("adding unit types yields a unit type")
+TEST_CASE("adding distance types yields a distance type")
 {
-  using U = strong::type<int, struct u_, strong::unit>;
+  using U = strong::type<int, struct u_, strong::distance>;
 
   U u1{3};
   U u2{4};
@@ -818,9 +818,9 @@ TEST_CASE("adding unit types yields a unit type")
   REQUIRE(value(r) == 7);
 }
 
-TEST_CASE("subtracting unit types yields a unit type")
+TEST_CASE("subtracting distance types yields a distance type")
 {
-  using U = strong::type<int, struct U_, strong::unit>;
+  using U = strong::type<int, struct U_, strong::distance>;
 
   U u1{8};
   U u2{3};
@@ -831,9 +831,9 @@ TEST_CASE("subtracting unit types yields a unit type")
   REQUIRE(value(r) == 5);
 }
 
-TEST_CASE("dividing unit types yields a base type")
+TEST_CASE("dividing distance types yields a base type")
 {
-  using U = strong::type<int, struct U_, strong::unit>;
+  using U = strong::type<int, struct U_, strong::distance>;
 
   U u1{8};
   U u2{2};
@@ -843,9 +843,9 @@ TEST_CASE("dividing unit types yields a base type")
   REQUIRE(r == 4);
 }
 
-TEST_CASE("dividing a unit type with its base type yields a unit")
+TEST_CASE("dividing a distance type with its base type yields a distance")
 {
-  using U = strong::type<int, struct U_, strong::unit>;
+  using U = strong::type<int, struct U_, strong::distance>;
 
   U u{8};
 
@@ -854,9 +854,9 @@ TEST_CASE("dividing a unit type with its base type yields a unit")
   REQUIRE(value(r) == 4);
 }
 
-TEST_CASE("multiplying a unit with its base type yields a unit")
+TEST_CASE("multiplying a distance with its base type yields a distance")
 {
-  using U = strong::type<int, struct U_, strong::unit>;
+  using U = strong::type<int, struct U_, strong::distance>;
 
   U u{3};
 
