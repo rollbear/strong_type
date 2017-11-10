@@ -64,7 +64,7 @@ add_executable(
   EXCLUDE_FROM_ALL
     test.cpp
     include/strong_type.hpp
-    )
+    test_main.cpp)
 target_include_directories(
     self_test
   PRIVATE

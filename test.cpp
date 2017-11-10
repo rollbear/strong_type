@@ -1,7 +1,7 @@
-#define CATCH_CONFIG_MAIN
 #include <catch.hpp>
 #include <strong_type.hpp>
 #include <unordered_set>
+#include <memory>
 
 template <typename T, typename U>
 using equality_compare = decltype(std::declval<const T&>() == std::declval<const U&>());
