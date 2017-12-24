@@ -24,7 +24,8 @@ public:
 
   template <typename U,
     typename = std::enable_if_t<std::is_constructible<T, std::initializer_list<U>>::value>>
-    explicit
+  constexpr
+  explicit
   type(
     std::initializer_list<U> us
   )
