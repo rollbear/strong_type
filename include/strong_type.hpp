@@ -28,8 +28,8 @@ public:
   type(
     std::initializer_list<U> us
   )
-    noexcept(noexcept(T(us)))
-  : val(us)
+    noexcept(noexcept(T{us}))
+  : val{us}
   {
   }
   template <typename ... U,
