@@ -937,3 +937,16 @@ TEST_CASE("iterator type can be used from range")
   }
 
 }
+
+TEST_CASE("swap")
+{
+  using strong_int = strong::type<int, struct si_>;
+
+  strong_int v1{6};
+  strong_int v2{34};
+
+  swap(v1, v2);
+
+  CHECK(v1.value() == 34);
+  CHECK(v2.value() == 6);
+}

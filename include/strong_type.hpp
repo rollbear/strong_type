@@ -42,6 +42,15 @@ public:
   : val(std::forward<U>(u)...)
   {}
 
+  friend void swap(type& a, type& b) noexcept(
+                                        std::is_nothrow_move_constructible<type>::value &&
+                                        std::is_nothrow_move_assignable<type>::value
+                                      )
+  {
+    using std::swap;
+    swap(a.val, b.val);
+  }
+
   template <typename U = T,
             typename = decltype(std::declval<const U&>() == std::declval<const U&>())>
   STRONG_NODISCARD
