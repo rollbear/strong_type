@@ -506,9 +506,9 @@ TEST_CASE("an iostreamable type can be both read and written using streams")
   REQUIRE(os.str() == "3");
 }
 
-TEST_CASE("an up_counter can be incremented")
+TEST_CASE("an incrementable can be incremented")
 {
-  using C = strong::type<int, struct i_, strong::up_counter>;
+  using C = strong::type<int, struct i_, strong::incrementable>;
 
   C c{3};
   REQUIRE(++c == C{4});
@@ -517,9 +517,9 @@ TEST_CASE("an up_counter can be incremented")
   REQUIRE(c == C{5});
 }
 
-TEST_CASE("a down_counter can be decremented")
+TEST_CASE("a decrementable can be decremented")
 {
-  using C = strong::type<int, struct i_, strong::down_counter>;
+  using C = strong::type<int, struct i_, strong::decrementable>;
 
   C c{10};
   REQUIRE(--c == C{9});
@@ -528,9 +528,9 @@ TEST_CASE("a down_counter can be decremented")
   REQUIRE(c == C{8});
 }
 
-TEST_CASE("a bidirectional_counter goes both ways")
+TEST_CASE("a bicrementable goes both ways")
 {
-  using C = strong::type<int, struct i_, strong::bidirectional_counter>;
+  using C = strong::type<int, struct i_, strong::bicrementable>;
 
   C c{3};
   REQUIRE(++c == C{4});

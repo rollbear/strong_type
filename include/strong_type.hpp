@@ -293,7 +293,7 @@ struct iostreamable
   };
 };
 
-struct up_counter
+struct incrementable
 {
   template <typename T>
   class modifier
@@ -320,7 +320,7 @@ struct up_counter
   };
 };
 
-struct down_counter
+struct decrementable
 {
   template <typename T>
   class modifier
@@ -347,12 +347,12 @@ struct down_counter
   };
 };
 
-struct bidirectional_counter
+struct bicrementable
 {
   template <typename T>
   class modifier
-    : public up_counter::modifier<T>
-    , public down_counter::modifier<T>
+    : public incrementable::modifier<T>
+    , public decrementable::modifier<T>
   {
   };
 };
@@ -1046,14 +1046,14 @@ public:
   template <typename I, typename category = typename std::iterator_traits<I>::iterator_category>
   class modifier
     : public pointer::modifier<I>
-      , public up_counter::modifier<I>
+      , public incrementable::modifier<I>
   {
   };
 
   template <typename I>
   class modifier<I, std::bidirectional_iterator_tag>
     : public modifier<I, std::forward_iterator_tag>
-      , public down_counter::modifier<I>
+      , public decrementable::modifier<I>
   {
   };
   template <typename I>

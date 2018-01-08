@@ -50,9 +50,9 @@ Other modifiers are:
   provide the default iostream integrations (as handled by the underlying
   type.) Provide your own operators instead if you prefer that.
 
-* `strong::up_counter`, `strong::down_counter`, `strong::bidirectional_counter`.
-  Support `operator++` and `operator--`. *not* happy about these, especially
-  the names. Suggestions for improvements welcome.
+* `strong::incrementable`, `strong::decrementable`, `strong::bicrementable`.
+  Support `operator++` and `operator--`. *bicrementable* is obviously a made-
+  up word for the occasion, but I think its meaning is clear.
 
 * `strong::boolean` provides `explicit operator bool() const`, providing the
   underlying type supports it.
