@@ -222,7 +222,7 @@ static_assert(!is_hashable<ihandle>{},"");
 static_assert(is_indexable<ihandle, int>{}, "");
 static_assert(!is_range<ihandle>{}, "");
 
-using dhandle = strong::type<int, struct int_tag, strong::data_point<handle>>;
+using dhandle = strong::type<int, struct int_tag, strong::affine_point<handle>>;
 
 static_assert(std::is_nothrow_default_constructible<dhandle>{},"");
 static_assert(std::is_nothrow_constructible<dhandle, int>{},"");
@@ -763,10 +763,10 @@ TEST_CASE("indexed can be accessed using operator []")
   REQUIRE(acr == 'b');
 }
 
-TEST_CASE("data_point types can be subtracted")
+TEST_CASE("affine_point types can be subtracted")
 {
   using D = strong::type<int, struct i_>;
-  using T = strong::type<int, struct i_, strong::data_point<D>>;
+  using T = strong::type<int, struct i_, strong::affine_point<D>>;
 
   T t1{3};
   T t2{8};
@@ -775,10 +775,10 @@ TEST_CASE("data_point types can be subtracted")
   REQUIRE(d == D{5});
 }
 
-TEST_CASE("data_point types can be added with the delta type")
+TEST_CASE("affine_point types can be added with the delta type")
 {
   using D = strong::type<int, struct i_>;
-  using T = strong::type<int, struct i_, strong::data_point<D>>;
+  using T = strong::type<int, struct i_, strong::affine_point<D>>;
 
   T t1{8};
   D d{3};
@@ -793,10 +793,10 @@ TEST_CASE("data_point types can be added with the delta type")
   REQUIRE(t1 == T{11});
 }
 
-TEST_CASE("data_point types can be subtracted with the delta type")
+TEST_CASE("affine_point types can be subtracted with the delta type")
 {
   using D = strong::type<int, struct i_>;
-  using T = strong::type<int, struct i_, strong::data_point<D>>;
+  using T = strong::type<int, struct i_, strong::affine_point<D>>;
 
   T t1{8};
   D d{3};

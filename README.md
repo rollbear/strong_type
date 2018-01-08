@@ -66,11 +66,15 @@ Other modifiers are:
   divided with the base type, yielding another `strong::distance`. A
   `strong::distance` is also `strong::ordered`
 
-* `strong::data_point<D>` allows instances to be subtracted (yielding a `D`) or
-  to add or subtract a `D` to an instance. Think pointer and `ptrdiff_t`, or
-  `std::time_point<>` and `std::duration<>`. It is natural that `D` is
-  of a `strong::distance` type. I think this functionality is OK, but I'm not happy
-  with the name.
+* `strong::affine_point<D>` allows instances to be subtracted (yielding a `D`) or
+  to add or subtract a `D` to an instance.
+  See [Affine Space](https://en.wikipedia.org/wiki/Affine_space). Examples of
+  one dimentional affine points are pointer (with `D` being `ptrdiff_t`,) or
+  `std::time_point<>` (with `std::duration<>` as `D`.) An example of a
+  multidimensional affine point is a coordinate (with a vector type for `D`.)
+  It is natural that `D` is of a `strong::distance` type. This is a good name
+  from a mathematical point of view, but perhaps a bit too academic, and not
+  well aligned with the other names.
 
 * `strong::pointer` allows `operator*` and `operator->`, and comparisons with
   `nullptr` providing the underlying type supports it.
@@ -88,8 +92,8 @@ Other modifiers are:
 
 * `strong::iterator` adds functionality needed depending on iterator category.
   If the iterator type is a `random_access_iterator`, the strong type
-  is `strong::indexed<>` and `strong::data_point<difference_type>`. It should be
-  possible to specify the index type and data_point type.
+  is `strong::indexed<>` and `strong::affine_point<difference_type>`. It should be
+  possible to specify the index type and affine_point type.
 
 * `strong::range` adds the functionality needed to iterate over the elements.
   the iterator types are using the same tag as using in the range. Only

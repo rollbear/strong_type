@@ -441,7 +441,7 @@ public:
 };
 
 template <typename D>
-struct data_point
+struct affine_point
 {
   template <typename T>
   class modifier;
@@ -463,7 +463,7 @@ namespace impl
 
 template <typename D>
 template <typename T, typename Tag, typename ... M>
-class data_point<D>::modifier<::strong::type<T, Tag, M...>>
+class affine_point<D>::modifier<::strong::type<T, Tag, M...>>
 {
   using type = ::strong::type<T, Tag, M...>;
   static_assert(impl::subtractable<T>::value, "it must be possible to subtract instances of your underlying type");
@@ -1039,7 +1039,7 @@ public:
   template <typename I>
   class modifier<I, std::random_access_iterator_tag>
     : public modifier<I, std::bidirectional_iterator_tag>
-      , public data_point<typename std::iterator_traits<I>::difference_type>::template modifier<I>
+      , public affine_point<typename std::iterator_traits<I>::difference_type>::template modifier<I>
       , public indexed<>::modifier<I>
       , public ordered::modifier<I>
   {
