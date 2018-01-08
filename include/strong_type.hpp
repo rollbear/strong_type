@@ -13,6 +13,13 @@
 
 namespace strong
 {
+
+namespace impl
+{
+  template <typename T, typename ... V>
+  using WhenConstructible = std::enable_if_t<std::is_constructible<T, V...>::value>;
+}
+
 template <typename M, typename T>
 using modifier = typename M::template modifier<T>;
 
@@ -21,7 +28,7 @@ class type : public modifier<M, type<T, Tag, M...>>...
 {
 public:
   template <typename U,
-    typename = std::enable_if_t<std::is_constructible<T, std::initializer_list<U>>::value>>
+    typename = impl::WhenConstructible<T, std::initializer_list<U>>>
     explicit
   type(
     std::initializer_list<U> us
@@ -31,7 +38,7 @@ public:
   {
   }
   template <typename ... U,
-            typename = std::enable_if_t<std::is_constructible<T, U&&...>::value>>
+            typename = impl::WhenConstructible<T, U&&...>>
   constexpr
   explicit
   type(
@@ -40,8 +47,7 @@ public:
   : val(std::forward<U>(u)...)
   {}
 
-  template <typename U = T,
-            typename = decltype(std::declval<const U&>() == std::declval<const U&>())>
+  template <typename = T>
   STRONG_NODISCARD
   friend
   constexpr
@@ -55,8 +61,7 @@ public:
     return lh.val == rh.val;
   }
 
-  template <typename U = T,
-            typename = decltype(std::declval<const U&>() != std::declval<const U&>())>
+  template <typename = T>
   STRONG_NODISCARD
   friend
   constexpr
@@ -85,19 +90,34 @@ struct is_safe_type : std::false_type {};
 template <typename T, typename Tag, typename ... M>
 struct is_safe_type<type<T, Tag, M...>> : std::true_type {};
 
-template <typename T, typename = std::enable_if_t<is_safe_type<std::decay_t<T>>::value>>
+namespace impl {
+  template <typename T>
+  using WhenSafeType = std::enable_if_t<is_safe_type<std::decay_t<T>>::value>;
+  template <typename T>
+  using WhenNotSafeType = std::enable_if_t<!is_safe_type<std::decay_t<T>>::value>;
+}
+
+template <
+  typename T,
+  typename = impl::WhenSafeType<T>>
 STRONG_NODISCARD
-decltype(auto) value(T&& t) noexcept
+auto
+value(T&& t)
+noexcept
+-> decltype(std::forward<T>(t).value())
 {
   return std::forward<T>(t).value();
 }
 
-template <typename T>
-std::enable_if_t<!is_safe_type<std::decay_t<T>>::value, T&&> value(T&& t) noexcept
+template <
+  typename T,
+  typename = impl::WhenNotSafeType<T>>
+T&&
+value(T&& t)
+noexcept
 {
   return std::forward<T>(t);
 }
-
 
 namespace impl
 {
