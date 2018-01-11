@@ -393,14 +393,14 @@ struct hashable
   class modifier{};
 };
 
-struct distance
+struct difference
 {
   template <typename T>
   class modifier;
 };
 
 template <typename T, typename Tag, typename ... M>
-class distance::modifier<::strong::type<T, Tag, M...>>
+class difference::modifier<::strong::type<T, Tag, M...>>
 : public ordered::modifier<::strong::type<T, Tag, M...>>
 {
   using type = ::strong::type<T, Tag, M...>;

@@ -66,10 +66,10 @@ Other modifiers are:
   underlying type,) to allow use in `std::unordered_set<>` and
   `std::unordered_map<>`
 
-* `strong::distance` allows instances to be subtracted and added (yielding a
-  `strong::distance`,) divideded (yielding the base type), or multiplied or
-  divided with the base type, yielding another `strong::distance`. A
-  `strong::distance` is also `strong::ordered`
+* `strong::difference` allows instances to be subtracted and added (yielding a
+  `strong::difference`,) divideded (yielding the base type), or multiplied or
+  divided with the base type, yielding another `strong::difference`. A
+  `strong::difference` is also `strong::ordered`
 
 * `strong::affine_point<D>` allows instances to be subtracted (yielding a `D`) or
   to add or subtract a `D` to an instance.
@@ -77,7 +77,7 @@ Other modifiers are:
   one dimentional affine points are pointer (with `D` being `ptrdiff_t`,) or
   `std::time_point<>` (with `std::duration<>` as `D`.) An example of a
   multidimensional affine point is a coordinate (with a vector type for `D`.)
-  It is natural that `D` is of a `strong::distance` type. This is a good name
+  It is natural that `D` is of a `strong::difference` type. This is a good name
   from a mathematical point of view, but perhaps a bit too academic, and not
   well aligned with the other names.
 

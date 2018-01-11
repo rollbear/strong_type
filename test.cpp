@@ -336,7 +336,7 @@ static_assert(std::is_nothrow_copy_assignable<crhi>{},"");
 static_assert(std::is_nothrow_move_assignable<crhi>{},"");
 static_assert(std::is_nothrow_destructible<crhi>{},"");
 
-using uhandle = strong::type<int, struct uh_, strong::distance>;
+using uhandle = strong::type<int, struct uh_, strong::difference>;
 static_assert(std::is_default_constructible<uhandle>{},"");
 static_assert(std::is_copy_constructible<uhandle>{},"");
 static_assert(is_equal_comparable<uhandle>{}, "");
@@ -811,9 +811,9 @@ TEST_CASE("affine_point types can be subtracted with the delta type")
   REQUIRE(t1 == T{5});
 }
 
-TEST_CASE("adding distance types yields a distance type")
+TEST_CASE("adding difference types yields a difference type")
 {
-  using U = strong::type<int, struct u_, strong::distance>;
+  using U = strong::type<int, struct u_, strong::difference>;
 
   U u1{3};
   U u2{4};
@@ -823,9 +823,9 @@ TEST_CASE("adding distance types yields a distance type")
   REQUIRE(value_of(r) == 7);
 }
 
-TEST_CASE("subtracting distance types yields a distance type")
+TEST_CASE("subtracting difference types yields a difference type")
 {
-  using U = strong::type<int, struct U_, strong::distance>;
+  using U = strong::type<int, struct U_, strong::difference>;
 
   U u1{8};
   U u2{3};
@@ -836,9 +836,9 @@ TEST_CASE("subtracting distance types yields a distance type")
   REQUIRE(value_of(r) == 5);
 }
 
-TEST_CASE("dividing distance types yields a base type")
+TEST_CASE("dividing difference types yields a base type")
 {
-  using U = strong::type<int, struct U_, strong::distance>;
+  using U = strong::type<int, struct U_, strong::difference>;
 
   U u1{8};
   U u2{2};
@@ -848,9 +848,9 @@ TEST_CASE("dividing distance types yields a base type")
   REQUIRE(r == 4);
 }
 
-TEST_CASE("dividing a distance type with its base type yields a distance")
+TEST_CASE("dividing a difference type with its base type yields a difference")
 {
-  using U = strong::type<int, struct U_, strong::distance>;
+  using U = strong::type<int, struct U_, strong::difference>;
 
   U u{8};
 
@@ -859,9 +859,9 @@ TEST_CASE("dividing a distance type with its base type yields a distance")
   REQUIRE(value_of(r) == 4);
 }
 
-TEST_CASE("multiplying a distance with its base type yields a distance")
+TEST_CASE("multiplying a difference with its base type yields a difference")
 {
-  using U = strong::type<int, struct U_, strong::distance>;
+  using U = strong::type<int, struct U_, strong::difference>;
 
   U u{3};
 
