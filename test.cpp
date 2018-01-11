@@ -106,10 +106,13 @@ using is_range = std::integral_constant<bool, is_detected<begin_type, T>::value 
 
 using handle = strong::type<int, struct handle_tag>;
 
-static_assert(std::is_lvalue_reference<decltype(value(std::declval<handle&>()))>{},"");
-static_assert(std::is_lvalue_reference<decltype(value(std::declval<const handle&>()))>{},"");
-static_assert(std::is_const<std::remove_reference_t<decltype(value(std::declval<const handle&>()))>>{},"");
-static_assert(std::is_rvalue_reference<decltype(value(std::declval<handle&&>()))>{},"");
+static_assert(std::is_same<int, strong::underlying_type_t<handle>>{},"");
+static_assert(std::is_same<int, strong::underlying_type_t<int>>{},"");
+
+static_assert(std::is_lvalue_reference<decltype(value_of(std::declval<handle&>()))>{},"");
+static_assert(std::is_lvalue_reference<decltype(value_of(std::declval<const handle&>()))>{},"");
+static_assert(std::is_const<std::remove_reference_t<decltype(value_of(std::declval<const handle&>()))>>{},"");
+static_assert(std::is_rvalue_reference<decltype(value_of(std::declval<handle&&>()))>{},"");
 
 static_assert(std::is_nothrow_default_constructible<handle>{},"");
 static_assert(std::is_nothrow_constructible<handle, int&&>{},"");
@@ -367,15 +370,15 @@ TEST_CASE("Construction from a value type lvalue copies it")
 {
   auto orig = std::make_shared<int>(3);
   strong::type<std::shared_ptr<int>, struct int_> i{orig};
-  REQUIRE(*value(i) == 3);
+  REQUIRE(*value_of(i) == 3);
   REQUIRE(orig.use_count() == 2);
-  REQUIRE(value(i).get() == orig.get());
+  REQUIRE(value_of(i).get() == orig.get());
 }
 
 TEST_CASE("Construction from multiple parameters constructs value from them")
 {
   strong::type<std::string, struct string_> s(3U, 'a');
-  REQUIRE(value(s) == "aaa");
+  REQUIRE(value_of(s) == "aaa");
 }
 
 TEST_CASE("construction from an rvalue reference moves from it")
@@ -385,7 +388,7 @@ TEST_CASE("construction from an rvalue reference moves from it")
   strong::type<std::unique_ptr<int>, struct p_, strong::pointer> p(std::move(orig));
   REQUIRE(*p == 3);
   REQUIRE(!orig);
-  REQUIRE(value(p).get() == addr);
+  REQUIRE(value_of(p).get() == addr);
 }
 
 TEST_CASE("value can be copy constructed if member can")
@@ -393,7 +396,7 @@ TEST_CASE("value can be copy constructed if member can")
   using ptr = strong::type<std::shared_ptr<int>, struct p_, strong::pointer>;
   ptr orig{std::make_shared<int>(3)};
   ptr p{orig};
-  REQUIRE(value(orig).use_count() == 2);
+  REQUIRE(value_of(orig).use_count() == 2);
   REQUIRE(*p == 3);
 }
 
@@ -403,7 +406,7 @@ TEST_CASE("value can be copy assigned")
   ptr orig{std::make_shared<int>(3)};
   ptr p;
   p = orig;
-  REQUIRE(value(orig).use_count() == 2);
+  REQUIRE(value_of(orig).use_count() == 2);
   REQUIRE(*p == 3);
 }
 
@@ -420,7 +423,7 @@ TEST_CASE("value can be move assigned")
 TEST_CASE("value can be retained from const lvalue ref")
 {
   const strong::type<int, struct i_> i{3};
-  auto&& r = value(i);
+  auto&& r = value_of(i);
   REQUIRE(r == 3);
   static_assert(std::is_const<std::remove_reference_t <decltype(r)>>{},"");
   static_assert(std::is_lvalue_reference<decltype(r)>{},"");
@@ -429,7 +432,7 @@ TEST_CASE("value can be retained from const lvalue ref")
 TEST_CASE("value can be retained from rvalue ref")
 {
   strong::type<int, struct i_> i{3};
-  auto&& r = value(std::move(i));
+  auto&& r = value_of(std::move(i));
   REQUIRE(r == 3);
   static_assert(!std::is_const<std::remove_reference_t <decltype(r)>>{},"");
   static_assert(std::is_rvalue_reference<decltype(r)>{},"");
@@ -492,8 +495,8 @@ TEST_CASE("an istreamable type can be read from a istream")
 
   std::istringstream is{" 3 4"};
   is >> i >> j;
-  REQUIRE(value(i) == 3);
-  REQUIRE(value(j) == 4);
+  REQUIRE(value_of(i) == 3);
+  REQUIRE(value_of(j) == 4);
 }
 
 TEST_CASE("an iostreamable type can be both read and written using streams")
@@ -785,10 +788,10 @@ TEST_CASE("affine_point types can be added with the delta type")
 
   auto t2 = t1 + d;
   static_assert(std::is_same<decltype(t2), T>{}, "");
-  REQUIRE(value(t2) == 11);
+  REQUIRE(value_of(t2) == 11);
   auto t3 = d + t1;
   static_assert(std::is_same<decltype(t3), T>{}, "");
-  REQUIRE(value(t3) == 11);
+  REQUIRE(value_of(t3) == 11);
   t1 += d;
   REQUIRE(t1 == T{11});
 }
@@ -803,7 +806,7 @@ TEST_CASE("affine_point types can be subtracted with the delta type")
 
   auto t2 = t1 - d;
   static_assert(std::is_same<decltype(t2), T>{}, "");
-  REQUIRE(value(t2) == 5);
+  REQUIRE(value_of(t2) == 5);
   t1 -= d;
   REQUIRE(t1 == T{5});
 }
@@ -817,7 +820,7 @@ TEST_CASE("adding distance types yields a distance type")
 
   auto r = u1 + u2;
   static_assert(std::is_same<decltype(r), U>{},"");
-  REQUIRE(value(r) == 7);
+  REQUIRE(value_of(r) == 7);
 }
 
 TEST_CASE("subtracting distance types yields a distance type")
@@ -830,7 +833,7 @@ TEST_CASE("subtracting distance types yields a distance type")
   auto r = u1 - u2;
 
   static_assert(std::is_same<decltype(r), U>{}, "");
-  REQUIRE(value(r) == 5);
+  REQUIRE(value_of(r) == 5);
 }
 
 TEST_CASE("dividing distance types yields a base type")
@@ -853,7 +856,7 @@ TEST_CASE("dividing a distance type with its base type yields a distance")
 
   auto r = u/2;
   static_assert(std::is_same<decltype(r), U>{}, "");
-  REQUIRE(value(r) == 4);
+  REQUIRE(value_of(r) == 4);
 }
 
 TEST_CASE("multiplying a distance with its base type yields a distance")
@@ -864,11 +867,11 @@ TEST_CASE("multiplying a distance with its base type yields a distance")
 
   auto r1 = u * 2;
   static_assert(std::is_same<decltype(r1), U>{}, "");
-  REQUIRE(value(r1) == 6);
+  REQUIRE(value_of(r1) == 6);
 
   auto r2 = 3 * u;
   static_assert(std::is_same<decltype(r2), U>{}, "");
-  REQUIRE(value(r2) == 9);
+  REQUIRE(value_of(r2) == 9);
 }
 
 TEST_CASE("iterators work with algorithms")

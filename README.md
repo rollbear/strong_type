@@ -24,7 +24,12 @@ using myint = strong::type<int, struct my_int_>;
 
 `myint` is a very basic handle. You can initialize it. You can do
 equal/not-equal comparison with other instances of the same type, and you can
-access its underlying `int` instance with `value(variable)`
+access its underlying `int` instance with `value_of(variable)`.
+
+To get the underlying type of a strong type, use
+`typename strong::underlying_type<mytype>::type`, or the convenience alias
+`strong::underlying_type_t<mytype>`. If `mytype` is not a `strong::type`,
+they give `mytype`.
 
 ```Cpp
 using otherint = strong::type<int, struct other_int_>;
