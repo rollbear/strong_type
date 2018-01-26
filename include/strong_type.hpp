@@ -69,7 +69,7 @@ public:
   {
   }
   template <typename ... U,
-            typename = std::enable_if_t<std::is_constructible<T, U&&...>::value>>
+            typename = std::enable_if_t<std::is_constructible<T, U&&...>::value && (sizeof...(U) > 0)>>
   constexpr
   explicit
   type(
