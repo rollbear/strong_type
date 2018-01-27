@@ -159,6 +159,27 @@ static_assert(!is_hashable<bhandle>{},"");
 static_assert(!is_indexable<bhandle, int>{}, "");
 static_assert(!is_range<bhandle>{}, "");
 
+using dchandle = strong::type<int, struct dchandle_tag, strong::default_constructible>;
+
+static_assert(std::is_default_constructible<dchandle>{},"");
+static_assert(std::is_nothrow_constructible<dchandle, int&&>{},"");
+static_assert(std::is_nothrow_constructible<dchandle, const int&>{},"");
+static_assert(std::is_copy_constructible<dchandle>{},"");
+static_assert(std::is_nothrow_swappable<dchandle>{},"");
+static_assert(is_equal_comparable<dchandle>{}, "");
+static_assert(std::is_nothrow_assignable<dchandle, const dchandle&>{}, "");
+static_assert(std::is_nothrow_assignable<dchandle, dchandle&&>{}, "");
+static_assert(!is_less_than_comparable<dchandle>{},"");
+static_assert(!is_ostreamable<dchandle>{},"");
+static_assert(!is_istreamable<dchandle>{},"");
+static_assert(!std::is_constructible<bool, dchandle>{}, "");
+static_assert(!is_incrementable<dchandle>{},"");
+static_assert(!is_decrementable<dchandle>{},"");
+static_assert(!std::is_arithmetic<dchandle>{},"");
+static_assert(!is_hashable<dchandle>{},"");
+static_assert(!is_indexable<dchandle, int>{}, "");
+static_assert(!is_range<dchandle>{}, "");
+
 using ahandle = strong::type<int, struct ahandle_tag, strong::arithmetic>;
 
 static_assert(!std::is_default_constructible<ahandle>{},"");

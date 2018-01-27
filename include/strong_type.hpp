@@ -13,14 +13,49 @@
 
 namespace strong
 {
+namespace impl
+{
+template<class...>
+struct has_tag : std::false_type {};
+
+template<class Tag, class SingleTag>
+struct has_tag<Tag, SingleTag>
+{
+  static constexpr bool value{std::is_same<Tag, SingleTag>::value};
+};
+
+template<class Tag, class FirstTag, class... Tags>
+struct has_tag<Tag, FirstTag, Tags...>
+{
+  static constexpr bool value{std::is_same<Tag, FirstTag>::value || has_tag<Tag, Tags...>::value};
+};
+
+}
+
 template <typename M, typename T>
 using modifier = typename M::template modifier<T>;
+
+struct default_constructible
+{
+  template <typename T>
+  class modifier
+  {
+  };
+};
+
 
 template <typename T, typename Tag, typename ... M>
 class type : public modifier<M, type<T, Tag, M...>>...
 {
+  static constexpr bool has_default_constructible_tag{impl::has_tag<default_constructible, M...>::value};
+
 public:
-  type() = delete;
+  template <bool B=has_default_constructible_tag, typename std::enable_if_t<B, int> = 0>
+  type()
+    noexcept(noexcept(T{}))
+  : val{}
+  {
+  }
 
   template <typename U,
     typename = std::enable_if_t<std::is_constructible<T, std::initializer_list<U>>::value>>
@@ -34,7 +69,7 @@ public:
   {
   }
   template <typename ... U,
-            typename = std::enable_if_t<std::is_constructible<T, U&&...>::value>>
+            typename = std::enable_if_t<std::is_constructible<T, U&&...>::value && (sizeof...(U) > 0)>>
   constexpr
   explicit
   type(
