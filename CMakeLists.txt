@@ -65,7 +65,7 @@ add_executable(
     self_test
   EXCLUDE_FROM_ALL
     test.cpp
-    include/strong_type.hpp
+    include/strong_type/strong_type.hpp
     test_main.cpp)
 target_include_directories(
     self_test
@@ -104,9 +104,9 @@ install(
 )
 
 install(
-  FILES
-    include/strong_type.hpp
+  DIRECTORY
+    "include/strong_type/"
   DESTINATION
-    ${CMAKE_INSTALL_INCLUDEDIR}
+    "${CMAKE_INSTALL_INCLUDEDIR}/strong_type"
 )
 
