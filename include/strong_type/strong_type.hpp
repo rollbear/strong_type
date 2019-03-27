@@ -13,23 +13,27 @@
 
 namespace strong
 {
+
 namespace impl
 {
-template<class...>
-struct has_tag : std::false_type {};
+  template<class...>
+  struct has_tag : std::false_type {};
 
-template<class Tag, class SingleTag>
-struct has_tag<Tag, SingleTag>
-{
-  static constexpr bool value{std::is_same<Tag, SingleTag>::value};
-};
+  template<class Tag, class SingleTag>
+  struct has_tag<Tag, SingleTag>
+  {
+    static constexpr bool value{std::is_same<Tag, SingleTag>::value};
+  };
 
-template<class Tag, class FirstTag, class... Tags>
-struct has_tag<Tag, FirstTag, Tags...>
-{
-  static constexpr bool value{std::is_same<Tag, FirstTag>::value || has_tag<Tag, Tags...>::value};
-};
+  template<class Tag, class FirstTag, class... Tags>
+  struct has_tag<Tag, FirstTag, Tags...>
+  {
+    static constexpr bool value{std::is_same<Tag, FirstTag>::value
+                                || has_tag<Tag, Tags...>::value};
+  };
 
+  template <typename T, typename ... V>
+  using WhenConstructible = std::enable_if_t<std::is_constructible<T, V...>::value>;
 }
 
 template <typename M, typename T>
@@ -47,7 +51,8 @@ struct default_constructible
 template <typename T, typename Tag, typename ... M>
 class type : public modifier<M, type<T, Tag, M...>>...
 {
-  static constexpr bool has_default_constructible_tag{impl::has_tag<default_constructible, M...>::value};
+  static constexpr bool has_default_constructible_tag{
+                            impl::has_tag<default_constructible, M...>::value};
 
 public:
   template <bool B=has_default_constructible_tag, typename std::enable_if_t<B, int> = 0>
@@ -58,7 +63,7 @@ public:
   }
 
   template <typename U,
-    typename = std::enable_if_t<std::is_constructible<T, std::initializer_list<U>>::value>>
+    typename = impl::WhenConstructible<T, std::initializer_list<U>>>
   constexpr
   explicit
   type(
@@ -87,8 +92,7 @@ public:
     swap(a.val, b.val);
   }
 
-  template <typename U = T,
-            typename = decltype(std::declval<const U&>() == std::declval<const U&>())>
+  template <typename = T>
   STRONG_NODISCARD
   friend
   constexpr
@@ -102,8 +106,7 @@ public:
     return lh.val == rh.val;
   }
 
-  template <typename U = T,
-            typename = decltype(std::declval<const U&>() != std::declval<const U&>())>
+  template <typename = T>
   STRONG_NODISCARD
   friend
   constexpr
@@ -118,11 +121,11 @@ public:
   }
 
   STRONG_NODISCARD
-  constexpr T& value() & noexcept { return val;}
+  constexpr T& value_of() & noexcept { return val;}
   STRONG_NODISCARD
-  constexpr const T& value() const & noexcept { return val;}
+  constexpr const T& value_of() const & noexcept { return val;}
   STRONG_NODISCARD
-  constexpr T&& value() && noexcept { return std::move(val);}
+  constexpr T&& value_of() && noexcept { return std::move(val);}
 private:
   T val;
 };
@@ -132,19 +135,49 @@ struct is_safe_type : std::false_type {};
 template <typename T, typename Tag, typename ... M>
 struct is_safe_type<type<T, Tag, M...>> : std::true_type {};
 
-template <typename T, typename = std::enable_if_t<is_safe_type<std::decay_t<T>>::value>>
-STRONG_NODISCARD
-decltype(auto) value(T&& t) noexcept
-{
-  return std::forward<T>(t).value();
+namespace impl {
+  template <typename T>
+  using WhenSafeType = std::enable_if_t<is_safe_type<std::decay_t<T>>::value>;
+  template <typename T>
+  using WhenNotSafeType = std::enable_if_t<!is_safe_type<std::decay_t<T>>::value>;
 }
 
 template <typename T>
-std::enable_if_t<!is_safe_type<std::decay_t<T>>::value, T&&> value(T&& t) noexcept
+struct underlying_type
+{
+  using type = T;
+};
+
+template <typename T, typename Tag, typename ... M>
+struct underlying_type<type<T, Tag, M...>>
+{
+  using type = T;
+};
+
+template <typename T>
+using underlying_type_t = typename underlying_type<T>::type;
+
+template <
+  typename T,
+  typename = impl::WhenSafeType<T>>
+STRONG_NODISCARD
+auto
+value_of(T&& t)
+noexcept
+-> decltype(std::forward<T>(t).value_of())
+{
+  return std::forward<T>(t).value_of();
+}
+
+template <
+  typename T,
+  typename = impl::WhenNotSafeType<T>>
+T&&
+value_of(T&& t)
+noexcept
 {
   return std::forward<T>(t);
 }
-
 
 namespace impl
 {
@@ -177,7 +210,7 @@ inline constexpr decltype(auto) access(U &&t) noexcept
 {
   static_assert(is_safe_type<T>::value, "");
   static_assert(std::is_base_of<std::remove_reference_t<U>, T>::value, "");
-  return get<T>(std::forward<U>(t)).value();
+  return get<T>(std::forward<U>(t)).value_of();
 }
 
 template <typename T>
@@ -320,7 +353,7 @@ struct iostreamable
   };
 };
 
-struct up_counter
+struct incrementable
 {
   template <typename T>
   class modifier
@@ -329,10 +362,10 @@ struct up_counter
     constexpr
     T&
     operator++()
-    noexcept(noexcept(++std::declval<T&>().value()))
+    noexcept(noexcept(++std::declval<T&>().value_of()))
     {
       auto &self = impl::get<T>(*this);
-      ++value(self);
+      ++value_of(self);
       return self;
     }
 
@@ -347,7 +380,7 @@ struct up_counter
   };
 };
 
-struct down_counter
+struct decrementable
 {
   template <typename T>
   class modifier
@@ -356,10 +389,10 @@ struct down_counter
     constexpr
     T&
     operator--()
-    noexcept(noexcept(--std::declval<T&>().value()))
+    noexcept(noexcept(--std::declval<T&>().value_of()))
     {
       auto &self = impl::get<T>(*this);
-      --value(self);
+      --value_of(self);
       return self;
     }
 
@@ -374,12 +407,12 @@ struct down_counter
   };
 };
 
-struct bidirectional_counter
+struct bicrementable
 {
   template <typename T>
   class modifier
-    : public up_counter::modifier<T>
-    , public down_counter::modifier<T>
+    : public incrementable::modifier<T>
+    , public decrementable::modifier<T>
   {
   };
 };
@@ -405,29 +438,29 @@ struct hashable
   class modifier{};
 };
 
-struct distance
+struct difference
 {
   template <typename T>
   class modifier;
 };
 
 template <typename T, typename Tag, typename ... M>
-class distance::modifier<::strong::type<T, Tag, M...>>
+class difference::modifier<::strong::type<T, Tag, M...>>
 : public ordered::modifier<::strong::type<T, Tag, M...>>
 {
   using type = ::strong::type<T, Tag, M...>;
 public:
   type& operator+=(const type& t)
-  noexcept(noexcept(std::declval<T&>() += value(t)))
+  noexcept(noexcept(std::declval<T&>() += value_of(t)))
   {
-    impl::access<type>(*this) += value(t);
+    impl::access<type>(*this) += value_of(t);
     return impl::get<type>(*this);
   }
 
   type& operator-=(const type& t)
-    noexcept(noexcept(std::declval<T&>() -= value(t)))
+    noexcept(noexcept(std::declval<T&>() -= value_of(t)))
   {
-    impl::access<type>(*this) -= value(t);
+    impl::access<type>(*this) -= value_of(t);
     return impl::get<type>(*this);
   }
 
@@ -483,12 +516,12 @@ public:
   friend
   T operator/(const type& lh, const type& rh)
   {
-    return value(lh) / value(rh);
+    return value_of(lh) / value_of(rh);
   }
 };
 
 template <typename D>
-struct data_point
+struct affine_point
 {
   template <typename T>
   class modifier;
@@ -510,7 +543,7 @@ namespace impl
 
 template <typename D>
 template <typename T, typename Tag, typename ... M>
-class data_point<D>::modifier<::strong::type<T, Tag, M...>>
+class affine_point<D>::modifier<::strong::type<T, Tag, M...>>
 {
   using type = ::strong::type<T, Tag, M...>;
   static_assert(impl::subtractable<T>::value, "it must be possible to subtract instances of your underlying type");
@@ -531,18 +564,18 @@ public:
   type&
   operator+=(
     const D& d)
-  noexcept(noexcept(std::declval<T&>() += value(d)))
+  noexcept(noexcept(std::declval<T&>() += value_of(d)))
   {
-    impl::access<type>(*this) += value(d);
+    impl::access<type>(*this) += value_of(d);
     return impl::get<type>(*this);
   }
 
   type&
   operator-=(
     const D& d)
-  noexcept(noexcept(std::declval<T&>() -= value(d)))
+  noexcept(noexcept(std::declval<T&>() -= value_of(d)))
   {
-    impl::access<type>(*this) -= value(d);
+    impl::access<type>(*this) -= value_of(d);
     return impl::get<type>(*this);
   }
 
@@ -553,7 +586,7 @@ public:
     const modifier& lh,
     const D& d)
   {
-    return type(impl::access<type>(lh) + value(d));
+    return type(impl::access<type>(lh) + value_of(d));
   }
 
   STRONG_NODISCARD
@@ -563,7 +596,7 @@ public:
     const D& d,
     const modifier& rh)
   {
-    return type(value(d) + impl::access<type>(rh));
+    return type(value_of(d) + impl::access<type>(rh));
   }
 
   STRONG_NODISCARD
@@ -573,7 +606,7 @@ public:
     const modifier& lh,
     const D& d)
   {
-    return type(impl::access<type>(lh) - value(d));
+    return type(impl::access<type>(lh) - value_of(d));
   }
 };
 
@@ -599,7 +632,7 @@ public:
   noexcept(noexcept(std::declval<const TT&>() == nullptr))
   -> decltype(std::declval<const TT&>() == nullptr)
   {
-    return value(t) == nullptr;
+    return value_of(t) == nullptr;
   }
 
   template <typename U = type, typename TT = T>
@@ -613,7 +646,7 @@ public:
   noexcept(noexcept(nullptr == std::declval<const TT&>()))
   -> decltype(nullptr == std::declval<const TT&>())
   {
-    return value(t) == nullptr;
+    return value_of(t) == nullptr;
   }
 
   template <typename U = type, typename TT = T>
@@ -627,7 +660,7 @@ public:
   noexcept(noexcept(std::declval<const TT&>() != nullptr))
   -> decltype(std::declval<const TT&>() != nullptr)
   {
-    return value(t) != nullptr;
+    return value_of(t) != nullptr;
   }
 
   template <typename U = type, typename TT = T>
@@ -641,7 +674,7 @@ public:
   noexcept(noexcept(nullptr != std::declval<const TT&>()))
   -> decltype(nullptr != std::declval<const TT&>())
   {
-    return value(t) != nullptr;
+    return value_of(t) != nullptr;
   }
 
   STRONG_NODISCARD
@@ -669,7 +702,7 @@ struct arithmetic
     operator-(
       const T &lh)
     {
-      return T{-value(lh)};
+      return T{-value_of(lh)};
     }
 
     friend
@@ -678,9 +711,9 @@ struct arithmetic
     operator+=(
       T &lh,
       const T &rh)
-    noexcept(noexcept(value(lh) += value(rh)))
+    noexcept(noexcept(value_of(lh) += value_of(rh)))
     {
-      value(lh) += value(rh);
+      value_of(lh) += value_of(rh);
       return lh;
     }
 
@@ -690,9 +723,9 @@ struct arithmetic
     operator-=(
       T &lh,
       const T &rh)
-    noexcept(noexcept(value(lh) -= value(rh)))
+    noexcept(noexcept(value_of(lh) -= value_of(rh)))
     {
-      value(lh) -= value(rh);
+      value_of(lh) -= value_of(rh);
       return lh;
     }
 
@@ -702,9 +735,9 @@ struct arithmetic
     operator*=(
       T &lh,
       const T &rh)
-    noexcept(noexcept(value(lh) *= value(rh)))
+    noexcept(noexcept(value_of(lh) *= value_of(rh)))
     {
-      value(lh) *= value(rh);
+      value_of(lh) *= value_of(rh);
       return lh;
     }
 
@@ -714,9 +747,9 @@ struct arithmetic
     operator/=(
       T &lh,
       const T &rh)
-    noexcept(noexcept(value(lh) /= value(rh)))
+    noexcept(noexcept(value_of(lh) /= value_of(rh)))
     {
-      value(lh) /= value(rh);
+      value_of(lh) /= value_of(rh);
       return lh;
     }
 
@@ -783,9 +816,9 @@ struct bitarithmetic
     operator&=(
       T &lh,
       const T &rh)
-    noexcept(noexcept(value(lh) &= value(rh)))
+    noexcept(noexcept(value_of(lh) &= value_of(rh)))
     {
-      value(lh) &= value(rh);
+      value_of(lh) &= value_of(rh);
       return lh;
     }
 
@@ -795,9 +828,9 @@ struct bitarithmetic
     operator|=(
       T &lh,
       const T &rh)
-    noexcept(noexcept(value(lh) |= value(rh)))
+    noexcept(noexcept(value_of(lh) |= value_of(rh)))
     {
-      value(lh) |= value(rh);
+      value_of(lh) |= value_of(rh);
       return lh;
     }
 
@@ -807,9 +840,9 @@ struct bitarithmetic
     operator^=(
       T &lh,
       const T &rh)
-    noexcept(noexcept(value(lh) ^= value(rh)))
+    noexcept(noexcept(value_of(lh) ^= value_of(rh)))
     {
-      value(lh) ^= value(rh);
+      value_of(lh) ^= value_of(rh);
       return lh;
     }
 
@@ -820,9 +853,9 @@ struct bitarithmetic
     operator<<=(
       T &lh,
       C c)
-    noexcept(noexcept(value(lh) <<= c))
+    noexcept(noexcept(value_of(lh) <<= c))
     {
-      value(lh) <<= c;
+      value_of(lh) <<= c;
       return lh;
     }
 
@@ -833,9 +866,9 @@ struct bitarithmetic
     operator>>=(
       T &lh,
       C c)
-    noexcept(noexcept(value(lh) >>= c))
+    noexcept(noexcept(value_of(lh) >>= c))
     {
-      value(lh) >>= c;
+      value_of(lh) >>= c;
       return lh;
     }
 
@@ -846,7 +879,7 @@ struct bitarithmetic
     operator~(
       const T &lh)
     {
-      auto v = value(lh);
+      auto v = value_of(lh);
       v = ~v;
       return T(v);
     }
@@ -936,10 +969,10 @@ public:
   operator[](
     const I& i)
   const &
-  noexcept(noexcept(std::declval<cref>()[strong::value(i)]))
-  -> decltype(std::declval<cref>()[strong::value(i)])
+  noexcept(noexcept(std::declval<cref>()[strong::value_of(i)]))
+  -> decltype(std::declval<cref>()[strong::value_of(i)])
   {
-    return impl::access<Type>(*this)[strong::value(i)];
+    return impl::access<Type>(*this)[strong::value_of(i)];
   }
 
   template <typename I>
@@ -948,10 +981,10 @@ public:
   operator[](
     const I& i)
   &
-  noexcept(noexcept(std::declval<ref>()[strong::value(i)]))
-  -> decltype(std::declval<ref>()[strong::value(i)])
+  noexcept(noexcept(std::declval<ref>()[strong::value_of(i)]))
+  -> decltype(std::declval<ref>()[strong::value_of(i)])
   {
-    return impl::access<Type>(*this)[strong::value(i)];
+    return impl::access<Type>(*this)[strong::value_of(i)];
   }
 
   template <typename I>
@@ -960,10 +993,10 @@ public:
   operator[](
     const I& i)
   &&
-  noexcept(noexcept(std::declval<rref>()[strong::value(i)]))
-  -> decltype(std::declval<rref>()[strong::value(i)])
+  noexcept(noexcept(std::declval<rref>()[strong::value_of(i)]))
+  -> decltype(std::declval<rref>()[strong::value_of(i)])
   {
-    return impl::access<Type>(*this)[strong::value(i)];
+    return impl::access<Type>(*this)[strong::value_of(i)];
   }
   template <typename I, typename C = cref>
   STRONG_NODISCARD
@@ -971,9 +1004,9 @@ public:
   at(
     const I& i)
   const &
-  -> decltype(std::declval<C>().at(strong::value(i)))
+  -> decltype(std::declval<C>().at(strong::value_of(i)))
   {
-    return impl::access<Type>(*this).at(strong::value(i));
+    return impl::access<Type>(*this).at(strong::value_of(i));
   }
   template <typename I, typename R = ref>
   STRONG_NODISCARD
@@ -981,9 +1014,9 @@ public:
   at(
     const I& i)
   &
-  -> decltype(std::declval<R>().at(strong::value(i)))
+  -> decltype(std::declval<R>().at(strong::value_of(i)))
   {
-    return impl::access<Type>(*this).at(strong::value(i));
+    return impl::access<Type>(*this).at(strong::value_of(i));
   }
   template <typename I, typename R = rref>
   STRONG_NODISCARD
@@ -991,9 +1024,9 @@ public:
   at(
     const I& i)
   &&
-  -> decltype(std::declval<R>().at(strong::value(i)))
+  -> decltype(std::declval<R>().at(strong::value_of(i)))
   {
-    return impl::access<Type>(*this).at(strong::value(i));
+    return impl::access<Type>(*this).at(strong::value_of(i));
   }
 };
 
@@ -1008,10 +1041,10 @@ public:
   operator[](
     const I& i)
   const &
-  noexcept(noexcept(std::declval<const T&>()[strong::value(i)]))
-  -> decltype(std::declval<const T&>()[strong::value(i)])
+  noexcept(noexcept(std::declval<const T&>()[strong::value_of(i)]))
+  -> decltype(std::declval<const T&>()[strong::value_of(i)])
   {
-    return impl::access<type>(*this)[strong::value(i)];
+    return impl::access<type>(*this)[strong::value_of(i)];
   }
 
   STRONG_NODISCARD
@@ -1019,10 +1052,10 @@ public:
   operator[](
     const I& i)
   &
-  noexcept(noexcept(std::declval<T&>()[strong::value(i)]))
-  -> decltype(std::declval<T&>()[strong::value(i)])
+  noexcept(noexcept(std::declval<T&>()[strong::value_of(i)]))
+  -> decltype(std::declval<T&>()[strong::value_of(i)])
   {
-    return impl::access<type>(*this)[strong::value(i)];
+    return impl::access<type>(*this)[strong::value_of(i)];
   }
 
   STRONG_NODISCARD
@@ -1030,10 +1063,10 @@ public:
   operator[](
     const I& i)
   &&
-  noexcept(noexcept(std::declval<T&&>()[strong::value(i)]))
-  -> decltype(std::declval<T&&>()[strong::value(i)])
+  noexcept(noexcept(std::declval<T&&>()[strong::value_of(i)]))
+  -> decltype(std::declval<T&&>()[strong::value_of(i)])
   {
-    return impl::access<type>(*this)[strong::value(i)];
+    return impl::access<type>(*this)[strong::value_of(i)];
   }
 
   STRONG_NODISCARD
@@ -1041,9 +1074,9 @@ public:
   at(
     const I& i)
   const &
-  -> decltype(std::declval<const T&>().at(strong::value(i)))
+  -> decltype(std::declval<const T&>().at(strong::value_of(i)))
   {
-    return impl::access<type>(*this).at(strong::value(i));
+    return impl::access<type>(*this).at(strong::value_of(i));
   }
 
   STRONG_NODISCARD
@@ -1051,9 +1084,9 @@ public:
   at(
     const I& i)
   &
-  -> decltype(std::declval<T&>().at(strong::value(i)))
+  -> decltype(std::declval<T&>().at(strong::value_of(i)))
   {
-    return impl::access<type>(*this).at(strong::value(i));
+    return impl::access<type>(*this).at(strong::value_of(i));
   }
 
   STRONG_NODISCARD
@@ -1061,9 +1094,9 @@ public:
   at(
     const I& i)
   &&
-  -> decltype(std::declval<T&&>().at(strong::value(i)))
+  -> decltype(std::declval<T&&>().at(strong::value_of(i)))
   {
-    return impl::access<type>(*this).at(strong::value(i));
+    return impl::access<type>(*this).at(strong::value_of(i));
   }
 };
 
@@ -1073,20 +1106,20 @@ public:
   template <typename I, typename category = typename std::iterator_traits<I>::iterator_category>
   class modifier
     : public pointer::modifier<I>
-      , public up_counter::modifier<I>
+      , public incrementable::modifier<I>
   {
   };
 
   template <typename I>
   class modifier<I, std::bidirectional_iterator_tag>
     : public modifier<I, std::forward_iterator_tag>
-      , public down_counter::modifier<I>
+      , public decrementable::modifier<I>
   {
   };
   template <typename I>
   class modifier<I, std::random_access_iterator_tag>
     : public modifier<I, std::bidirectional_iterator_tag>
-      , public data_point<typename std::iterator_traits<I>::difference_type>::template modifier<I>
+      , public affine_point<typename std::iterator_traits<I>::difference_type>::template modifier<I>
       , public indexed<>::modifier<I>
       , public ordered::modifier<I>
   {

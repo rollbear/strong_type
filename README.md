@@ -24,7 +24,12 @@ using myint = strong::type<int, struct my_int_>;
 
 `myint` is a very basic handle. You can initialize it. You can do
 equal/not-equal comparison with other instances of the same type, and you can
-access its underlying `int` instance with `value(variable)`
+access its underlying `int` instance with `value_of(variable)`.
+
+To get the underlying type of a strong type, use
+`typename strong::underlying_type<mytype>::type`, or the convenience alias
+`strong::underlying_type_t<mytype>`. If `mytype` is not a `strong::type`,
+they give `mytype`.
 
 ```Cpp
 using otherint = strong::type<int, struct other_int_>;
@@ -50,9 +55,9 @@ Other modifiers are:
   provide the default iostream integrations (as handled by the underlying
   type.) Provide your own operators instead if you prefer that.
 
-* `strong::up_counter`, `strong::down_counter`, `strong::bidirectional_counter`.
-  Support `operator++` and `operator--`. *not* happy about these, especially
-  the names. Suggestions for improvements welcome.
+* `strong::incrementable`, `strong::decrementable`, `strong::bicrementable`.
+  Support `operator++` and `operator--`. *bicrementable* is obviously a made-
+  up word for the occasion, but I think its meaning is clear.
 
 * `strong::boolean` provides `explicit operator bool() const`, providing the
   underlying type supports it.
@@ -61,16 +66,20 @@ Other modifiers are:
   underlying type,) to allow use in `std::unordered_set<>` and
   `std::unordered_map<>`
 
-* `strong::distance` allows instances to be subtracted and added (yielding a
-  `strong::distance`,) divideded (yielding the base type), or multiplied or
-  divided with the base type, yielding another `strong::distance`. A
-  `strong::distance` is also `strong::ordered`
+* `strong::difference` allows instances to be subtracted and added (yielding a
+  `strong::difference`,) divideded (yielding the base type), or multiplied or
+  divided with the base type, yielding another `strong::difference`. A
+  `strong::difference` is also `strong::ordered`
 
-* `strong::data_point<D>` allows instances to be subtracted (yielding a `D`) or
-  to add or subtract a `D` to an instance. Think pointer and `ptrdiff_t`, or
-  `std::time_point<>` and `std::duration<>`. It is natural that `D` is
-  of a `strong::distance` type. I think this functionality is OK, but I'm not happy
-  with the name.
+* `strong::affine_point<D>` allows instances to be subtracted (yielding a `D`) or
+  to add or subtract a `D` to an instance.
+  See [Affine Space](https://en.wikipedia.org/wiki/Affine_space). Examples of
+  one dimentional affine points are pointer (with `D` being `ptrdiff_t`,) or
+  `std::time_point<>` (with `std::duration<>` as `D`.) An example of a
+  multidimensional affine point is a coordinate (with a vector type for `D`.)
+  It is natural that `D` is of a `strong::difference` type. This is a good name
+  from a mathematical point of view, but perhaps a bit too academic, and not
+  well aligned with the other names.
 
 * `strong::pointer` allows `operator*` and `operator->`, and comparisons with
   `nullptr` providing the underlying type supports it.
@@ -88,8 +97,8 @@ Other modifiers are:
 
 * `strong::iterator` adds functionality needed depending on iterator category.
   If the iterator type is a `random_access_iterator`, the strong type
-  is `strong::indexed<>` and `strong::data_point<difference_type>`. It should be
-  possible to specify the index type and data_point type.
+  is `strong::indexed<>` and `strong::affine_point<difference_type>`. It should be
+  possible to specify the index type and affine_point type.
 
 * `strong::range` adds the functionality needed to iterate over the elements.
   the iterator types are using the same tag as using in the range. Only
