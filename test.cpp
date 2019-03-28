@@ -106,6 +106,25 @@ using is_indexable = is_detected<indexing, T, U>;
 template <typename T>
 using is_range = std::integral_constant<bool, is_detected<begin_type, T>::value && is_detected<end_type, T>::value>;
 
+template <typename T1, typename T2>
+struct is_strong_swappable_with
+{
+private:
+  struct size_one_t { char x; };
+  struct size_two_t { char x[2]; };
+
+  template<typename C1, typename C2>
+  static size_one_t test(
+      std::enable_if_t<std::is_void<decltype(swap(std::declval<C1&>(),
+                                                  std::declval<C2&>()))>::value,
+                       int>);
+  template<typename C1, typename C2>
+  static size_two_t test(...);
+
+public:
+  static constexpr bool value = (sizeof(test<T1, T2>(0)) == 1);
+};
+
 using handle = strong::type<int, struct handle_tag>;
 
 static_assert(std::is_same<int, strong::underlying_type_t<handle>>{},"");
@@ -394,6 +413,20 @@ static_assert(!is_addable<uhandle,li>{},"");
 static_assert(!is_range<uhandle>{}, "");
 static_assert(!is_range<const uhandle>{}, "");
 
+static_assert(is_strong_swappable_with<handle, handle>::value, "");
+static_assert(!is_strong_swappable_with<handle, handle2>::value, "");
+static_assert(!is_strong_swappable_with<
+                      strong::type<int, struct handle_tag>,
+                      strong::type<long, struct handle_tag>
+                  >::value, "");
+static_assert(!is_strong_swappable_with<
+                      strong::type<int, struct handle_tag>,
+                      strong::type<int, struct handle_tag, strong::default_constructible>
+                  >::value, "");
+static_assert(!is_strong_swappable_with<
+                      strong::type<int, struct handle_tag>,
+                      strong::type<int, struct handle_tag, strong::incrementable>
+                  >::value, "");
 
 TEST_CASE("Construction from a value type lvalue copies it")
 {
