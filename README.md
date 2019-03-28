@@ -51,6 +51,10 @@ can thus be used as key in `std::map`<> or `std::set<>`.
 
 Other modifiers are:
 
+* `strong::default_constructible`. The strong type is not default constructible
+  by default. This modifier enables a default constructor which uses a default
+  constructor of the underlying type.
+
 * `strong::ostreamable`, `strong::istreamable`, `strong::iostreamable`, which
   provide the default iostream integrations (as handled by the underlying
   type.) Provide your own operators instead if you prefer that.
@@ -113,6 +117,10 @@ the traits of the underlying iterator type.
 
 Which are the *right* modifiers to have? Going into too fine detail makes no
 sense and becomes a burden. `iterator`? One for each iterator category?
+
+Miscellaneous:
+* `strong::type` provides a non-member `swap()` function which swaps underlying
+  values using [ADL](https://en.cppreference.com/w/cpp/language/adl) technique.
 
 To build the self-test program:
 
