@@ -55,6 +55,9 @@ Other modifiers are:
   by default. This modifier enables a default constructor which uses a default
   constructor of the underlying type.
 
+* `strong::equality` provides operators `==` and `!=`. The strong type can be
+  then compared for equality or inequality.
+
 * `strong::ostreamable`, `strong::istreamable`, `strong::iostreamable`, which
   provide the default iostream integrations (as handled by the underlying
   type.) Provide your own operators instead if you prefer that.
