@@ -1,11 +1,12 @@
+// include first to ensure there aren't any unmet header dependencies
+#include <strong_type/strong_type.hpp>
+
 #include <iomanip>
 #include <unordered_set>
 #include <memory>
 #include <algorithm>
 
 #include <catch.hpp>
-
-#include <strong_type/strong_type.hpp>
 
 template <typename T, typename U>
 using equality_compare = decltype(std::declval<const T&>() == std::declval<const U&>());
