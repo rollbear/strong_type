@@ -16,6 +16,20 @@ namespace strong
 
 namespace impl
 {
+  template <bool ... bs>
+  using bool_sequence = std::integer_sequence<bool, bs...>;
+  
+  template <typename Tag, typename ... Tags>
+  struct has_tag
+  {
+    template <typename T>
+    static constexpr bool match = std::is_same<Tag, T>::value;
+
+    static constexpr bool value{!std::is_same<
+	  bool_sequence<true, !match<Tags>...>,
+      bool_sequence<!match<Tags>..., true>>::value};
+  };
+
   template <typename T, typename ... V>
   using WhenConstructible = std::enable_if_t<std::is_constructible<T, V...>::value>;
 }
@@ -23,22 +37,42 @@ namespace impl
 template <typename M, typename T>
 using modifier = typename M::template modifier<T>;
 
+struct default_constructible
+{
+  template <typename T>
+  class modifier
+  {
+  };
+};
+
+
 template <typename T, typename Tag, typename ... M>
 class type : public modifier<M, type<T, Tag, M...>>...
 {
+  static constexpr bool has_default_constructible_tag{
+                            impl::has_tag<default_constructible, M...>::value};
+
 public:
+  template <bool B=has_default_constructible_tag, typename std::enable_if_t<B, int> = 0>
+  type()
+    noexcept(noexcept(T{}))
+  : val{}
+  {
+  }
+
   template <typename U,
     typename = impl::WhenConstructible<T, std::initializer_list<U>>>
-    explicit
+  constexpr
+  explicit
   type(
     std::initializer_list<U> us
   )
-    noexcept(noexcept(T(us)))
-  : val(us)
+    noexcept(noexcept(T{us}))
+  : val{us}
   {
   }
   template <typename ... U,
-            typename = impl::WhenConstructible<T, U&&...>>
+            typename = std::enable_if_t<std::is_constructible<T, U&&...>::value && (sizeof...(U) > 0)>>
   constexpr
   explicit
   type(
@@ -46,6 +80,15 @@ public:
   noexcept(std::is_nothrow_constructible<T, U...>::value)
   : val(std::forward<U>(u)...)
   {}
+
+  friend void swap(type& a, type& b) noexcept(
+                                        std::is_nothrow_move_constructible<type>::value &&
+                                        std::is_nothrow_move_assignable<type>::value
+                                      )
+  {
+    using std::swap;
+    swap(a.val, b.val);
+  }
 
   template <typename = T>
   STRONG_NODISCARD

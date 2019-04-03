@@ -24,7 +24,7 @@ if (MASTER_PROJECT AND CMAKE_BUILD_TYPE MATCHES Debug)
     endif()
     file(
       DOWNLOAD
-        https://raw.githubusercontent.com/philsquared/Catch/master/single_include/catch.hpp  ${CATCH_DIR}/catch.hpp
+        https://github.com/catchorg/Catch2/releases/download/v2.7.0/catch.hpp  ${CATCH_DIR}/catch.hpp
       STATUS
         status
       LOG
@@ -63,7 +63,7 @@ add_executable(
     self_test
   EXCLUDE_FROM_ALL
     test.cpp
-    include/strong_type.hpp
+    include/strong_type/strong_type.hpp
     test_main.cpp)
 target_include_directories(
     self_test
@@ -102,9 +102,9 @@ install(
 )
 
 install(
-  FILES
-    include/strong_type.hpp
+  DIRECTORY
+    "include/strong_type/"
   DESTINATION
-    ${CMAKE_INSTALL_INCLUDEDIR}
+    "${CMAKE_INSTALL_INCLUDEDIR}/strong_type"
 )
 

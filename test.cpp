@@ -1,9 +1,12 @@
-#include <catch.hpp>
-#include <strong_type.hpp>
+// include first to ensure there aren't any unmet header dependencies
+#include <strong_type/strong_type.hpp>
+
 #include <iomanip>
 #include <unordered_set>
 #include <memory>
 #include <algorithm>
+
+#include <catch.hpp>
 
 template <typename T, typename U>
 using equality_compare = decltype(std::declval<const T&>() == std::declval<const U&>());
@@ -46,6 +49,9 @@ using preincrement = decltype(++std::declval<T&>());
 
 template <typename T>
 using predecrement = decltype(--std::declval<T&>());
+
+template <typename T1, typename T2>
+using swapping = decltype(swap(std::declval<T1&>(), std::declval<T2&>()));
 
 template <typename ...>
 struct void_t_
@@ -104,6 +110,12 @@ using is_indexable = is_detected<indexing, T, U>;
 template <typename T>
 using is_range = std::integral_constant<bool, is_detected<begin_type, T>::value && is_detected<end_type, T>::value>;
 
+template <typename T>
+using is_nothrow_swappable = std::integral_constant<bool, noexcept(swap(std::declval<T&>(), std::declval<T&>()))>;
+
+template <typename T1, typename T2>
+using is_strong_swappable_with = is_detected<swapping, T1, T2>;
+
 using handle = strong::type<int, struct handle_tag>;
 
 static_assert(std::is_same<int, strong::underlying_type_t<handle>>{},"");
@@ -114,10 +126,11 @@ static_assert(std::is_lvalue_reference<decltype(value_of(std::declval<const hand
 static_assert(std::is_const<std::remove_reference_t<decltype(value_of(std::declval<const handle&>()))>>{},"");
 static_assert(std::is_rvalue_reference<decltype(value_of(std::declval<handle&&>()))>{},"");
 
-static_assert(std::is_nothrow_default_constructible<handle>{},"");
+static_assert(!std::is_default_constructible<handle>{},"");
 static_assert(std::is_nothrow_constructible<handle, int&&>{},"");
 static_assert(std::is_nothrow_constructible<handle, const int&>{},"");
 static_assert(std::is_copy_constructible<handle>{},"");
+static_assert(is_nothrow_swappable<handle>{},"");
 static_assert(is_equal_comparable<handle>{}, "");
 static_assert(std::is_nothrow_assignable<handle, const handle&>{}, "");
 static_assert(std::is_nothrow_assignable<handle, handle&&>{}, "");
@@ -142,10 +155,11 @@ static_assert(!is_equal_comparable<handle, handle2>{},"");
 
 using bhandle = strong::type<int, struct bhandle_tag, strong::boolean>;
 
-static_assert(std::is_nothrow_default_constructible<bhandle>{},"");
+static_assert(!std::is_default_constructible<bhandle>{},"");
 static_assert(std::is_nothrow_constructible<bhandle, int&&>{},"");
 static_assert(std::is_nothrow_constructible<bhandle, const int&>{},"");
 static_assert(std::is_copy_constructible<bhandle>{},"");
+static_assert(is_nothrow_swappable<bhandle>{},"");
 static_assert(is_equal_comparable<bhandle>{}, "");
 static_assert(std::is_nothrow_assignable<bhandle, const bhandle&>{}, "");
 static_assert(std::is_nothrow_assignable<bhandle, bhandle&&>{}, "");
@@ -160,12 +174,34 @@ static_assert(!is_hashable<bhandle>{},"");
 static_assert(!is_indexable<bhandle, int>{}, "");
 static_assert(!is_range<bhandle>{}, "");
 
+using dchandle = strong::type<int, struct dchandle_tag, strong::default_constructible>;
+
+static_assert(std::is_default_constructible<dchandle>{},"");
+static_assert(std::is_nothrow_constructible<dchandle, int&&>{},"");
+static_assert(std::is_nothrow_constructible<dchandle, const int&>{},"");
+static_assert(std::is_copy_constructible<dchandle>{},"");
+static_assert(is_nothrow_swappable<dchandle>{},"");
+static_assert(is_equal_comparable<dchandle>{}, "");
+static_assert(std::is_nothrow_assignable<dchandle, const dchandle&>{}, "");
+static_assert(std::is_nothrow_assignable<dchandle, dchandle&&>{}, "");
+static_assert(!is_less_than_comparable<dchandle>{},"");
+static_assert(!is_ostreamable<dchandle>{},"");
+static_assert(!is_istreamable<dchandle>{},"");
+static_assert(!std::is_constructible<bool, dchandle>{}, "");
+static_assert(!is_incrementable<dchandle>{},"");
+static_assert(!is_decrementable<dchandle>{},"");
+static_assert(!std::is_arithmetic<dchandle>{},"");
+static_assert(!is_hashable<dchandle>{},"");
+static_assert(!is_indexable<dchandle, int>{}, "");
+static_assert(!is_range<dchandle>{}, "");
+
 using ahandle = strong::type<int, struct ahandle_tag, strong::arithmetic>;
 
-static_assert(std::is_nothrow_default_constructible<ahandle>{},"");
+static_assert(!std::is_default_constructible<ahandle>{},"");
 static_assert(std::is_nothrow_constructible<ahandle, int&&>{},"");
 static_assert(std::is_nothrow_constructible<ahandle, const int&>{},"");
 static_assert(std::is_copy_constructible<ahandle>{},"");
+static_assert(is_nothrow_swappable<ahandle>{},"");
 static_assert(is_equal_comparable<ahandle>{}, "");
 static_assert(std::is_nothrow_assignable<ahandle, const ahandle&>{}, "");
 static_assert(std::is_nothrow_assignable<ahandle, ahandle&&>{}, "");
@@ -188,10 +224,11 @@ static_assert(!is_subtractable<ahandle, ahandle2>{},"");
 
 using hhandle = strong::type<int, struct hhandle_tag, strong::hashable>;
 
-static_assert(std::is_nothrow_default_constructible<hhandle>{},"");
+static_assert(!std::is_default_constructible<hhandle>{},"");
 static_assert(std::is_nothrow_constructible<hhandle, int&&>{},"");
 static_assert(std::is_nothrow_constructible<hhandle, const int&>{},"");
 static_assert(std::is_copy_constructible<hhandle>{},"");
+static_assert(is_nothrow_swappable<hhandle>{},"");
 static_assert(is_equal_comparable<hhandle>{}, "");
 static_assert(std::is_nothrow_assignable<hhandle, const hhandle&>{}, "");
 static_assert(std::is_nothrow_assignable<hhandle, hhandle&&>{}, "");
@@ -208,9 +245,10 @@ static_assert(!is_range<hhandle>{}, "");
 
 using ihandle = strong::type<std::string, struct string_tag, strong::indexed<int>>;
 
-static_assert(std::is_nothrow_default_constructible<ihandle>{},"");
+static_assert(!std::is_default_constructible<ihandle>{},"");
 static_assert(!std::is_nothrow_constructible<ihandle, int>{},"");
 static_assert(std::is_copy_constructible<ihandle>{},"");
+static_assert(is_nothrow_swappable<ihandle>{},"");
 static_assert(is_equal_comparable<ihandle>{}, "");
 static_assert(!std::is_nothrow_assignable<ihandle, const ihandle&>{}, "");
 static_assert(std::is_nothrow_assignable<ihandle, ihandle&&>{}, "");
@@ -227,9 +265,10 @@ static_assert(!is_range<ihandle>{}, "");
 
 using dhandle = strong::type<int, struct int_tag, strong::affine_point<handle>>;
 
-static_assert(std::is_nothrow_default_constructible<dhandle>{},"");
+static_assert(!std::is_default_constructible<dhandle>{},"");
 static_assert(std::is_nothrow_constructible<dhandle, int>{},"");
 static_assert(std::is_copy_constructible<dhandle>{},"");
+static_assert(is_nothrow_swappable<dhandle>{},"");
 static_assert(is_equal_comparable<dhandle>{}, "");
 static_assert(std::is_nothrow_assignable<dhandle, const dhandle&>{}, "");
 static_assert(std::is_nothrow_assignable<dhandle, dhandle&&>{}, "");
@@ -251,7 +290,7 @@ static_assert(!is_range<dhandle>{}, "");
 
 using ri = strong::type<int*, struct ipt, strong::iterator>;
 
-static_assert(std::is_nothrow_default_constructible<ri>{},"");
+static_assert(!std::is_default_constructible<ri>{},"");
 static_assert(std::is_nothrow_constructible<ri, int*>{},"");
 static_assert(std::is_copy_constructible<ri>{},"");
 static_assert(is_equal_comparable<ri>{}, "");
@@ -275,7 +314,7 @@ static_assert(!is_range<ri>{}, "");
 
 using li = strong::type<std::unordered_set<int>::iterator, struct lit, strong::iterator>;
 
-static_assert(std::is_nothrow_default_constructible<li>{},"");
+static_assert(!std::is_default_constructible<li>{},"");
 static_assert(std::is_copy_constructible<li>{},"");
 static_assert(is_equal_comparable<li>{}, "");
 static_assert(std::is_nothrow_assignable<li, const li&>{}, "");
@@ -298,7 +337,7 @@ static_assert(!is_range<li>{}, "");
 
 using rhandle = strong::type<std::vector<int>, struct r_tag, strong::range>;
 
-static_assert(std::is_default_constructible<rhandle>{},"");
+static_assert(!std::is_default_constructible<rhandle>{},"");
 static_assert(std::is_copy_constructible<rhandle>{},"");
 static_assert(is_equal_comparable<rhandle>{}, "");
 static_assert(!std::is_nothrow_assignable<rhandle, const rhandle&>{}, "");
@@ -323,7 +362,7 @@ static_assert(is_range<const rhandle>{}, "");
 using rhi = rhandle::iterator;
 static_assert(std::is_nothrow_copy_constructible<rhi>{},"");
 static_assert(std::is_nothrow_move_constructible<rhi>{},"");
-static_assert(std::is_default_constructible<rhi>{},"");
+static_assert(!std::is_default_constructible<rhi>{},"");
 static_assert(std::is_nothrow_copy_assignable<rhi>{},"");
 static_assert(std::is_nothrow_move_assignable<rhi>{},"");
 static_assert(std::is_nothrow_destructible<rhi>{},"");
@@ -331,13 +370,13 @@ static_assert(std::is_nothrow_destructible<rhi>{},"");
 using crhi = rhandle::const_iterator;
 static_assert(std::is_nothrow_copy_constructible<crhi>{},"");
 static_assert(std::is_nothrow_move_constructible<crhi>{},"");
-static_assert(std::is_default_constructible<crhi>{},"");
+static_assert(!std::is_default_constructible<crhi>{},"");
 static_assert(std::is_nothrow_copy_assignable<crhi>{},"");
 static_assert(std::is_nothrow_move_assignable<crhi>{},"");
 static_assert(std::is_nothrow_destructible<crhi>{},"");
 
 using uhandle = strong::type<int, struct uh_, strong::difference>;
-static_assert(std::is_default_constructible<uhandle>{},"");
+static_assert(!std::is_default_constructible<uhandle>{},"");
 static_assert(std::is_copy_constructible<uhandle>{},"");
 static_assert(is_equal_comparable<uhandle>{}, "");
 static_assert(std::is_nothrow_assignable<uhandle, const uhandle&>{}, "");
@@ -365,6 +404,20 @@ static_assert(!is_addable<uhandle,li>{},"");
 static_assert(!is_range<uhandle>{}, "");
 static_assert(!is_range<const uhandle>{}, "");
 
+static_assert(is_strong_swappable_with<handle, handle>::value, "");
+static_assert(!is_strong_swappable_with<handle, handle2>::value, "");
+static_assert(!is_strong_swappable_with<
+                      strong::type<int, struct handle_tag>,
+                      strong::type<long, struct handle_tag>
+                  >::value, "");
+static_assert(!is_strong_swappable_with<
+                      strong::type<int, struct handle_tag>,
+                      strong::type<int, struct handle_tag, strong::default_constructible>
+                  >::value, "");
+static_assert(!is_strong_swappable_with<
+                      strong::type<int, struct handle_tag>,
+                      strong::type<int, struct handle_tag, strong::incrementable>
+                  >::value, "");
 
 TEST_CASE("Construction from a value type lvalue copies it")
 {
@@ -404,7 +457,7 @@ TEST_CASE("value can be copy assigned")
 {
   using ptr = strong::type<std::shared_ptr<int>, struct p_, strong::pointer>;
   ptr orig{std::make_shared<int>(3)};
-  ptr p;
+  ptr p{nullptr};
   p = orig;
   REQUIRE(value_of(orig).use_count() == 2);
   REQUIRE(*p == 3);
@@ -414,7 +467,7 @@ TEST_CASE("value can be move assigned")
 {
   using ptr = strong::type<std::unique_ptr<int>, struct p_, strong::pointer>;
   ptr orig{std::make_unique<int>(3)};
-  ptr p;
+  ptr p{nullptr};
   p = std::move(orig);
   REQUIRE(orig == nullptr);
   REQUIRE(*p == 3);
@@ -562,7 +615,7 @@ TEST_CASE("pointer types can be compared with nullptr")
 {
   using P = strong::type<std::unique_ptr<int>, struct p_, strong::pointer>;
 
-  P p;
+  P p{nullptr};
   REQUIRE(p == nullptr);
   REQUIRE(nullptr == p);
   REQUIRE_FALSE(p != nullptr);
@@ -933,4 +986,17 @@ TEST_CASE("iterator type can be used from range")
     REQUIRE(*i == n--);
   }
 
+}
+
+TEST_CASE("swap")
+{
+  using strong_int = strong::type<int, struct si_>;
+
+  strong_int v1{6};
+  strong_int v2{34};
+
+  swap(v1, v2);
+
+  CHECK(v1.value_of() == 34);
+  CHECK(v2.value_of() == 6);
 }
