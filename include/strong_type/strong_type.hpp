@@ -16,20 +16,18 @@ namespace strong
 
 namespace impl
 {
-  template<class...>
-  struct has_tag : std::false_type {};
-
-  template<class Tag, class SingleTag>
-  struct has_tag<Tag, SingleTag>
+  template <bool ... bs>
+  using bool_sequence = std::integer_sequence<bool, bs...>;
+  
+  template <typename Tag, typename ... Tags>
+  struct has_tag
   {
-    static constexpr bool value{std::is_same<Tag, SingleTag>::value};
-  };
+    template <typename T>
+    static constexpr bool match = std::is_same<Tag, T>::value;
 
-  template<class Tag, class FirstTag, class... Tags>
-  struct has_tag<Tag, FirstTag, Tags...>
-  {
-    static constexpr bool value{std::is_same<Tag, FirstTag>::value
-                                || has_tag<Tag, Tags...>::value};
+    static constexpr bool value{!std::is_same<
+	  bool_sequence<true, !match<Tags>...>,
+      bool_sequence<!match<Tags>..., true>>::value};
   };
 
   template <typename T, typename ... V>
