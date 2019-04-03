@@ -107,6 +107,9 @@ using is_indexable = is_detected<indexing, T, U>;
 template <typename T>
 using is_range = std::integral_constant<bool, is_detected<begin_type, T>::value && is_detected<end_type, T>::value>;
 
+template <typename T>
+using is_nothrow_swappable = std::integral_constant<bool, noexcept(swap(std::declval<T&>(), std::declval<T&>()))>;
+
 template <typename T1, typename T2>
 struct is_strong_swappable_with
 {
@@ -140,7 +143,7 @@ static_assert(!std::is_default_constructible<handle>{},"");
 static_assert(std::is_nothrow_constructible<handle, int&&>{},"");
 static_assert(std::is_nothrow_constructible<handle, const int&>{},"");
 static_assert(std::is_copy_constructible<handle>{},"");
-static_assert(std::is_nothrow_swappable<handle>{},"");
+static_assert(is_nothrow_swappable<handle>{},"");
 static_assert(is_equal_comparable<handle>{}, "");
 static_assert(std::is_nothrow_assignable<handle, const handle&>{}, "");
 static_assert(std::is_nothrow_assignable<handle, handle&&>{}, "");
@@ -169,7 +172,7 @@ static_assert(!std::is_default_constructible<bhandle>{},"");
 static_assert(std::is_nothrow_constructible<bhandle, int&&>{},"");
 static_assert(std::is_nothrow_constructible<bhandle, const int&>{},"");
 static_assert(std::is_copy_constructible<bhandle>{},"");
-static_assert(std::is_nothrow_swappable<bhandle>{},"");
+static_assert(is_nothrow_swappable<bhandle>{},"");
 static_assert(is_equal_comparable<bhandle>{}, "");
 static_assert(std::is_nothrow_assignable<bhandle, const bhandle&>{}, "");
 static_assert(std::is_nothrow_assignable<bhandle, bhandle&&>{}, "");
@@ -190,7 +193,7 @@ static_assert(std::is_default_constructible<dchandle>{},"");
 static_assert(std::is_nothrow_constructible<dchandle, int&&>{},"");
 static_assert(std::is_nothrow_constructible<dchandle, const int&>{},"");
 static_assert(std::is_copy_constructible<dchandle>{},"");
-static_assert(std::is_nothrow_swappable<dchandle>{},"");
+static_assert(is_nothrow_swappable<dchandle>{},"");
 static_assert(is_equal_comparable<dchandle>{}, "");
 static_assert(std::is_nothrow_assignable<dchandle, const dchandle&>{}, "");
 static_assert(std::is_nothrow_assignable<dchandle, dchandle&&>{}, "");
@@ -211,7 +214,7 @@ static_assert(!std::is_default_constructible<ahandle>{},"");
 static_assert(std::is_nothrow_constructible<ahandle, int&&>{},"");
 static_assert(std::is_nothrow_constructible<ahandle, const int&>{},"");
 static_assert(std::is_copy_constructible<ahandle>{},"");
-static_assert(std::is_nothrow_swappable<ahandle>{},"");
+static_assert(is_nothrow_swappable<ahandle>{},"");
 static_assert(is_equal_comparable<ahandle>{}, "");
 static_assert(std::is_nothrow_assignable<ahandle, const ahandle&>{}, "");
 static_assert(std::is_nothrow_assignable<ahandle, ahandle&&>{}, "");
@@ -238,7 +241,7 @@ static_assert(!std::is_default_constructible<hhandle>{},"");
 static_assert(std::is_nothrow_constructible<hhandle, int&&>{},"");
 static_assert(std::is_nothrow_constructible<hhandle, const int&>{},"");
 static_assert(std::is_copy_constructible<hhandle>{},"");
-static_assert(std::is_nothrow_swappable<hhandle>{},"");
+static_assert(is_nothrow_swappable<hhandle>{},"");
 static_assert(is_equal_comparable<hhandle>{}, "");
 static_assert(std::is_nothrow_assignable<hhandle, const hhandle&>{}, "");
 static_assert(std::is_nothrow_assignable<hhandle, hhandle&&>{}, "");
@@ -258,7 +261,7 @@ using ihandle = strong::type<std::string, struct string_tag, strong::indexed<int
 static_assert(!std::is_default_constructible<ihandle>{},"");
 static_assert(!std::is_nothrow_constructible<ihandle, int>{},"");
 static_assert(std::is_copy_constructible<ihandle>{},"");
-static_assert(std::is_nothrow_swappable<ihandle>{},"");
+static_assert(is_nothrow_swappable<ihandle>{},"");
 static_assert(is_equal_comparable<ihandle>{}, "");
 static_assert(!std::is_nothrow_assignable<ihandle, const ihandle&>{}, "");
 static_assert(std::is_nothrow_assignable<ihandle, ihandle&&>{}, "");
@@ -278,7 +281,7 @@ using dhandle = strong::type<int, struct int_tag, strong::affine_point<handle>>;
 static_assert(!std::is_default_constructible<dhandle>{},"");
 static_assert(std::is_nothrow_constructible<dhandle, int>{},"");
 static_assert(std::is_copy_constructible<dhandle>{},"");
-static_assert(std::is_nothrow_swappable<dhandle>{},"");
+static_assert(is_nothrow_swappable<dhandle>{},"");
 static_assert(is_equal_comparable<dhandle>{}, "");
 static_assert(std::is_nothrow_assignable<dhandle, const dhandle&>{}, "");
 static_assert(std::is_nothrow_assignable<dhandle, dhandle&&>{}, "");
