@@ -50,6 +50,9 @@ using preincrement = decltype(++std::declval<T&>());
 template <typename T>
 using predecrement = decltype(--std::declval<T&>());
 
+template <typename T1, typename T2>
+using swapping = decltype(swap(std::declval<T1&>(), std::declval<T2&>()));
+
 template <typename ...>
 struct void_t_
 {
@@ -111,23 +114,7 @@ template <typename T>
 using is_nothrow_swappable = std::integral_constant<bool, noexcept(swap(std::declval<T&>(), std::declval<T&>()))>;
 
 template <typename T1, typename T2>
-struct is_strong_swappable_with
-{
-private:
-  struct size_one_t { char x; };
-  struct size_two_t { char x[2]; };
-
-  template<typename C1, typename C2>
-  static size_one_t test(
-      std::enable_if_t<std::is_void<decltype(swap(std::declval<C1&>(),
-                                                  std::declval<C2&>()))>::value,
-                       int>);
-  template<typename C1, typename C2>
-  static size_two_t test(...);
-
-public:
-  static constexpr bool value = (sizeof(test<T1, T2>(0)) == 1);
-};
+using is_strong_swappable_with = is_detected<swapping, T1, T2>;
 
 using handle = strong::type<int, struct handle_tag>;
 
