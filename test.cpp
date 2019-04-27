@@ -131,7 +131,7 @@ static_assert(std::is_nothrow_constructible<handle, int&&>{},"");
 static_assert(std::is_nothrow_constructible<handle, const int&>{},"");
 static_assert(std::is_copy_constructible<handle>{},"");
 static_assert(is_nothrow_swappable<handle>{},"");
-static_assert(is_equal_comparable<handle>{}, "");
+static_assert(!is_equal_comparable<handle>{}, "");
 static_assert(std::is_nothrow_assignable<handle, const handle&>{}, "");
 static_assert(std::is_nothrow_assignable<handle, handle&&>{}, "");
 static_assert(!is_less_than_comparable<handle>{},"");
@@ -160,7 +160,7 @@ static_assert(std::is_nothrow_constructible<bhandle, int&&>{},"");
 static_assert(std::is_nothrow_constructible<bhandle, const int&>{},"");
 static_assert(std::is_copy_constructible<bhandle>{},"");
 static_assert(is_nothrow_swappable<bhandle>{},"");
-static_assert(is_equal_comparable<bhandle>{}, "");
+static_assert(!is_equal_comparable<bhandle>{}, "");
 static_assert(std::is_nothrow_assignable<bhandle, const bhandle&>{}, "");
 static_assert(std::is_nothrow_assignable<bhandle, bhandle&&>{}, "");
 static_assert(!is_less_than_comparable<bhandle>{},"");
@@ -181,7 +181,7 @@ static_assert(std::is_nothrow_constructible<dchandle, int&&>{},"");
 static_assert(std::is_nothrow_constructible<dchandle, const int&>{},"");
 static_assert(std::is_copy_constructible<dchandle>{},"");
 static_assert(is_nothrow_swappable<dchandle>{},"");
-static_assert(is_equal_comparable<dchandle>{}, "");
+static_assert(!is_equal_comparable<dchandle>{}, "");
 static_assert(std::is_nothrow_assignable<dchandle, const dchandle&>{}, "");
 static_assert(std::is_nothrow_assignable<dchandle, dchandle&&>{}, "");
 static_assert(!is_less_than_comparable<dchandle>{},"");
@@ -202,7 +202,7 @@ static_assert(std::is_nothrow_constructible<ahandle, int&&>{},"");
 static_assert(std::is_nothrow_constructible<ahandle, const int&>{},"");
 static_assert(std::is_copy_constructible<ahandle>{},"");
 static_assert(is_nothrow_swappable<ahandle>{},"");
-static_assert(is_equal_comparable<ahandle>{}, "");
+static_assert(!is_equal_comparable<ahandle>{}, "");
 static_assert(std::is_nothrow_assignable<ahandle, const ahandle&>{}, "");
 static_assert(std::is_nothrow_assignable<ahandle, ahandle&&>{}, "");
 static_assert(!is_less_than_comparable<ahandle>{},"");
@@ -229,7 +229,7 @@ static_assert(std::is_nothrow_constructible<hhandle, int&&>{},"");
 static_assert(std::is_nothrow_constructible<hhandle, const int&>{},"");
 static_assert(std::is_copy_constructible<hhandle>{},"");
 static_assert(is_nothrow_swappable<hhandle>{},"");
-static_assert(is_equal_comparable<hhandle>{}, "");
+static_assert(!is_equal_comparable<hhandle>{}, "");
 static_assert(std::is_nothrow_assignable<hhandle, const hhandle&>{}, "");
 static_assert(std::is_nothrow_assignable<hhandle, hhandle&&>{}, "");
 static_assert(!is_less_than_comparable<hhandle>{},"");
@@ -249,7 +249,7 @@ static_assert(!std::is_default_constructible<ihandle>{},"");
 static_assert(!std::is_nothrow_constructible<ihandle, int>{},"");
 static_assert(std::is_copy_constructible<ihandle>{},"");
 static_assert(is_nothrow_swappable<ihandle>{},"");
-static_assert(is_equal_comparable<ihandle>{}, "");
+static_assert(!is_equal_comparable<ihandle>{}, "");
 static_assert(!std::is_nothrow_assignable<ihandle, const ihandle&>{}, "");
 static_assert(std::is_nothrow_assignable<ihandle, ihandle&&>{}, "");
 static_assert(!is_less_than_comparable<ihandle>{},"");
@@ -269,7 +269,7 @@ static_assert(!std::is_default_constructible<dhandle>{},"");
 static_assert(std::is_nothrow_constructible<dhandle, int>{},"");
 static_assert(std::is_copy_constructible<dhandle>{},"");
 static_assert(is_nothrow_swappable<dhandle>{},"");
-static_assert(is_equal_comparable<dhandle>{}, "");
+static_assert(!is_equal_comparable<dhandle>{}, "");
 static_assert(std::is_nothrow_assignable<dhandle, const dhandle&>{}, "");
 static_assert(std::is_nothrow_assignable<dhandle, dhandle&&>{}, "");
 static_assert(!is_less_than_comparable<dhandle>{},"");
@@ -339,7 +339,7 @@ using rhandle = strong::type<std::vector<int>, struct r_tag, strong::range>;
 
 static_assert(!std::is_default_constructible<rhandle>{},"");
 static_assert(std::is_copy_constructible<rhandle>{},"");
-static_assert(is_equal_comparable<rhandle>{}, "");
+static_assert(!is_equal_comparable<rhandle>{}, "");
 static_assert(!std::is_nothrow_assignable<rhandle, const rhandle&>{}, "");
 static_assert(std::is_nothrow_assignable<rhandle, rhandle&&>{}, "");
 static_assert(!is_less_than_comparable<rhandle>{},"");
@@ -378,7 +378,7 @@ static_assert(std::is_nothrow_destructible<crhi>{},"");
 using uhandle = strong::type<int, struct uh_, strong::difference>;
 static_assert(!std::is_default_constructible<uhandle>{},"");
 static_assert(std::is_copy_constructible<uhandle>{},"");
-static_assert(is_equal_comparable<uhandle>{}, "");
+static_assert(!is_equal_comparable<uhandle>{}, "");
 static_assert(std::is_nothrow_assignable<uhandle, const uhandle&>{}, "");
 static_assert(std::is_nothrow_assignable<uhandle, uhandle&&>{}, "");
 static_assert(is_less_than_comparable<uhandle>{},"");
@@ -418,6 +418,12 @@ static_assert(!is_strong_swappable_with<
                       strong::type<int, struct handle_tag>,
                       strong::type<int, struct handle_tag, strong::incrementable>
                   >::value, "");
+
+using ehandle = strong::type<int, struct handle_tag, strong::equality>;
+static_assert(is_equal_comparable<ehandle>{}, "");
+using rehandle = strong::type<std::vector<int>, struct r_tag,
+                              strong::range, strong::equality>;
+static_assert(is_equal_comparable<rehandle>{}, "");
 
 TEST_CASE("Construction from a value type lvalue copies it")
 {
@@ -493,7 +499,7 @@ TEST_CASE("value can be retained from rvalue ref")
 
 TEST_CASE("values can be compared using operator==")
 {
-  using type = strong::type<int, struct i_>;
+  using type = strong::type<int, struct i_, strong::equality>;
 
   type i{3};
   type j{4};
@@ -504,7 +510,7 @@ TEST_CASE("values can be compared using operator==")
 
 TEST_CASE("values can be compared using operator!=")
 {
-  using type = strong::type<int, struct i_>;
+  using type = strong::type<int, struct i_, strong::equality>;
 
   type i{3};
   type j{4};
@@ -567,21 +573,20 @@ TEST_CASE("an incrementable can be incremented")
   using C = strong::type<int, struct i_, strong::incrementable>;
 
   C c{3};
-  REQUIRE(++c == C{4});
-  REQUIRE(c == C{4});
-  REQUIRE(c++ == C{4});
-  REQUIRE(c == C{5});
-}
+  REQUIRE(value_of(++c) == 4);
+  REQUIRE(value_of(c) == 4);
+  REQUIRE(value_of(c++) == 4);
+  REQUIRE(value_of(c) == 5); }
 
 TEST_CASE("a decrementable can be decremented")
 {
   using C = strong::type<int, struct i_, strong::decrementable>;
 
   C c{10};
-  REQUIRE(--c == C{9});
-  REQUIRE(c == C{9});
-  REQUIRE(c-- == C{9});
-  REQUIRE(c == C{8});
+  REQUIRE(value_of(--c) == 9);
+  REQUIRE(value_of(c) == 9);
+  REQUIRE(value_of(c--) == 9);
+  REQUIRE(value_of(c) == 8);
 }
 
 TEST_CASE("a bicrementable goes both ways")
@@ -589,14 +594,14 @@ TEST_CASE("a bicrementable goes both ways")
   using C = strong::type<int, struct i_, strong::bicrementable>;
 
   C c{3};
-  REQUIRE(++c == C{4});
-  REQUIRE(c == C{4});
-  REQUIRE(c++ == C{4});
-  REQUIRE(c == C{5});
-  REQUIRE(--c == C{4});
-  REQUIRE(c == C{4});
-  REQUIRE(c-- == C{4});
-  REQUIRE(c == C{3});
+  REQUIRE(value_of(++c) == 4);
+  REQUIRE(value_of(c) == 4);
+  REQUIRE(value_of(c++) == 4);
+  REQUIRE(value_of(c) == 5);
+  REQUIRE(value_of(--c) == 4);
+  REQUIRE(value_of(c) == 4);
+  REQUIRE(value_of(c--) == 4);
+  REQUIRE(value_of(c) == 3);
 }
 
 TEST_CASE("a boolean value can be tested for truth")
@@ -652,12 +657,12 @@ TEST_CASE("arithmetic types can be added")
 
   T i{3};
   T j{4};
-  REQUIRE(i + j == T{7});
-  REQUIRE(i == T{3});
-  REQUIRE(j == T{4});
+  REQUIRE(value_of(i + j) == 7);
+  REQUIRE(value_of(i) == 3);
+  REQUIRE(value_of(j) == 4);
   i += j;
-  REQUIRE(i == T{7});
-  REQUIRE(j == T{4});
+  REQUIRE(value_of(i) == 7);
+  REQUIRE(value_of(j) == 4);
 }
 
 TEST_CASE("arithmetic types can be subtracted")
@@ -666,12 +671,12 @@ TEST_CASE("arithmetic types can be subtracted")
 
   T i{7};
   T j{4};
-  REQUIRE(i - j == T{3});
-  REQUIRE(i == T{7});
-  REQUIRE(j == T{4});
+  REQUIRE(value_of(i - j) == 3);
+  REQUIRE(value_of(i) == 7);
+  REQUIRE(value_of(j) == 4);
   i -= j;
-  REQUIRE(i == T{3});
-  REQUIRE(j == T{4});
+  REQUIRE(value_of(i) == 3);
+  REQUIRE(value_of(j) == 4);
 }
 
 TEST_CASE("arithmetic types can be multiplied")
@@ -680,12 +685,12 @@ TEST_CASE("arithmetic types can be multiplied")
 
   T i{12};
   T j{3};
-  REQUIRE(i * j == T{36});
-  REQUIRE(i == T{12});
-  REQUIRE(j == T{3});
+  REQUIRE(value_of(i * j) == 36);
+  REQUIRE(value_of(i) == 12);
+  REQUIRE(value_of(j) == 3);
   i *= j;
-  REQUIRE(i == T{36});
-  REQUIRE(j == T{3});
+  REQUIRE(value_of(i) == 36);
+  REQUIRE(value_of(j) == 3);
 }
 
 TEST_CASE("arithmetic types can be divided")
@@ -694,12 +699,12 @@ TEST_CASE("arithmetic types can be divided")
 
   T i{12};
   T j{3};
-  REQUIRE(i / j == T{4});
-  REQUIRE(i == T{12});
-  REQUIRE(j == T{3});
+  REQUIRE(value_of(i / j) == 4);
+  REQUIRE(value_of(i) == 12);
+  REQUIRE(value_of(j) == 3);
   i /= j;
-  REQUIRE(i == T{4});
-  REQUIRE(j == T{3});
+  REQUIRE(value_of(i) == 4);
+  REQUIRE(value_of(j) == 3);
 }
 
 TEST_CASE("an aritmmetic type can be negated")
@@ -707,8 +712,8 @@ TEST_CASE("an aritmmetic type can be negated")
   using T = strong::type<int, struct i_, strong::arithmetic>;
 
   T i{12};
-  REQUIRE(-i == T{-12});
-  REQUIRE(i == T{12});
+  REQUIRE(value_of(-i) == -12);
+  REQUIRE(value_of(i) == 12);
 }
 
 TEST_CASE("bitarithmetic types can be bitanded")
@@ -719,12 +724,12 @@ TEST_CASE("bitarithmetic types can be bitanded")
   T i{u(0x0f0f)};
   T j{u(0x5555)};
 
-  REQUIRE((i & j) == T{u(0x0505)});
-  REQUIRE(i == T{u(0x0f0f)});
-  REQUIRE(j == T{u(0x5555)});
-  REQUIRE((i &= j) == T{u(0x0505)});
-  REQUIRE(i == T{u(0x0505)});
-  REQUIRE(j == T{u(0x5555)});
+  REQUIRE(value_of(i & j) == u(0x0505));
+  REQUIRE(value_of(i) == u(0x0f0f));
+  REQUIRE(value_of(j) == u(0x5555));
+  REQUIRE(value_of(i &= j) == u(0x0505));
+  REQUIRE(value_of(i) == u(0x0505));
+  REQUIRE(value_of(j) == u(0x5555));
 }
 
 TEST_CASE("bitarithmetic types can be bitored")
@@ -735,12 +740,12 @@ TEST_CASE("bitarithmetic types can be bitored")
   T i{u(0x0f0f)};
   T j{u(0x5555)};
 
-  REQUIRE((i | j) == T{u(0x5f5f)});
-  REQUIRE(i == T{u(0x0f0f)});
-  REQUIRE(j == T{u(0x5555)});
-  REQUIRE((i |= j) == T{u(0x5f5f)});
-  REQUIRE(i == T{u(0x5f5f)});
-  REQUIRE(j == T{u(0x5555)});
+  REQUIRE(value_of(i | j) == u(0x5f5f));
+  REQUIRE(value_of(i) == u(0x0f0f));
+  REQUIRE(value_of(j) == u(0x5555));
+  REQUIRE(value_of(i |= j) == u(0x5f5f));
+  REQUIRE(value_of(i) == u(0x5f5f));
+  REQUIRE(value_of(j) == u(0x5555));
 }
 
 TEST_CASE("bitarithmetic types can be bitxored")
@@ -751,12 +756,12 @@ TEST_CASE("bitarithmetic types can be bitxored")
   T i{u(0x0f0f)};
   T j{u(0x5555)};
 
-  REQUIRE((i ^ j) == T{u(0x5a5a)});
-  REQUIRE(i == T{u(0x0f0f)});
-  REQUIRE(j == T{u(0x5555)});
-  REQUIRE((i ^= j) == T{u(0x5a5a)});
-  REQUIRE(i == T{u(0x5a5a)});
-  REQUIRE(j == T{u(0x5555)});
+  REQUIRE(value_of(i ^ j) == u(0x5a5a));
+  REQUIRE(value_of(i) == u(0x0f0f));
+  REQUIRE(value_of(j) == u(0x5555));
+  REQUIRE(value_of(i ^= j) == u(0x5a5a));
+  REQUIRE(value_of(i) == u(0x5a5a));
+  REQUIRE(value_of(j) == u(0x5555));
 }
 
 TEST_CASE("bitarithmetic types can be left shifted")
@@ -766,10 +771,10 @@ TEST_CASE("bitarithmetic types can be left shifted")
 
   T i{u(0x0f0f)};
 
-  REQUIRE((i << 2) == T{u(0x3c3c)});
-  REQUIRE(i == T{u(0x0f0f)});
-  REQUIRE((i <<= 3) == T{u(0x7878)});
-  REQUIRE(i == T{u(0x7878)});
+  REQUIRE(value_of(i << 2) == u(0x3c3c));
+  REQUIRE(value_of(i) == u(0x0f0f));
+  REQUIRE(value_of(i <<= 3) == u(0x7878));
+  REQUIRE(value_of(i) == u(0x7878));
 }
 
 TEST_CASE("bitarithmetic types can be right shifted")
@@ -779,10 +784,10 @@ TEST_CASE("bitarithmetic types can be right shifted")
 
   T i{u(0x0f0f)};
 
-  REQUIRE((i >> 2) == T{u(0x03c3)});
-  REQUIRE(i == T{u(0x0f0f)});
-  REQUIRE((i >>= 1) == T{u(0x0787)});
-  REQUIRE(i == T{u(0x0787)});
+  REQUIRE(value_of(i >> 2) == u(0x03c3));
+  REQUIRE(value_of(i) == u(0x0f0f));
+  REQUIRE(value_of(i >>= 1) == u(0x0787));
+  REQUIRE(value_of(i) == u(0x0787));
 }
 
 TEST_CASE("bitarithmetic types can be inverted")
@@ -792,8 +797,8 @@ TEST_CASE("bitarithmetic types can be inverted")
 
   T i{u(0x0f0f)};
 
-  REQUIRE(~i == T{u(0xf0f0)});
-  REQUIRE(i == T{u(0x0f0f)});
+  REQUIRE(value_of(~i) == u(0xf0f0));
+  REQUIRE(value_of(i) == u(0x0f0f));
 }
 
 TEST_CASE("indexed can be accessed using operator []")
@@ -828,7 +833,7 @@ TEST_CASE("affine_point types can be subtracted")
   T t2{8};
   auto d = t2 - t1;
   static_assert(std::is_same<decltype(d), D>{}, "");
-  REQUIRE(d == D{5});
+  REQUIRE(value_of(d) == 5);
 }
 
 TEST_CASE("affine_point types can be added with the delta type")
@@ -846,7 +851,7 @@ TEST_CASE("affine_point types can be added with the delta type")
   static_assert(std::is_same<decltype(t3), T>{}, "");
   REQUIRE(value_of(t3) == 11);
   t1 += d;
-  REQUIRE(t1 == T{11});
+  REQUIRE(value_of(t1) == 11);
 }
 
 TEST_CASE("affine_point types can be subtracted with the delta type")
@@ -861,7 +866,7 @@ TEST_CASE("affine_point types can be subtracted with the delta type")
   static_assert(std::is_same<decltype(t2), T>{}, "");
   REQUIRE(value_of(t2) == 5);
   t1 -= d;
-  REQUIRE(t1 == T{5});
+  REQUIRE(value_of(t1) == 5);
 }
 
 TEST_CASE("adding difference types yields a difference type")

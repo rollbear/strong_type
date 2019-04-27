@@ -90,34 +90,6 @@ public:
     swap(a.val, b.val);
   }
 
-  template <typename = T>
-  STRONG_NODISCARD
-  friend
-  constexpr
-  auto
-  operator==(
-    const type& lh,
-    const type& rh)
-  noexcept(noexcept(lh.val == rh.val))
-  -> decltype(std::declval<const T&>() == std::declval<const T&>())
-  {
-    return lh.val == rh.val;
-  }
-
-  template <typename = T>
-  STRONG_NODISCARD
-  friend
-  constexpr
-  auto
-  operator!=(
-    const type& lh,
-    const type& rh)
-  noexcept(noexcept(lh.val != rh.val))
-  -> decltype(std::declval<const T&>() != std::declval<const T&>())
-  {
-    return lh.val != rh.val;
-  }
-
   STRONG_NODISCARD
   constexpr T& value_of() & noexcept { return val;}
   STRONG_NODISCARD
@@ -241,6 +213,45 @@ struct type_of<const ::strong::type<T, Tag, M...> &>
 template <typename T>
 typename type_of<T>::type type_of_t();
 }
+
+struct equality
+{
+  template <typename T>
+  class modifier;
+};
+
+
+template <typename T, typename Tag, typename ... M>
+class equality::modifier<::strong::type<T, Tag, M...>>
+{
+  using type = ::strong::type<T, Tag, M...>;
+public:
+  STRONG_NODISCARD
+  friend
+  constexpr
+  auto
+  operator==(
+    const modifier& lh,
+    const modifier& rh)
+  noexcept(noexcept(std::declval<const T&>() == std::declval<const T&>()))
+  -> decltype(std::declval<const T&>() == std::declval<const T&>())
+  {
+    return impl::access<type>(lh) == impl::access<type>(rh);
+  }
+
+  STRONG_NODISCARD
+  friend
+  constexpr
+  auto
+  operator!=(
+    const modifier& lh,
+    const modifier& rh)
+  noexcept(noexcept(std::declval<const T&>() != std::declval<const T&>()))
+  -> decltype(std::declval<const T&>() != std::declval<const T&>())
+  {
+    return impl::access<type>(lh) != impl::access<type>(rh);
+  }
+};
 
 struct ordered
 {
@@ -1104,6 +1115,7 @@ public:
   template <typename I, typename category = typename std::iterator_traits<I>::iterator_category>
   class modifier
     : public pointer::modifier<I>
+      , public equality::modifier<I>
       , public incrementable::modifier<I>
   {
   };
