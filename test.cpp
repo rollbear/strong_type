@@ -5,6 +5,7 @@
 #include <unordered_set>
 #include <memory>
 #include <algorithm>
+#include <vector>
 
 #include <catch.hpp>
 
