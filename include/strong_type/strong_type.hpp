@@ -16,20 +16,6 @@ namespace strong
 
 namespace impl
 {
-  template <bool ... bs>
-  using bool_sequence = std::integer_sequence<bool, bs...>;
-  
-  template <typename Tag, typename ... Tags>
-  struct has_tag
-  {
-    template <typename T>
-    static constexpr bool match = std::is_same<Tag, T>::value;
-
-    static constexpr bool value{!std::is_same<
-	  bool_sequence<true, !match<Tags>...>,
-      bool_sequence<!match<Tags>..., true>>::value};
-  };
-
   template <typename T, typename ... V>
   using WhenConstructible = std::enable_if_t<std::is_constructible<T, V...>::value>;
 }
@@ -45,15 +31,21 @@ struct default_constructible
   };
 };
 
+namespace impl {
+  template <typename T>
+  constexpr bool supports_default_construction(const ::strong::default_constructible::modifier<T>*)
+  {
+    return true;
+  }
+}
 
 template <typename T, typename Tag, typename ... M>
 class type : public modifier<M, type<T, Tag, M...>>...
 {
-  static constexpr bool has_default_constructible_tag{
-                            impl::has_tag<default_constructible, M...>::value};
-
 public:
-  template <bool B=has_default_constructible_tag, typename std::enable_if_t<B, int> = 0>
+  template <typename type_ = type,
+            bool = impl::supports_default_construction(static_cast<type_*>(nullptr))>
+  constexpr
   type()
     noexcept(noexcept(T{}))
   : val{}
@@ -131,6 +123,7 @@ template <
   typename T,
   typename = impl::WhenSafeType<T>>
 STRONG_NODISCARD
+constexpr
 auto
 value_of(T&& t)
 noexcept
@@ -142,6 +135,7 @@ noexcept
 template <
   typename T,
   typename = impl::WhenNotSafeType<T>>
+constexpr
 T&&
 value_of(T&& t)
 noexcept
@@ -251,6 +245,70 @@ public:
   {
     return impl::access<type>(lh) != impl::access<type>(rh);
   }
+};
+
+namespace impl
+{
+  template <typename T>
+  struct require_copy_constructible
+  {
+    static constexpr bool value = std::is_copy_constructible<underlying_type_t<T>>::value;
+    static_assert(value, "underlying type must be copy constructible");
+  };
+  template <typename T>
+  struct require_move_constructible
+  {
+    static constexpr bool value = std::is_move_constructible<underlying_type_t<T>>::value;
+    static_assert(value, "underlying type must be move constructible");
+  };
+  template <typename T>
+  struct require_copy_assignable
+  {
+    static constexpr bool value = std::is_copy_assignable<underlying_type_t<T>>::value;
+    static_assert(value, "underlying type must be copy assignable");
+  };
+  template <typename T>
+  struct require_move_assignable
+  {
+    static constexpr bool value = std::is_move_assignable<underlying_type_t<T>>::value;
+    static_assert(value, "underlying type must be move assignable");
+  };
+
+  template <bool> struct valid_type;
+  template <>
+  struct valid_type<true> {};
+
+  template <typename T>
+  struct require_semiregular
+    : valid_type<require_copy_constructible<T>::value &&
+                 require_move_constructible<T>::value &&
+                 require_copy_assignable<T>::value &&
+                 require_move_assignable<T>::value>
+  {
+  };
+
+}
+struct semiregular
+{
+  template <typename>
+  class modifier;
+};
+
+template <typename T, typename Tag, typename ... M>
+class semiregular::modifier<::strong::type<T, Tag, M...>>
+  : public default_constructible::modifier<T>
+  , private impl::require_semiregular<T>
+{
+};
+
+struct regular
+{
+  template <typename T>
+  class modifier
+    : public semiregular::modifier<T>
+    , public equality::modifier<T>
+  {
+  };
 };
 
 struct ordered
@@ -425,7 +483,6 @@ struct bicrementable
   {
   };
 };
-
 
 struct boolean
 {

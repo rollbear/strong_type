@@ -426,6 +426,24 @@ using rehandle = strong::type<std::vector<int>, struct r_tag,
                               strong::range, strong::equality>;
 static_assert(is_equal_comparable<rehandle>{}, "");
 
+using srint = strong::type<int, struct srint_, strong::semiregular>;
+static_assert(std::is_nothrow_default_constructible<srint>{},"");
+static_assert(std::is_nothrow_copy_constructible<srint>{},"");
+static_assert(std::is_nothrow_move_constructible<srint>{},"");
+static_assert(std::is_nothrow_copy_assignable<srint>{},"");
+static_assert(std::is_nothrow_move_assignable<srint>{},"");
+static_assert(is_strong_swappable_with<srint,srint>{},"");
+static_assert(!is_equal_comparable<srint>{},"");
+
+using regint = strong::type<int, struct rint_, strong::regular>;
+static_assert(std::is_nothrow_default_constructible<regint>{},"");
+static_assert(std::is_nothrow_copy_constructible<regint>{},"");
+static_assert(std::is_nothrow_move_constructible<regint>{},"");
+static_assert(std::is_nothrow_copy_assignable<regint>{},"");
+static_assert(std::is_nothrow_move_assignable<regint>{},"");
+static_assert(is_strong_swappable_with<regint,regint>{},"");
+static_assert(is_equal_comparable<regint>{},"");
+
 TEST_CASE("Construction from a value type lvalue copies it")
 {
   auto orig = std::make_shared<int>(3);
@@ -1006,3 +1024,4 @@ TEST_CASE("swap")
   CHECK(v1.value_of() == 34);
   CHECK(v2.value_of() == 6);
 }
+

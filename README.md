@@ -58,6 +58,13 @@ Other modifiers are:
 * `strong::equality` provides operators `==` and `!=`. The strong type can be
   then compared for equality or inequality.
 
+* `strong::semiregular`. This gives you default constructible, move/copy
+  constructible, move/copy assignable and swappable. A decent default for
+  many types.
+
+* `strong::regular`. Same as `regular` and also equality comparable. A good
+  default base for most types.
+
 * `strong::ostreamable`, `strong::istreamable`, `strong::iostreamable`, which
   provide the default iostream integrations (as handled by the underlying
   type.) Provide your own operators instead if you prefer that.
