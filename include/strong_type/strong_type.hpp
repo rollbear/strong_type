@@ -1,9 +1,11 @@
 #ifndef SAFE_TYPE_SAFE_TYPE_HPP
 #define SAFE_TYPE_SAFE_TYPE_HPP
 
-#include <utility>
-#include <type_traits>
 #include <functional>
+#include <istream>
+#include <ostream>
+#include <type_traits>
+#include <utility>
 
 #if __cplusplus >= 201703L
 #define STRONG_NODISCARD [[nodiscard]]
