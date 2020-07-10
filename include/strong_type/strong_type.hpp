@@ -90,6 +90,13 @@ public:
   constexpr const T& value_of() const & noexcept { return val;}
   STRONG_NODISCARD
   constexpr T&& value_of() && noexcept { return std::move(val);}
+
+  STRONG_NODISCARD
+  friend constexpr T& value_of(type& t) noexcept { return t.val;}
+  STRONG_NODISCARD
+  friend constexpr const T& value_of(const type& t) noexcept { return t.val;}
+  STRONG_NODISCARD
+  friend constexpr T&& value_of(type&& t) noexcept { return std::move(t).val;}
 private:
   T val;
 };
@@ -121,30 +128,31 @@ struct underlying_type<type<T, Tag, M...>>
 template <typename T>
 using underlying_type_t = typename underlying_type<T>::type;
 
-template <
-  typename T,
-  typename = impl::WhenSafeType<T>>
-STRONG_NODISCARD
-constexpr
-auto
-value_of(T&& t)
-noexcept
--> decltype(std::forward<T>(t).value_of())
-{
-  return std::forward<T>(t).value_of();
-}
 
-template <
-  typename T,
-  typename = impl::WhenNotSafeType<T>>
-constexpr
-T&&
-value_of(T&& t)
-noexcept
-{
-  return std::forward<T>(t);
-}
+namespace impl {
+  template<
+    typename T,
+    typename = impl::WhenNotSafeType<T>>
+  constexpr
+  T &&
+  access(T &&t)
+  noexcept {
+    return std::forward<T>(t);
+  }
+  template <
+    typename T,
+    typename = impl::WhenSafeType<T>>
+  STRONG_NODISCARD
+  constexpr
+  auto
+  access(T&& t)
+  noexcept
+  -> decltype(value_of(std::forward<T>(t)))
+  {
+    return value_of(std::forward<T>(t));
+  }
 
+}
 struct equality
 {
   template <typename T>
@@ -570,9 +578,9 @@ public:
   operator+=(
     type& lh,
     const D& d)
-  noexcept(noexcept(value_of(lh) += value_of(d)))
+  noexcept(noexcept(value_of(lh) += impl::access(d)))
   {
-    value_of(lh) += value_of(d);
+    value_of(lh) += impl::access(d);
     return lh;
   }
 
@@ -581,9 +589,9 @@ public:
   operator-=(
     type& lh,
     const D& d)
-  noexcept(noexcept(value_of(lh) -= value_of(d)))
+  noexcept(noexcept(value_of(lh) -= impl::access(d)))
   {
-    value_of(lh) -= value_of(d);
+    value_of(lh) -= impl::access(d);
     return lh;
   }
 
@@ -981,10 +989,10 @@ struct indexed<void> {
     operator[](
       const I &i)
     const &
-    noexcept(noexcept(std::declval<cref>()[strong::value_of(i)]))
-    -> decltype(std::declval<cref>()[strong::value_of(i)]) {
+    noexcept(noexcept(std::declval<cref>()[impl::access(i)]))
+    -> decltype(std::declval<cref>()[impl::access(i)]) {
       auto& self = static_cast<const type&>(*this);
-      return value_of(self)[strong::value_of(i)];
+      return value_of(self)[impl::access(i)];
     }
 
     template<typename I>
@@ -993,10 +1001,10 @@ struct indexed<void> {
     operator[](
       const I &i)
     &
-    noexcept(noexcept(std::declval<ref>()[strong::value_of(i)]))
-    -> decltype(std::declval<ref>()[strong::value_of(i)]) {
+    noexcept(noexcept(std::declval<ref>()[impl::access(i)]))
+    -> decltype(std::declval<ref>()[impl::access(i)]) {
       auto& self = static_cast<type&>(*this);
-      return value_of(self)[strong::value_of(i)];
+      return value_of(self)[impl::access(i)];
     }
 
     template<typename I>
@@ -1005,10 +1013,10 @@ struct indexed<void> {
     operator[](
       const I &i)
     &&
-    noexcept(noexcept(std::declval<rref>()[strong::value_of(i)]))
-    -> decltype(std::declval<rref>()[strong::value_of(i)]) {
+    noexcept(noexcept(std::declval<rref>()[impl::access(i)]))
+    -> decltype(std::declval<rref>()[impl::access(i)]) {
       auto& self = static_cast<type&>(*this);
-      return value_of(std::move(self))[strong::value_of(i)];
+      return value_of(std::move(self))[impl::access(i)];
     }
 
     template<typename I, typename C = cref>
@@ -1017,9 +1025,9 @@ struct indexed<void> {
     at(
       const I &i)
     const &
-    -> decltype(std::declval<C>().at(strong::value_of(i))) {
+    -> decltype(std::declval<C>().at(impl::access(i))) {
       auto& self = static_cast<const type&>(*this);
-      return value_of(self).at(strong::value_of(i));
+      return value_of(self).at(impl::access(i));
     }
 
     template<typename I, typename R = ref>
@@ -1028,9 +1036,9 @@ struct indexed<void> {
     at(
       const I &i)
     &
-    -> decltype(std::declval<R>().at(strong::value_of(i))) {
+    -> decltype(std::declval<R>().at(impl::access(i))) {
       auto& self = static_cast<type&>(*this);
-      return value_of(self).at(strong::value_of(i));
+      return value_of(self).at(impl::access(i));
     }
 
     template<typename I, typename R = rref>
@@ -1039,9 +1047,9 @@ struct indexed<void> {
     at(
       const I &i)
     &&
-    -> decltype(std::declval<R>().at(strong::value_of(i))) {
+    -> decltype(std::declval<R>().at(impl::access(i))) {
       auto& self = static_cast<type&>(*this);
-      return value_of(std::move(self)).at(strong::value_of(i));
+      return value_of(std::move(self)).at(impl::access(i));
     }
   };
 };
@@ -1057,11 +1065,11 @@ public:
   operator[](
     const I& i)
   const &
-  noexcept(noexcept(std::declval<const T&>()[strong::value_of(i)]))
-  -> decltype(std::declval<const T&>()[strong::value_of(i)])
+  noexcept(noexcept(std::declval<const T&>()[impl::access(i)]))
+  -> decltype(std::declval<const T&>()[impl::access(i)])
   {
     auto& self = static_cast<const type&>(*this);
-    return value_of(self)[strong::value_of(i)];
+    return value_of(self)[impl::access(i)];
   }
 
   STRONG_NODISCARD
@@ -1069,11 +1077,11 @@ public:
   operator[](
     const I& i)
   &
-  noexcept(noexcept(std::declval<T&>()[strong::value_of(i)]))
-  -> decltype(std::declval<T&>()[strong::value_of(i)])
+  noexcept(noexcept(std::declval<T&>()[impl::access(i)]))
+  -> decltype(std::declval<T&>()[impl::access(i)])
   {
     auto& self = static_cast<const type&>(*this);
-    return value_of(self)[strong::value_of(i)];
+    return value_of(self)[impl::access(i)];
   }
 
   STRONG_NODISCARD
@@ -1081,11 +1089,11 @@ public:
   operator[](
     const I& i)
   &&
-  noexcept(noexcept(std::declval<T&&>()[strong::value_of(i)]))
-  -> decltype(std::declval<T&&>()[strong::value_of(i)])
+  noexcept(noexcept(std::declval<T&&>()[impl::access(i)]))
+  -> decltype(std::declval<T&&>()[impl::access(i)])
   {
     auto& self = static_cast<type&>(*this);
-    return value_of(std::move(self))[strong::value_of(i)];
+    return value_of(std::move(self))[impl::access(i)];
   }
 
   STRONG_NODISCARD
@@ -1093,10 +1101,10 @@ public:
   at(
     const I& i)
   const &
-  -> decltype(std::declval<const T&>().at(strong::value_of(i)))
+  -> decltype(std::declval<const T&>().at(impl::access(i)))
   {
     auto& self = static_cast<const type&>(*this);
-    return value_of(self).at(strong::value_of(i));
+    return value_of(self).at(impl::access(i));
   }
 
   STRONG_NODISCARD
@@ -1104,10 +1112,10 @@ public:
   at(
     const I& i)
   &
-  -> decltype(std::declval<T&>().at(strong::value_of(i)))
+  -> decltype(std::declval<T&>().at(impl::access(i)))
   {
     auto& self = static_cast<type&>(*this);
-    return value_of(self).at(strong::value_of(i));
+    return value_of(self).at(impl::access(i));
   }
 
   STRONG_NODISCARD
@@ -1115,10 +1123,10 @@ public:
   at(
     const I& i)
   &&
-  -> decltype(std::declval<T&&>().at(strong::value_of(i)))
+  -> decltype(std::declval<T&&>().at(impl::access(i)))
   {
     auto& self = static_cast<type&>(*this);
-    return value_of(std::move(self)).at(strong::value_of(i));
+    return value_of(std::move(self)).at(impl::access(i));
   }
 };
 
