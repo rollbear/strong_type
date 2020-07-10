@@ -1133,12 +1133,19 @@ public:
 class iterator
 {
 public:
-  template <typename I, typename category = typename std::iterator_traits<I>::iterator_category>
+  template <typename I, typename category = typename std::iterator_traits<underlying_type_t<I>>::iterator_category>
   class modifier
     : public pointer::modifier<I>
-      , public equality::modifier<I>
-      , public incrementable::modifier<I>
+    , public equality::modifier<I>
+    , public incrementable::modifier<I>
   {
+    using T = underlying_type_t<I>;
+  public:
+    using difference_type = typename std::iterator_traits<T>::difference_type;
+    using value_type = typename std::iterator_traits<T>::value_type;
+    using pointer = typename std::iterator_traits<T>::value_type;
+    using reference = typename std::iterator_traits<T>::reference;
+    using iterator_category = typename std::iterator_traits<T>::iterator_category;
   };
 
   template <typename I>
@@ -1150,7 +1157,7 @@ public:
   template <typename I>
   class modifier<I, std::random_access_iterator_tag>
     : public modifier<I, std::bidirectional_iterator_tag>
-      , public affine_point<typename std::iterator_traits<I>::difference_type>::template modifier<I>
+      , public affine_point<typename std::iterator_traits<underlying_type_t<I>>::difference_type>::template modifier<I>
       , public indexed<>::modifier<I>
       , public ordered::modifier<I>
   {
@@ -1256,17 +1263,6 @@ struct is_arithmetic<::strong::type<T, Tag, M...>>
   : is_base_of<::strong::arithmetic::modifier<::strong::type<T, Tag, M...>>,
                ::strong::type<T, Tag, M...>>
 {
-};
-
-template <typename T, typename Tag, typename ... M>
-struct iterator_traits<::strong::type<T, Tag, M...>>
-  : std::iterator_traits<T>
-{
-  using difference_type = typename std::iterator_traits<T>::difference_type;
-  using value_type = typename std::iterator_traits<T>::value_type;
-  using pointer = typename std::iterator_traits<T>::value_type;
-  using reference = typename std::iterator_traits<T>::reference;
-  using iterator_category = typename std::iterator_traits<T>::iterator_category;
 };
 
 }
