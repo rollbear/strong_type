@@ -145,33 +145,6 @@ noexcept
   return std::forward<T>(t);
 }
 
-namespace impl
-{
-template <typename T, typename U>
-static constexpr T &get(U &u) noexcept
-{
-  static_assert(is_safe_type<T>::value, "");
-  static_assert(std::is_base_of<U, T>::value, "");
-  return static_cast<T &>(u);
-}
-
-template <typename T, typename U>
-inline constexpr const T &get(const U &u) noexcept
-{
-  static_assert(is_safe_type<T>::value, "");
-  static_assert(std::is_base_of<U, T>::value, "");
-  return static_cast<const T &>(u);
-}
-
-template <typename T, typename U>
-inline constexpr T &&get(U &&u) noexcept
-{
-  static_assert(is_safe_type<T>::value, "");
-  static_assert(std::is_base_of<std::remove_reference_t<U>, T>::value, "");
-  return static_cast<T &&>(static_cast<U&&>(u));
-}
-}
-
 struct equality
 {
   template <typename T>
