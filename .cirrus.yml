@@ -1,0 +1,75 @@
+task:
+  container:
+    dockerfile: config/ci/Dockerfile
+  env:
+    matrix:
+      - COMPILER: clang++-10
+        CXXSTD: 14
+        STDLIB: "-stdlib=libc++"
+        LDFLAGS: "-fuse-ld=gold -lc++abi"
+      - COMPILER: clang++-10
+        CXXSTD: 17
+        STDLIB: "-stdlib=libc++"
+        LDFLAGS: "-fuse-ld=gold -lc++abi"
+      - COMPILER: clang++-10
+        CXXSTD: 20
+        STDLIB: "-stdlib=libc++"
+        LDFLAGS: "-fuse-ld=gold -lc++abi"
+      - COMPILER: clang++-10
+        CXXSTD: 14
+      - COMPILER: clang++-10
+        CXXSTD: 17
+      - COMPILER: clang++-10
+        CXXSTD: 20
+      - COMPILER: g++-10
+        CXXSTD: 14
+      - COMPILER: g++-10
+        CXXSTD: 17
+      - COMPILER: g++-10
+        CXXSTD: 20
+      - COMPILER: clang++-9
+        CXXSTD: 14
+      - COMPILER: clang++-9
+        CXXSTD: 17
+      - COMPILER: clang++-9
+        CXXSTD: 20
+      - COMPILER: g++-9
+        CXXSTD: 14
+      - COMPILER: g++-9
+        CXXSTD: 17
+      - COMPILER: g++-9
+        CXXSTD: 20
+      - COMPILER: clang++-8
+        CXXSTD: 14
+      - COMPILER: clang++-8
+        CXXSTD: 17
+      - COMPILER: g++-8
+        CXXSTD: 14
+      - COMPILER: g++-8
+        CXXSTD: 17
+      - COMPILER: g++-8
+        CXXSTD: 20
+      - COMPILER: clang++-7
+        CXXSTD: 14
+      - COMPILER: clang++-7
+        CXXSTD: 17
+      - COMPILER: g++-7
+        CXXSTD: 14
+      - COMPILER: g++-7
+        CXXSTD: 17
+      - COMPILER: clang++-6.0
+        CXXSTD: 14
+      - COMPILER: clang++-6.0
+        CXXSTD: 17
+    matrix:
+      - BUILD_TYPE: Debug
+  pre_install_script:
+    - mkdir -p build-${BUILD_TYPE}
+  build_script:
+    - cd build-${BUILD_TYPE}
+    - echo cmake -DCMAKE_CXX_COMPILER=${COMPILER} -DCMAKE_CXX_STANDARD=${CXXSTD} -DCMAKE_CXX_FLAGS="${STDLIB} -Wall -Wextra -pedantic -Werror" -DCMAKE_EXE_LINKER_FLAGS="${LDFLAGS}" -DCMAKE_BUILD_TYPE=${BUILD_TYPE} ..
+    - cmake -DCMAKE_CXX_COMPILER=${COMPILER} -DCMAKE_CXX_STANDARD=${CXXSTD} -DCMAKE_CXX_FLAGS="${STDLIB} -Wall -Wextra -pedantic -Werror" -DCMAKE_BUILD_TYPE=${BUILD_TYPE} ..
+    - cmake --build . --target self_test
+  test_script:
+    - cd build-${BUILD_TYPE}
+    - ./self_test

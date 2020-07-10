@@ -6,6 +6,7 @@
 #include <memory>
 #include <algorithm>
 #include <vector>
+#include <sstream>
 
 #include <catch.hpp>
 
