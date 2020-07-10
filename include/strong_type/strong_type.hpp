@@ -1022,80 +1022,77 @@ struct indexed
   class modifier;
 };
 
-
 template <>
-template <typename Type>
-class indexed<void>::modifier
-{
-  using ref = typename impl::type_of<Type&>::type;
-  using cref = typename impl::type_of<const Type&>::type;
-  using rref = typename impl::type_of<Type&&>::type;
-public:
-  template <typename I>
-  STRONG_NODISCARD
-  auto
-  operator[](
-    const I& i)
-  const &
-  noexcept(noexcept(std::declval<cref>()[strong::value_of(i)]))
-  -> decltype(std::declval<cref>()[strong::value_of(i)])
-  {
-    return impl::access<Type>(*this)[strong::value_of(i)];
-  }
+struct indexed<void> {
+  template<typename Type>
+  class modifier {
+    using ref = typename impl::type_of<Type &>::type;
+    using cref = typename impl::type_of<const Type &>::type;
+    using rref = typename impl::type_of<Type &&>::type;
+  public:
+    template<typename I>
+    STRONG_NODISCARD
+    auto
+    operator[](
+      const I &i)
+    const &
+    noexcept(noexcept(std::declval<cref>()[strong::value_of(i)]))
+    -> decltype(std::declval<cref>()[strong::value_of(i)]) {
+      return impl::access<Type>(*this)[strong::value_of(i)];
+    }
 
-  template <typename I>
-  STRONG_NODISCARD
-  auto
-  operator[](
-    const I& i)
-  &
-  noexcept(noexcept(std::declval<ref>()[strong::value_of(i)]))
-  -> decltype(std::declval<ref>()[strong::value_of(i)])
-  {
-    return impl::access<Type>(*this)[strong::value_of(i)];
-  }
+    template<typename I>
+    STRONG_NODISCARD
+    auto
+    operator[](
+      const I &i)
+    &
+    noexcept(noexcept(std::declval<ref>()[strong::value_of(i)]))
+    -> decltype(std::declval<ref>()[strong::value_of(i)]) {
+      return impl::access<Type>(*this)[strong::value_of(i)];
+    }
 
-  template <typename I>
-  STRONG_NODISCARD
-  auto
-  operator[](
-    const I& i)
-  &&
-  noexcept(noexcept(std::declval<rref>()[strong::value_of(i)]))
-  -> decltype(std::declval<rref>()[strong::value_of(i)])
-  {
-    return impl::access<Type>(*this)[strong::value_of(i)];
-  }
-  template <typename I, typename C = cref>
-  STRONG_NODISCARD
-  auto
-  at(
-    const I& i)
-  const &
-  -> decltype(std::declval<C>().at(strong::value_of(i)))
-  {
-    return impl::access<Type>(*this).at(strong::value_of(i));
-  }
-  template <typename I, typename R = ref>
-  STRONG_NODISCARD
-  auto
-  at(
-    const I& i)
-  &
-  -> decltype(std::declval<R>().at(strong::value_of(i)))
-  {
-    return impl::access<Type>(*this).at(strong::value_of(i));
-  }
-  template <typename I, typename R = rref>
-  STRONG_NODISCARD
-  auto
-  at(
-    const I& i)
-  &&
-  -> decltype(std::declval<R>().at(strong::value_of(i)))
-  {
-    return impl::access<Type>(*this).at(strong::value_of(i));
-  }
+    template<typename I>
+    STRONG_NODISCARD
+    auto
+    operator[](
+      const I &i)
+    &&
+    noexcept(noexcept(std::declval<rref>()[strong::value_of(i)]))
+    -> decltype(std::declval<rref>()[strong::value_of(i)]) {
+      return impl::access<Type>(*this)[strong::value_of(i)];
+    }
+
+    template<typename I, typename C = cref>
+    STRONG_NODISCARD
+    auto
+    at(
+      const I &i)
+    const &
+    -> decltype(std::declval<C>().at(strong::value_of(i))) {
+      return impl::access<Type>(*this).at(strong::value_of(i));
+    }
+
+    template<typename I, typename R = ref>
+    STRONG_NODISCARD
+    auto
+    at(
+      const I &i)
+    &
+    -> decltype(std::declval<R>().at(strong::value_of(i))) {
+      return impl::access<Type>(*this).at(strong::value_of(i));
+    }
+
+    template<typename I, typename R = rref>
+    STRONG_NODISCARD
+    auto
+    at(
+      const I &i)
+    &&
+    -> decltype(std::declval<R>().at(strong::value_of(i))) {
+      return impl::access<Type>(*this).at(strong::value_of(i));
+    }
+  };
 };
 
 template <typename I>
