@@ -1,6 +1,8 @@
 # strong_type
 An experimental C++ strong typedef-ish thingie
 
+[![Build Status](https://api.cirrus-ci.com/github/rollbear/strong_type.svg)](https://cirrus-ci.com/github/rollbear/strong_type)
+
 Highly experimental, for now.
 
 Public domain. May change to something else if experimentation proves
