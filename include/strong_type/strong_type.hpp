@@ -170,36 +170,6 @@ inline constexpr T &&get(U &&u) noexcept
   static_assert(std::is_base_of<std::remove_reference_t<U>, T>::value, "");
   return static_cast<T &&>(static_cast<U&&>(u));
 }
-
-template <typename T>
-struct type_of;
-
-template <typename T, typename Tag, typename ... M>
-struct type_of<::strong::type<T, Tag, M...>>
-{
-  using type = T;
-};
-
-template <typename T, typename Tag, typename ... M>
-struct type_of<::strong::type<T, Tag, M...> &>
-{
-  using type = T &;
-};
-
-template <typename T, typename Tag, typename ... M>
-struct type_of<::strong::type<T, Tag, M...> &&>
-{
-  using type = T &&;
-};
-
-template <typename T, typename Tag, typename ... M>
-struct type_of<const ::strong::type<T, Tag, M...> &>
-{
-  using type = const T &;
-};
-
-template <typename T>
-typename type_of<T>::type type_of_t();
 }
 
 struct equality
@@ -1022,11 +992,15 @@ struct indexed
 
 template <>
 struct indexed<void> {
-  template<typename Type>
-  class modifier {
-    using ref = typename impl::type_of<Type &>::type;
-    using cref = typename impl::type_of<const Type &>::type;
-    using rref = typename impl::type_of<Type &&>::type;
+  template<typename>
+  class modifier;
+
+  template <typename T, typename Tag, typename ... Ms>
+  class modifier<type<T, Tag, Ms...>> {
+    using ref = T&;
+    using cref = const T&;
+    using rref = T&&;
+    using type = strong::type<T, Tag, Ms...>;
   public:
     template<typename I>
     STRONG_NODISCARD
@@ -1036,7 +1010,7 @@ struct indexed<void> {
     const &
     noexcept(noexcept(std::declval<cref>()[strong::value_of(i)]))
     -> decltype(std::declval<cref>()[strong::value_of(i)]) {
-      auto& self = static_cast<const Type&>(*this);
+      auto& self = static_cast<const type&>(*this);
       return value_of(self)[strong::value_of(i)];
     }
 
@@ -1048,7 +1022,7 @@ struct indexed<void> {
     &
     noexcept(noexcept(std::declval<ref>()[strong::value_of(i)]))
     -> decltype(std::declval<ref>()[strong::value_of(i)]) {
-      auto& self = static_cast<Type&>(*this);
+      auto& self = static_cast<type&>(*this);
       return value_of(self)[strong::value_of(i)];
     }
 
@@ -1060,7 +1034,7 @@ struct indexed<void> {
     &&
     noexcept(noexcept(std::declval<rref>()[strong::value_of(i)]))
     -> decltype(std::declval<rref>()[strong::value_of(i)]) {
-      auto& self = static_cast<Type&>(*this);
+      auto& self = static_cast<type&>(*this);
       return value_of(std::move(self))[strong::value_of(i)];
     }
 
@@ -1071,7 +1045,7 @@ struct indexed<void> {
       const I &i)
     const &
     -> decltype(std::declval<C>().at(strong::value_of(i))) {
-      auto& self = static_cast<const Type&>(*this);
+      auto& self = static_cast<const type&>(*this);
       return value_of(self).at(strong::value_of(i));
     }
 
@@ -1082,7 +1056,7 @@ struct indexed<void> {
       const I &i)
     &
     -> decltype(std::declval<R>().at(strong::value_of(i))) {
-      auto& self = static_cast<Type&>(*this);
+      auto& self = static_cast<type&>(*this);
       return value_of(self).at(strong::value_of(i));
     }
 
@@ -1093,7 +1067,7 @@ struct indexed<void> {
       const I &i)
     &&
     -> decltype(std::declval<R>().at(strong::value_of(i))) {
-      auto& self = static_cast<Type&>(*this);
+      auto& self = static_cast<type&>(*this);
       return value_of(std::move(self)).at(strong::value_of(i));
     }
   };
