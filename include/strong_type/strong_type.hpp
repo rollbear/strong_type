@@ -13,6 +13,12 @@
 #define STRONG_NODISCARD
 #endif
 
+#if defined(_MSC_VER) && __MSC_VER < 1922
+#define STRONG_CONSTEXPR
+#else
+#define STRONG_CONSTEXPR constexpr
+#endif
+
 namespace strong
 {
 
@@ -175,7 +181,7 @@ class equality::modifier<::strong::type<T, Tag, M...>>
 public:
   STRONG_NODISCARD
   friend
-  constexpr
+  STRONG_CONSTEXPR
   auto
   operator==(
     const type& lh,
@@ -188,7 +194,7 @@ public:
 
   STRONG_NODISCARD
   friend
-  constexpr
+  STRONG_CONSTEXPR
   auto
   operator!=(
     const type& lh,
@@ -278,7 +284,7 @@ class ordered::modifier<::strong::type<T, Tag, M...>>
 public:
   STRONG_NODISCARD
   friend
-  constexpr
+  STRONG_CONSTEXPR
   auto
   operator<(
     const type& lh,
@@ -291,7 +297,7 @@ public:
 
   STRONG_NODISCARD
   friend
-  constexpr
+  STRONG_CONSTEXPR
   auto
   operator<=(
     const type& lh,
@@ -304,7 +310,7 @@ public:
 
   STRONG_NODISCARD
   friend
-  constexpr
+  STRONG_CONSTEXPR
   auto
   operator>(
     const type& lh,
@@ -317,7 +323,8 @@ public:
 
   STRONG_NODISCARD
   friend
-  constexpr
+  STRONG_CONSTEXPR
+
   auto
   operator>=(
     const type& lh,
@@ -379,7 +386,7 @@ struct incrementable
   class modifier
   {
   public:
-    constexpr
+    STRONG_CONSTEXPR
     T&
     operator++()
     noexcept(noexcept(++std::declval<T&>().value_of()))
@@ -389,7 +396,7 @@ struct incrementable
       return self;
     }
 
-    constexpr
+    STRONG_CONSTEXPR
     T
     operator++(int)
     {
@@ -406,7 +413,7 @@ struct decrementable
   class modifier
   {
   public:
-    constexpr
+    STRONG_CONSTEXPR
     T&
     operator--()
     noexcept(noexcept(--std::declval<T&>().value_of()))
@@ -416,7 +423,7 @@ struct decrementable
       return self;
     }
 
-    constexpr
+    STRONG_CONSTEXPR
     T
     operator--(int)
     {
@@ -443,7 +450,7 @@ struct boolean
   class modifier
   {
   public:
-    explicit constexpr operator bool() const
+    explicit STRONG_CONSTEXPR operator bool() const
     noexcept(noexcept(static_cast<bool>(value_of(std::declval<const T&>()))))
     {
       const auto& self = static_cast<const T&>(*this);
@@ -470,28 +477,36 @@ class difference::modifier<::strong::type<T, Tag, M...>>
 {
   using type = ::strong::type<T, Tag, M...>;
 public:
-  friend type& operator+=(type& lh, const type& rh)
+  friend
+  STRONG_CONSTEXPR
+  type& operator+=(type& lh, const type& rh)
   noexcept(noexcept(value_of(lh) += value_of(rh)))
   {
     value_of(lh) += value_of(rh);
     return lh;
   }
 
-  friend type& operator-=(type& lh, const type& rh)
+  friend
+  STRONG_CONSTEXPR
+  type& operator-=(type& lh, const type& rh)
     noexcept(noexcept(value_of(lh) -= value_of(rh)))
   {
     value_of(lh) -= value_of(rh);
     return lh;
   }
 
-  friend type& operator*=(type& lh, const T& rh)
+  friend
+  STRONG_CONSTEXPR
+  type& operator*=(type& lh, const T& rh)
   noexcept(noexcept(value_of(lh) *= rh))
   {
     value_of(lh) *= rh;
     return lh;
   }
 
-  friend type& operator/=(type& lh, const T& rh)
+  friend
+  STRONG_CONSTEXPR
+  type& operator/=(type& lh, const T& rh)
     noexcept(noexcept(value_of(lh) /= rh))
   {
     value_of(lh) /= rh;
@@ -499,6 +514,7 @@ public:
   }
 
   friend
+  STRONG_CONSTEXPR
   type operator+(type lh, const type& rh)
   {
     lh += rh;
@@ -506,6 +522,7 @@ public:
   }
 
   friend
+  STRONG_CONSTEXPR
   type operator-(type lh, const type& rh)
   {
     lh -= rh;
@@ -513,6 +530,7 @@ public:
   }
 
   friend
+  STRONG_CONSTEXPR
   type operator*(type lh, const T& rh)
   {
     lh *= rh;
@@ -520,6 +538,7 @@ public:
   }
 
   friend
+  STRONG_CONSTEXPR
   type operator*(const T& lh, type rh)
   {
     rh *= lh;
@@ -527,6 +546,7 @@ public:
   }
 
   friend
+  STRONG_CONSTEXPR
   type operator/(type lh, const T& rh)
   {
     lh /= rh;
@@ -534,6 +554,7 @@ public:
   }
 
   friend
+  STRONG_CONSTEXPR
   T operator/(const type& lh, const type& rh)
   {
     return value_of(lh) / value_of(rh);
@@ -572,7 +593,7 @@ class affine_point<D>::modifier<::strong::type<T, Tag, M...>>
 public:
   STRONG_NODISCARD
   friend
-  constexpr
+  STRONG_CONSTEXPR
   D
   operator-(
     const type& lh,
@@ -582,6 +603,7 @@ public:
   }
 
   friend
+  STRONG_CONSTEXPR
   type&
   operator+=(
     type& lh,
@@ -593,6 +615,7 @@ public:
   }
 
   friend
+  STRONG_CONSTEXPR
   type&
   operator-=(
     type& lh,
@@ -605,6 +628,7 @@ public:
 
   STRONG_NODISCARD
   friend
+  STRONG_CONSTEXPR
   type
   operator+(
     type lh,
@@ -615,6 +639,7 @@ public:
 
   STRONG_NODISCARD
   friend
+  STRONG_CONSTEXPR
   type
   operator+(
     const D& d,
@@ -625,6 +650,7 @@ public:
 
   STRONG_NODISCARD
   friend
+  STRONG_CONSTEXPR
   type
   operator-(
     type lh,
@@ -648,7 +674,7 @@ public:
   template <typename TT = T>
   STRONG_NODISCARD
   friend
-  constexpr
+  STRONG_CONSTEXPR
   auto
   operator==(
     const type& t,
@@ -662,7 +688,7 @@ public:
   template <typename TT = T>
   STRONG_NODISCARD
   friend
-  constexpr
+  STRONG_CONSTEXPR
   auto
   operator==(
     std::nullptr_t,
@@ -676,7 +702,7 @@ public:
   template <typename TT = T>
   STRONG_NODISCARD
   friend
-  constexpr
+  STRONG_CONSTEXPR
   auto
   operator!=(
     const type& t,
@@ -690,7 +716,7 @@ public:
   template <typename TT = T>
   STRONG_NODISCARD
   friend
-  constexpr
+  STRONG_CONSTEXPR
   auto
   operator!=(
     std::nullptr_t,
@@ -702,7 +728,7 @@ public:
   }
 
   STRONG_NODISCARD
-  constexpr
+  STRONG_CONSTEXPR
   decltype(*std::declval<const T&>())
   operator*()
   const
@@ -711,7 +737,9 @@ public:
     return *value_of(self);
   }
 
-  constexpr decltype(&(*std::declval<const T&>())) operator->() const { return &operator*();}
+  STRONG_NODISCARD
+  STRONG_CONSTEXPR
+  decltype(&(*std::declval<const T&>())) operator->() const { return &operator*();}
 };
 
 struct arithmetic
@@ -722,7 +750,7 @@ struct arithmetic
   public:
     STRONG_NODISCARD
     friend
-    constexpr
+    STRONG_CONSTEXPR
     T
     operator-(
       const T &lh)
@@ -731,7 +759,7 @@ struct arithmetic
     }
 
     friend
-    constexpr
+    STRONG_CONSTEXPR
     T&
     operator+=(
       T &lh,
@@ -743,7 +771,7 @@ struct arithmetic
     }
 
     friend
-    constexpr
+    STRONG_CONSTEXPR
     T&
     operator-=(
       T &lh,
@@ -755,7 +783,7 @@ struct arithmetic
     }
 
     friend
-    constexpr
+    STRONG_CONSTEXPR
     T&
     operator*=(
       T &lh,
@@ -767,7 +795,7 @@ struct arithmetic
     }
 
     friend
-    constexpr
+    STRONG_CONSTEXPR
     T&
     operator/=(
       T &lh,
@@ -780,7 +808,7 @@ struct arithmetic
 
     STRONG_NODISCARD
     friend
-    constexpr
+    STRONG_CONSTEXPR
     T
     operator+(
       T lh,
@@ -792,7 +820,7 @@ struct arithmetic
 
     STRONG_NODISCARD
     friend
-    constexpr
+    STRONG_CONSTEXPR
     T
     operator-(
       T lh,
@@ -804,7 +832,7 @@ struct arithmetic
 
     STRONG_NODISCARD
     friend
-    constexpr
+    STRONG_CONSTEXPR
     T
     operator*(
       T lh,
@@ -816,7 +844,7 @@ struct arithmetic
 
     STRONG_NODISCARD
     friend
-    constexpr
+    STRONG_CONSTEXPR
     T
     operator/(
       T lh,
@@ -836,7 +864,7 @@ struct bitarithmetic
   {
   public:
     friend
-    constexpr
+    STRONG_CONSTEXPR
     T&
     operator&=(
       T &lh,
@@ -848,7 +876,7 @@ struct bitarithmetic
     }
 
     friend
-    constexpr
+    STRONG_CONSTEXPR
     T&
     operator|=(
       T &lh,
@@ -860,7 +888,7 @@ struct bitarithmetic
     }
 
     friend
-    constexpr
+    STRONG_CONSTEXPR
     T&
     operator^=(
       T &lh,
@@ -873,7 +901,7 @@ struct bitarithmetic
 
     template <typename C>
     friend
-    constexpr
+    STRONG_CONSTEXPR
     T&
     operator<<=(
       T &lh,
@@ -886,7 +914,7 @@ struct bitarithmetic
 
     template <typename C>
     friend
-    constexpr
+    STRONG_CONSTEXPR
     T&
     operator>>=(
       T &lh,
@@ -899,7 +927,7 @@ struct bitarithmetic
 
     STRONG_NODISCARD
     friend
-    constexpr
+    STRONG_CONSTEXPR
     T
     operator~(
       const T &lh)
@@ -911,7 +939,7 @@ struct bitarithmetic
 
     STRONG_NODISCARD
     friend
-    constexpr
+    STRONG_CONSTEXPR
     T
     operator&(
       T lh,
@@ -923,7 +951,7 @@ struct bitarithmetic
 
     STRONG_NODISCARD
     friend
-    constexpr
+    STRONG_CONSTEXPR
     T
     operator|(
       T lh,
@@ -935,7 +963,7 @@ struct bitarithmetic
 
     STRONG_NODISCARD
     friend
-    constexpr
+    STRONG_CONSTEXPR
     T
     operator^(
       T lh,
@@ -948,7 +976,7 @@ struct bitarithmetic
     template <typename C>
     STRONG_NODISCARD
     friend
-    constexpr
+    STRONG_CONSTEXPR
     T
     operator<<(
       T lh,
@@ -961,7 +989,7 @@ struct bitarithmetic
     template <typename C>
     STRONG_NODISCARD
     friend
-    constexpr
+    STRONG_CONSTEXPR
     T
     operator>>(
       T lh,
@@ -1246,7 +1274,7 @@ namespace impl {
   template<typename T, typename D>
   struct converter
   {
-    constexpr explicit operator D() const
+    STRONG_CONSTEXPR explicit operator D() const
     noexcept(noexcept(static_cast<D>(std::declval<const underlying_type_t<T>&>())))
     {
       auto& self = static_cast<const T&>(*this);
@@ -1256,7 +1284,7 @@ namespace impl {
   template<typename T, typename D>
   struct implicit_converter
   {
-    constexpr operator D() const
+    STRONG_CONSTEXPR operator D() const
     noexcept(noexcept(static_cast<D>(std::declval<const underlying_type_t<T>&>())))
     {
       auto& self = static_cast<const T&>(*this);
