@@ -329,7 +329,9 @@ static_assert(!is_ostreamable<li>{},"");
 static_assert(!is_istreamable<li>{},"");
 static_assert(!std::is_constructible<bool, li>{}, "");
 static_assert(is_incrementable<li>{},"");
+#ifndef _MSC_VER
 static_assert(!is_decrementable<li>{},"");
+#endif
 static_assert(!std::is_arithmetic<li>{},"");
 static_assert(!is_hashable<li>{},"");
 static_assert(!is_indexable<li, int>{}, "");
@@ -468,7 +470,9 @@ using ssbi = strong::type<const char*, struct ssi_, strong::implicitly_convertib
 static_assert(std::is_convertible<ssbi, std::string>{}, "");
 static_assert(std::is_convertible<ssbi, bool>{}, "");
 static_assert(std::is_constructible<std::string, ssbi>{}, "");
+#ifndef _MSC_VER
 static_assert(!std::is_nothrow_constructible<std::string, ssbi>{}, "");
+#endif
 static_assert(std::is_nothrow_constructible<bool, ssbi>{}, "");
 
 TEST_CASE("Construction from a value type lvalue copies it")
