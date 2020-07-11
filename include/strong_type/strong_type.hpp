@@ -703,7 +703,7 @@ public:
 
   STRONG_NODISCARD
   constexpr
-  decltype(auto)
+  decltype(*std::declval<const T&>())
   operator*()
   const
   {
@@ -711,7 +711,7 @@ public:
     return *value_of(self);
   }
 
-  constexpr decltype(auto) operator->() const { return &operator*();}
+  constexpr decltype(&(*std::declval<const T&>())) operator->() const { return &operator*();}
 };
 
 struct arithmetic
