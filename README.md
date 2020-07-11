@@ -4,9 +4,6 @@ Boost Software License 1.0
 
 [![Build Status](https://api.cirrus-ci.com/github/rollbear/strong_type.svg)](https://cirrus-ci.com/github/rollbear/strong_type)
 
-Public domain. May change to something else if experimentation proves
-successful.
-
 Very much inspired by [@foonathan's](https://twitter.com/foonathan)
 [`type_safe`](https://github.com/foonathan/type_safe) library, but aim is
 slightly different. Limit scope for type safety only. No runtime checks. Also
