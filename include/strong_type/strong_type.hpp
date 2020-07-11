@@ -1147,13 +1147,12 @@ public:
     , public equality::modifier<I>
     , public incrementable::modifier<I>
   {
-    using T = underlying_type_t<I>;
   public:
-    using difference_type = typename std::iterator_traits<T>::difference_type;
-    using value_type = typename std::iterator_traits<T>::value_type;
-    using pointer = typename std::iterator_traits<T>::value_type;
-    using reference = typename std::iterator_traits<T>::reference;
-    using iterator_category = typename std::iterator_traits<T>::iterator_category;
+    using difference_type = typename std::iterator_traits<underlying_type_t<I>>::difference_type;
+    using value_type = typename std::iterator_traits<underlying_type_t<I>>::value_type;
+    using pointer = typename std::iterator_traits<underlying_type_t<I>>::value_type;
+    using reference = typename std::iterator_traits<underlying_type_t<I>>::reference;
+    using iterator_category = typename std::iterator_traits<underlying_type_t<I>>::iterator_category;
   };
 
   template <typename I>
