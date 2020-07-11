@@ -1,9 +1,8 @@
 # strong_type
-An experimental C++ strong typedef-ish thingie
+An additive strong typedef library for C++14/17/20 using the
+Boost Software License 1.0
 
 [![Build Status](https://api.cirrus-ci.com/github/rollbear/strong_type.svg)](https://cirrus-ci.com/github/rollbear/strong_type)
-
-Highly experimental, for now.
 
 Public domain. May change to something else if experimentation proves
 successful.
@@ -126,15 +125,11 @@ Other modifiers are:
   the iterator types are using the same tag as using in the range. Only
   implements types `iterator` and `const_iterator`, and thus `.begin()`,
   `.end()`, `.cbegin()`, `.cend()`, `.begin() const` and `.end() const`.
-  Are reverse iterators important, and thus `rbegin()`, `rend()` and friends?
     
 For modifier `strong::arithmetic`, the type trait `std::is_arithmetic<>` is true.
 
 For modifier `strong::iterator`, the type trait `std::iterator_traits` mirrors
 the traits of the underlying iterator type.
-
-Which are the *right* modifiers to have? Going into too fine detail makes no
-sense and becomes a burden. `iterator`? One for each iterator category?
 
 Miscellaneous:
 * `strong::type` provides a non-member `swap()` function as a friend, which
@@ -160,9 +155,8 @@ cmake <strong_type_dir> -DCMAKE_BUILD_TYPE=Debug
 cmake --build . --target self_test
 ```
 
-N.B. It looks like Microsoft Visual Studio MSVC compiler *really* doesn't like
-this code. If you're familier with MSVC idiosyncracies and/or willing to file
-bug reports, please lend a hand.
+N.B. Microsoft Visual Studio MSVC compiler < 19.22 does not handle `constexpr`
+correctly. Those found to cause trouble are disabled for those versions.
 
 Discussions, pull-requests, flames are welcome.
 

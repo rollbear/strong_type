@@ -1,3 +1,22 @@
+v1 2020-07-11
+
+        * Moved to Boost Software License (BSL) 1.0 license
+
+        * Added convertible_to<Ts...> and implicitly_convertible_to<Ts...>
+          modifiers.
+
+        * Added strong::uninitialized for when you *want* to create a
+          variable with unitialized value. Unlike the built in types,
+          this is explicitly visible at the site of use.
+
+        * Moved many namespace scope functions as inline friends to
+          avoid ADL issues.
+
+        * Added strong::semiregular and strong::regular since they are
+          such frequently seen good defaults.
+
+        * Many internal improvements and compiler bug work-arounds.
+
         * Added strong::iterator and strong::range modifiers.
 
         * More noexcept() specifiers

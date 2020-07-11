@@ -1,5 +1,18 @@
-#ifndef SAFE_TYPE_SAFE_TYPE_HPP
-#define SAFE_TYPE_SAFE_TYPE_HPP
+/*
+ * strong_type C++14/17/20 strong typedef library
+ *
+ * Copyright (C) Björn Fahller
+ *
+ *  Use, modification and distribution is subject to the
+ *  Boost Software License, Version 1.0. (See accompanying
+ *  file LICENSE_1_0.txt or copy at
+ *  http://www.boost.org/LICENSE_1_0.txt)
+ *
+ * Project home: https://github.com/rollbear/strong_type
+ */
+
+#ifndef ROLLBEAR_STRONG_TYPE_HPP_INCLUDED
+#define ROLLBEAR_STRONG_TYPE_HPP_INCLUDED
 
 #include <functional>
 #include <istream>
@@ -1344,4 +1357,4 @@ struct is_arithmetic<::strong::type<T, Tag, M...>>
 };
 
 }
-#endif //SAFE_TYPE_SAFE_TYPE_HPP
+#endif //ROLLBEAR_STRONG_TYPE_HPP_INCLUDED
