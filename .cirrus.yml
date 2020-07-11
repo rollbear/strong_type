@@ -1,4 +1,4 @@
-task:
+linux_task:
   container:
     dockerfile: config/ci/Dockerfile
   env:
@@ -73,3 +73,24 @@ task:
   test_script:
     - cd build-${BUILD_TYPE}
     - ./self_test
+
+windows_task:
+  windows_container:
+    image: cirrusci/windowsservercore:cmake
+  env:
+    matrix:
+      - CXXSTD: 14
+      - CXXSTD: 17
+      - CXXSTD: 20
+  build_script:
+    - set PATH=%PATH%;C:\Program Files\CMake\bin
+    - mkdir build
+    - cd build
+    - cmake --version
+    - echo cmake -DCMAKE_CXX_STANDARD=%CXXSTD% -DCMAKE_CXX_FLAGS="/W3 /we /EHsc" -DCMAKE_BUILD_TYPE=Debug ..
+    - cmake -DCMAKE_CXX_STANDARD=%CXXSTD% -DCMAKE_CXX_FLAGS="/W3 /we /EHsc" -DCMAKE_BUILD_TYPE=Debug ..
+    - cmake --build . --target self_test
+    - cd ..
+  test_script:
+    - dir build
+    - build\Debug\self_test.exe
