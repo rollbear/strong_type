@@ -131,6 +131,7 @@ static_assert(!std::is_default_constructible<handle>{},"");
 static_assert(std::is_nothrow_constructible<handle, int&&>{},"");
 static_assert(std::is_nothrow_constructible<handle, const int&>{},"");
 static_assert(std::is_copy_constructible<handle>{},"");
+static_assert(std::is_nothrow_constructible<handle, strong::uninitialized_t>{}, "");
 static_assert(is_nothrow_swappable<handle>{},"");
 static_assert(!is_equal_comparable<handle>{}, "");
 static_assert(std::is_nothrow_assignable<handle, const handle&>{}, "");
@@ -249,6 +250,8 @@ using ihandle = strong::type<std::string, struct string_tag, strong::indexed<int
 static_assert(!std::is_default_constructible<ihandle>{},"");
 static_assert(!std::is_nothrow_constructible<ihandle, int>{},"");
 static_assert(std::is_copy_constructible<ihandle>{},"");
+static_assert(!std::is_constructible<ihandle, strong::uninitialized_t>{}, "");
+
 static_assert(is_nothrow_swappable<ihandle>{},"");
 static_assert(!is_equal_comparable<ihandle>{}, "");
 static_assert(!std::is_nothrow_assignable<ihandle, const ihandle&>{}, "");

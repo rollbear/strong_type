@@ -25,6 +25,9 @@ namespace impl
 template <typename M, typename T>
 using modifier = typename M::template modifier<T>;
 
+struct uninitialized_t {};
+static constexpr uninitialized_t uninitialized{};
+
 struct default_constructible
 {
   template <typename T>
@@ -45,6 +48,11 @@ template <typename T, typename Tag, typename ... M>
 class type : public modifier<M, type<T, Tag, M...>>...
 {
 public:
+  template <typename TT = T, typename = std::enable_if_t<std::is_trivially_constructible<TT>{}>>
+  explicit type(uninitialized_t)
+    noexcept
+  {
+  }
   template <typename type_ = type,
             bool = impl::supports_default_construction(static_cast<type_*>(nullptr))>
   constexpr
