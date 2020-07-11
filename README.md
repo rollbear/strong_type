@@ -42,7 +42,7 @@ also can't cross-assign, cross-create or cross-compare.
 To access more functionality, you add modifiers. For example:
 
 ```Cpp
-using ordered_int = strong::type<int, ordered_int_, strong::ordered>;
+using ordered_int = strong::type<int, struct ordered_int_, strong::ordered>;
 ```
 
 Type `ordered_int` now supports relational order comparisons, like `<`,
@@ -87,7 +87,7 @@ Other modifiers are:
   `std::unordered_map<>`
 
 * `strong::difference` allows instances to be subtracted and added (yielding a
-  `strong::difference`,) divideded (yielding the base type), or multiplied or
+  `strong::difference`,) divided (yielding the base type), or multiplied or
   divided with the base type, yielding another `strong::difference`. A
   `strong::difference` is also `strong::ordered`
 
