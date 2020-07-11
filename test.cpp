@@ -444,6 +444,29 @@ static_assert(std::is_nothrow_move_assignable<regint>{},"");
 static_assert(is_strong_swappable_with<regint,regint>{},"");
 static_assert(is_equal_comparable<regint>{},"");
 
+using ibde = strong::type<int, struct ibdre_, strong::convertible_to<bool,double>>;
+static_assert(!std::is_convertible<ibde, bool>{},"");
+static_assert(!std::is_convertible<ibde, double>{},"");
+static_assert(!std::is_convertible<ibde, float>{},"");
+static_assert(std::is_nothrow_constructible<bool, ibde>{},"");
+static_assert(std::is_nothrow_constructible<double, ibde>{},"");
+static_assert(!std::is_constructible<float, ibde>{},"");
+
+using ibdi = strong::type<int, struct ibdri_, strong::implicitly_convertible_to<bool,double>>;
+static_assert(std::is_convertible<ibdi, bool>{},"");
+static_assert(std::is_convertible<ibdi, double>{},"");
+static_assert(!std::is_convertible<ibdi, float>{},"");
+static_assert(std::is_nothrow_constructible<bool, ibdi>{},"");
+static_assert(std::is_nothrow_constructible<double, ibdi>{},"");
+static_assert(!std::is_constructible<float, ibdi>{},"");
+
+using ssbi = strong::type<const char*, struct ssi_, strong::implicitly_convertible_to<std::string, bool>>;
+static_assert(std::is_convertible<ssbi, std::string>{}, "");
+static_assert(std::is_convertible<ssbi, bool>{}, "");
+static_assert(std::is_constructible<std::string, ssbi>{}, "");
+static_assert(!std::is_nothrow_constructible<std::string, ssbi>{}, "");
+static_assert(std::is_nothrow_constructible<bool, ssbi>{}, "");
+
 TEST_CASE("Construction from a value type lvalue copies it")
 {
   auto orig = std::make_shared<int>(3);
@@ -1025,3 +1048,22 @@ TEST_CASE("swap")
   CHECK(v2.value_of() == 6);
 }
 
+TEST_CASE("conversions")
+{
+  using ssbe = strong::type<const char*, struct ssbe_, strong::convertible_to<bool, std::string>>;
+
+  ssbi validi{"value"};
+  ssbi invalidi(nullptr);
+  ssbe valide("value");
+  ssbe invalide(nullptr);
+
+  REQUIRE(validi);
+  REQUIRE(valide);
+  REQUIRE_FALSE(invalidi);
+  REQUIRE_FALSE(invalide);
+
+  std::string svalidi = validi;
+  std::string svalide{valide};
+  REQUIRE(svalidi == "value");
+  REQUIRE(svalide == "value");
+}

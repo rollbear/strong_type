@@ -1233,6 +1233,49 @@ public:
     return const_iterator{value_of(self).end()};
   }
 };
+
+namespace impl {
+
+  template<typename T, typename D>
+  struct converter
+  {
+    constexpr explicit operator D() const
+    noexcept(noexcept(static_cast<D>(std::declval<const underlying_type_t<T>&>())))
+    {
+      auto& self = static_cast<const T&>(*this);
+      return static_cast<D>(value_of(self));
+    }
+  };
+  template<typename T, typename D>
+  struct implicit_converter
+  {
+    constexpr operator D() const
+    noexcept(noexcept(static_cast<D>(std::declval<const underlying_type_t<T>&>())))
+    {
+      auto& self = static_cast<const T&>(*this);
+      return static_cast<D>(value_of(self));
+    }
+  };
+}
+template <typename ... Ts>
+struct convertible_to
+{
+  template <typename T>
+  struct modifier : impl::converter<T, Ts>...
+  {
+  };
+};
+
+template <typename ... Ts>
+struct implicitly_convertible_to
+{
+  template <typename T>
+  struct modifier : impl::implicit_converter<T, Ts>...
+  {
+  };
+
+};
+
 }
 
 namespace std {

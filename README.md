@@ -76,6 +76,12 @@ Other modifiers are:
 * `strong::boolean` provides `explicit operator bool() const`, providing the
   underlying type supports it.
 
+* `strong::convertible_to<Ts...>` provides an `explicit operator Ts() const`
+   for each type `Ts`, providing the underlying type supports it.
+
+* `strong::implicitly_convertible_to<Ts...>` provides an `operator Ts() const`
+   for each type `Ts`, providing the underlying type supports it.
+   
 * `strong::hashable` allows `std::hash<>` on the type (forwards to the
   underlying type,) to allow use in `std::unordered_set<>` and
   `std::unordered_map<>`
