@@ -135,9 +135,22 @@ Which are the *right* modifiers to have? Going into too fine detail makes no
 sense and becomes a burden. `iterator`? One for each iterator category?
 
 Miscellaneous:
-* `strong::type` provides a non-member `swap()` function which swaps underlying
-  values using [ADL](https://en.cppreference.com/w/cpp/language/adl) technique.
-
+* `strong::type` provides a non-member `swap()` function as a friend, which
+   swaps underlying values using.
+   
+* `strong::uninitialized` can be used to construct instances of `strong::type<T...>`
+  without initializing the value. This is only possible if the underlying type
+  is [`trivially default constructible`](
+  https://en.cppreference.com/w/cpp/language/default_constructor), for example:
+  ```C++
+  void init(int*);
+  void function() {
+      strong::type<int, struct int_tag> x(strong::uninitialized);
+      // x will have an unspecified value
+      init(&value_of(x)); // hopefully the init() function assigns a value
+  }
+  ```
+  
 To build the self-test program:
 
 ```bash
