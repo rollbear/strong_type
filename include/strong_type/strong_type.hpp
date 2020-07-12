@@ -130,24 +130,24 @@ private:
 
 namespace impl {
   template <typename T, typename Tag, typename ... Ms>
-  constexpr bool is_safe_type_func(const strong::type<T, Tag, Ms...>*) { return true;}
-  constexpr bool is_safe_type_func(...) { return false;}
+  constexpr bool is_strong_type_func(const strong::type<T, Tag, Ms...>*) { return true;}
+  constexpr bool is_strong_type_func(...) { return false;}
   template <typename T, typename Tag, typename ... Ms>
   constexpr T underlying_type(strong::type<T, Tag, Ms...>*);
 
 }
 
 template <typename T>
-struct is_safe_type : std::integral_constant<bool, impl::is_safe_type_func(static_cast<T*>(nullptr))> {};
+struct is_strong_type : std::integral_constant<bool, impl::is_strong_type_func(static_cast<T *>(nullptr))> {};
 
 namespace impl {
   template <typename T>
-  using WhenSafeType = std::enable_if_t<is_safe_type<std::decay_t<T>>::value>;
+  using WhenStrongType = std::enable_if_t<is_strong_type<std::decay_t<T>>::value>;
   template <typename T>
-  using WhenNotSafeType = std::enable_if_t<!is_safe_type<std::decay_t<T>>::value>;
+  using WhenNotStrongType = std::enable_if_t<!is_strong_type<std::decay_t<T>>::value>;
 }
 
-template <typename T, bool = is_safe_type<T>::value>
+template <typename T, bool = is_strong_type<T>::value>
 struct underlying_type
 {
   using type = decltype(impl::underlying_type(static_cast<T*>(nullptr)));
@@ -166,7 +166,7 @@ using underlying_type_t = typename underlying_type<T>::type;
 namespace impl {
   template<
     typename T,
-    typename = impl::WhenNotSafeType<T>>
+    typename = impl::WhenNotStrongType<T>>
   constexpr
   T &&
   access(T &&t)
@@ -175,7 +175,7 @@ namespace impl {
   }
   template <
     typename T,
-    typename = impl::WhenSafeType<T>>
+    typename = impl::WhenStrongType<T>>
   STRONG_NODISCARD
   constexpr
   auto
