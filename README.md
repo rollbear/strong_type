@@ -56,6 +56,11 @@ Other modifiers are:
 * `strong::equality` provides operators `==` and `!=`. The strong type can be
   then compared for equality or inequality.
 
+* `strong::equality_with<Ts...>` provides operators `==` and `!=` between the
+  strong type and each of the types `Ts...`. Note! While `Ts` can include
+  other strong types, it can not refer to the strong type being defined. Use
+  `strong::equality` for that.
+  
 * `strong::semiregular`. This gives you default constructible, move/copy
   constructible, move/copy assignable and swappable. A decent default for
   many types.

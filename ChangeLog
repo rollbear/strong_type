@@ -1,3 +1,6 @@
+        * Added strong::equality_with<Ts...> for cross-type equality
+          comparison operators.
+
         * Added strong::unique modifier for creating move-only types
 
 v1 2020-07-11

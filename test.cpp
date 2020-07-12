@@ -504,6 +504,17 @@ static_assert(std::is_nothrow_move_constructible<us>{},"");
 static_assert(!std::is_copy_assignable<us>{},"");
 static_assert(std::is_nothrow_move_assignable<us>{},"");
 
+struct seqv : strong::type<std::string, seqv, strong::equality_with<const char*,us>>
+{};
+
+static_assert(!is_equal_comparable<seqv>{},"");
+static_assert(is_equal_comparable<seqv, const char*>{},"");
+static_assert(is_equal_comparable<const char*, seqv>{},"");
+static_assert(is_equal_comparable<seqv, us>{},"");
+static_assert(is_equal_comparable<us, seqv>{},"");
+static_assert(!is_equal_comparable<seqv, std::string>{},"");
+static_assert(!is_equal_comparable<std::string, seqv>{},"");
+
 TEST_CASE("Construction from a value type lvalue copies it")
 {
   auto orig = std::make_shared<int>(3);
