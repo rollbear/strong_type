@@ -47,7 +47,7 @@ Type `ordered_int` now supports relational order comparisons, like `<`,
 (provided the underlying type, int this case `int`, does.) Type `ordered_int`
 can thus be used as key in `std::map`<> or `std::set<>`.
 
-Other modifiers are:
+## Other modifiers are:
 
 * `strong::default_constructible`. The strong type is not default constructible
   by default. This modifier enables a default constructor which uses a default
@@ -128,10 +128,13 @@ For modifier `strong::arithmetic`, the type trait `std::is_arithmetic<>` is true
 For modifier `strong::iterator`, the type trait `std::iterator_traits` mirrors
 the traits of the underlying iterator type.
 
-Miscellaneous:
+# Miscellaneous:
 * `strong::type` provides a non-member `swap()` function as a friend, which
    swaps underlying values using.
-   
+  
+* `strong::underlying_type<Type>` is `T` for `strong::type<T, Tag, Ms...>` and
+   public descendants, and `Type` for other types.
+      
 * `strong::uninitialized` can be used to construct instances of `strong::type<T...>`
   without initializing the value. This is only possible if the underlying type
   is [`trivially default constructible`](
@@ -154,6 +157,23 @@ cmake --build . --target self_test
 
 N.B. Microsoft Visual Studio MSVC compiler < 19.22 does not handle `constexpr`
 correctly. Those found to cause trouble are disabled for those versions.
+
+## Other libraries:
+ 
+| Library                                             | Author |
+|-----------------------------------------------------|-------------------|
+| [type_safe](https://github.com/foonathan/type_safe) | Jonathan Müller   |
+| [NamedType](https://github.com/joboccara/NamedType) | Jonathan Boccara  |
+| [strong_typedef](https://github.com/anthonywilliams/strong_typedef) | Anthony Williams (justsoftwaresolutions) |
+
+## Presentations about defining and using strong types
+
+|   |   |
+|---|---|
+| [![Strong Types for Strong Interfaces](https://img.youtube.com/vi/WVleZqzTw2k/mqdefault.jpg)](https://img.youtube.com/vi/WVleZqzTw2k/mqdefault.jpg) | Jonathan Boccara from MeetingC++ 2017 |
+| [![Strong Types in C++](https://img.youtube.com/vi/fWcnp7Bulc8/mqdefault.jpg)](https://youtu.be/fWcnp7Bulc8) | Barney Dellar from C++OnSea 2019 |
+| [![Type Safe C++? - LOL! - ;-)](https://img.youtube.com/vi/SWHvNvY-PHw/mqdefault.jpg)](https://youtu.be/SWHvNvY-PHw) | Björn Fahller from ACCU 2018 |
+| [![Curiously Coupled Types](https://img.youtube.com/vi/msi4WNQZyWs/mqdefault.jpg)](https://youtu.be/msi4WNQZyWs) | Adi Shavit & Björn Fahller from NDC{Oslo} 2019 |
 
 Discussions, pull-requests, flames are welcome.
 
