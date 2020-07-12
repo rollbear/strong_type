@@ -63,6 +63,9 @@ Other modifiers are:
 * `strong::regular`. Same as `regular` and also equality comparable. A good
   default base for most types.
 
+* `strong::unique`. Make the type move constructible and move assignable but
+  not copy constructible nor copy assignable.
+  
 * `strong::ostreamable`, `strong::istreamable`, `strong::iostreamable`, which
   provide the default iostream integrations (as handled by the underlying
   type.) Provide your own operators instead if you prefer that.

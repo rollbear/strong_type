@@ -489,6 +489,21 @@ static_assert(!std::is_nothrow_constructible<std::string, ssbi>{}, "");
 #endif
 static_assert(std::is_nothrow_constructible<bool, ssbi>{}, "");
 
+using ui = strong::type<int, struct ui_, strong::unique>;
+static_assert(std::is_nothrow_constructible<ui, int>{},"");
+static_assert(!std::is_copy_constructible<ui>{},"");
+static_assert(std::is_nothrow_move_constructible<ui>{},"");
+static_assert(!std::is_copy_assignable<ui>{},"");
+static_assert(std::is_nothrow_move_assignable<ui>{},"");
+
+using us = strong::type<std::string, struct us_, strong::unique>;
+static_assert(std::is_constructible<us, const char*>{},"");
+static_assert(!std::is_nothrow_constructible<us, const char*>{},"");
+static_assert(!std::is_copy_constructible<us>{},"");
+static_assert(std::is_nothrow_move_constructible<us>{},"");
+static_assert(!std::is_copy_assignable<us>{},"");
+static_assert(std::is_nothrow_move_assignable<us>{},"");
+
 TEST_CASE("Construction from a value type lvalue copies it")
 {
   auto orig = std::make_shared<int>(3);

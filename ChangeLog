@@ -1,3 +1,5 @@
+        * Added strong::unique modifier for creating move-only types
+
 v1 2020-07-11
 
         * Moved to Boost Software License (BSL) 1.0 license

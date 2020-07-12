@@ -290,6 +290,23 @@ struct regular
   };
 };
 
+struct unique
+{
+  template <typename T>
+  class modifier
+    : private impl::valid_type<
+      impl::require_move_constructible<T>::value &&
+      impl::require_move_assignable<T>::value
+    >
+  {
+  public:
+    constexpr modifier() = default;
+    modifier(const modifier&) = delete;
+    constexpr modifier(modifier&&) = default;
+    modifier& operator=(const modifier&) = delete;
+    constexpr modifier& operator=(modifier&&) = default;
+  };
+};
 struct ordered
 {
   template <typename T>
