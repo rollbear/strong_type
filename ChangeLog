@@ -1,3 +1,5 @@
+        * Fixed strong::underlying_type<T> for CRTP defined strong type T
+
         * Added strong::equality_with<Ts...> for cross-type equality
           comparison operators.
 
