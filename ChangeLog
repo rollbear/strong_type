@@ -1,5 +1,8 @@
         * Fixed strong::underlying_type<T> for CRTP defined strong type T
 
+        * Added strong::ordered_with<Ts...> for cross-type ordering
+          relations.
+
         * Added strong::equality_with<Ts...> for cross-type equality
           comparison operators.
 

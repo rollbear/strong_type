@@ -47,7 +47,7 @@ Type `ordered_int` now supports relational order comparisons, like `<`,
 (provided the underlying type, int this case `int`, does.) Type `ordered_int`
 can thus be used as key in `std::map`<> or `std::set<>`.
 
-## Other modifiers are:
+## Modifiers are:
 
 * `strong::default_constructible`. The strong type is not default constructible
   by default. This modifier enables a default constructor which uses a default
@@ -60,6 +60,14 @@ can thus be used as key in `std::map`<> or `std::set<>`.
   strong type and each of the types `Ts...`. Note! While `Ts` can include
   other strong types, it can not refer to the strong type being defined. Use
   `strong::equality` for that.
+
+* `strong::ordered` provides operators '<', '<=', '>=' and '>'. The strong type
+  offers the same ordering relatin as the underlying type.
+
+* `strong::ordered_with<Ts...>` provides operators '<', '<=', '>=' and '>'
+  between the strong type and each of the types `Ts...`. Note! While `Ts` can
+  include other strong types, it cannot refer to the strong type being defined.
+  Use `strong::ordered` for that.
   
 * `strong::semiregular`. This gives you default constructible, move/copy
   constructible, move/copy assignable and swappable. A decent default for

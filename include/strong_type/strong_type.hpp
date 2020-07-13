@@ -281,6 +281,103 @@ struct equality_with
   {
   };
 };
+
+namespace impl
+{
+  template <typename T, typename Other>
+  class typed_ordering
+  {
+  private:
+    using TT = underlying_type_t<T>;
+    using OT = underlying_type_t<Other>;
+  public:
+    STRONG_NODISCARD
+    friend
+    STRONG_CONSTEXPR
+    auto operator<(const T& lh, const Other& rh)
+    noexcept(noexcept(std::declval<const TT&>() < std::declval<const OT&>()))
+    -> decltype(std::declval<const TT&>() < std::declval<const OT&>())
+    {
+      return value_of(lh) < impl::access(rh);
+    }
+    STRONG_NODISCARD
+    friend
+    STRONG_CONSTEXPR
+    auto operator<(const Other& lh, const T& rh)
+    noexcept(noexcept(std::declval<const OT&>() < std::declval<const TT&>()))
+    -> decltype(std::declval<const OT&>() < std::declval<const TT&>())
+    {
+      return impl::access(lh) < value_of(rh) ;
+    }
+
+    STRONG_NODISCARD
+    friend
+    STRONG_CONSTEXPR
+    auto operator<=(const T& lh, const Other& rh)
+    noexcept(noexcept(std::declval<const TT&>() <= std::declval<const OT&>()))
+    -> decltype(std::declval<const TT&>() <= std::declval<const OT&>())
+    {
+      return value_of(lh) <= impl::access(rh);
+    }
+    STRONG_NODISCARD
+    friend
+    STRONG_CONSTEXPR
+    auto operator<=(const Other& lh, const T& rh)
+    noexcept(noexcept(std::declval<const OT&>() <= std::declval<const TT&>()))
+    -> decltype(std::declval<const OT&>() <= std::declval<const TT&>())
+    {
+      return impl::access(lh) <= value_of(rh) ;
+    }
+
+    STRONG_NODISCARD
+    friend
+    STRONG_CONSTEXPR
+    auto operator>(const T& lh, const Other& rh)
+    noexcept(noexcept(std::declval<const TT&>() > std::declval<const OT&>()))
+    -> decltype(std::declval<const TT&>() > std::declval<const OT&>())
+    {
+      return value_of(lh) > impl::access(rh);
+    }
+    STRONG_NODISCARD
+    friend
+    STRONG_CONSTEXPR
+    auto operator>(const Other& lh, const T& rh)
+    noexcept(noexcept(std::declval<const OT&>() > std::declval<const TT&>()))
+    -> decltype(std::declval<const OT&>() > std::declval<const TT&>())
+    {
+      return impl::access(lh) > value_of(rh) ;
+    }
+
+    STRONG_NODISCARD
+    friend
+    STRONG_CONSTEXPR
+    auto operator>=(const T& lh, const Other& rh)
+    noexcept(noexcept(std::declval<const TT&>() >= std::declval<const OT&>()))
+    -> decltype(std::declval<const TT&>() >= std::declval<const OT&>())
+    {
+      return value_of(lh) >= impl::access(rh);
+    }
+    STRONG_NODISCARD
+    friend
+    STRONG_CONSTEXPR
+    auto operator>=(const Other& lh, const T& rh)
+    noexcept(noexcept(std::declval<const OT&>() >= std::declval<const TT&>()))
+    -> decltype(std::declval<const OT&>() >= std::declval<const TT&>())
+    {
+      return impl::access(lh) >= value_of(rh) ;
+    }
+  };
+}
+
+template <typename ... Ts>
+struct ordered_with
+{
+  template <typename T>
+  class modifier : public impl::typed_ordering<T, Ts>...
+  {
+  };
+};
+
 namespace impl
 {
   template <typename T>
