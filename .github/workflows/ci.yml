@@ -6,6 +6,7 @@ jobs:
   build_linux:
     runs-on: ubuntu-20.04
     strategy:
+      fail-fast: false
       matrix:
         config:
           - { cxx: clang++-10, std: 14, stdlib: "-stdlib=libc++", linker: "-fuse-ld=gold -lc++abi" }
@@ -53,3 +54,30 @@ jobs:
       - name: "test"
         run: |
           ./build/self_test
+
+  build_windows:
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - { std: 14 }
+          - { std: 17 }
+          - { std: 20 }
+    name: "Windows C++${{matrix.config.std}}"
+    steps:
+      - uses: actions/checkout@v2
+      - name: "setup"
+        shell: bash
+        run: |
+          cmake \
+            -S . \
+            -B build \
+            -DCMAKE_CXX_STANDARD=${{matrix.config.std}} \
+            -DCMAKE_BUILD_TYPE=Debug
+      - name: "build"
+        run: |
+          cmake --build build --target self_test
+      - name: "test"
+        run: |
+          build\Debug\self_test.exe
