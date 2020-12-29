@@ -1520,6 +1520,7 @@ struct hash<::strong::type<T, Tag, M...>>
   operator()(
     const ::strong::hashable::modifier<type>& t)
   const
+  noexcept(noexcept(std::declval<hash<T>>()(value_of(std::declval<const type&>()))))
   {
     auto& tt = static_cast<const type&>(t);
     return hash<T>::operator()(value_of(tt));
