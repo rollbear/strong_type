@@ -1,3 +1,6 @@
+        * operator() is now noexcept if the underlying type has a
+          noexcept operator (). Thanks Björn Schäpers @HazardyKnusperkeks
+
         * Use github-actions for CI
 
 v2 2020-07-13
