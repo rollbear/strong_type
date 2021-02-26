@@ -73,7 +73,7 @@ can thus be used as key in `std::map`<> or `std::set<>`.
   constructible, move/copy assignable and swappable. A decent default for
   many types.
 
-* `strong::regular`. Same as `regular` and also equality comparable. A good
+* `strong::regular`. Same as `semiregular` and also equality comparable. A good
   default base for most types.
 
 * `strong::unique`. Make the type move constructible and move assignable but
