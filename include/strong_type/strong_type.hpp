@@ -1305,7 +1305,7 @@ public:
   noexcept(noexcept(std::declval<T&>()[impl::access(i)]))
   -> decltype(std::declval<T&>()[impl::access(i)])
   {
-    auto& self = static_cast<const type&>(*this);
+    auto& self = static_cast<type&>(*this);
     return value_of(self)[impl::access(i)];
   }
 

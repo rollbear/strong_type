@@ -909,23 +909,38 @@ TEST_CASE("indexed can be accessed using operator []")
 {
   using I = strong::type<unsigned, struct I_>;
   using T = strong::type<std::string, struct s_, strong::indexed<>>;
+  using TI = strong::type<std::string, struct s_, strong::indexed<I>>;
 
   T s("foo");
   const T c("bar");
+  TI si("foo");
+  const TI ci("bar");
 
   auto& r = s[I{0U}];
   static_assert(!std::is_const<std::remove_reference_t<decltype(r)>>{}, "");
   REQUIRE(r == 'f');
+  auto& ri = si[I{0U}];
+  static_assert(!std::is_const<std::remove_reference_t<decltype(ri)>>{}, "");
+  REQUIRE(ri == 'f');
   auto& cr = c[I{0U}];
   static_assert(std::is_const<std::remove_reference_t<decltype(cr)>>{}, "");
   REQUIRE(cr == 'b');
+  auto& cri = ci[I{0U}];
+  static_assert(std::is_const<std::remove_reference_t<decltype(cri)>>{}, "");
+  REQUIRE(cri == 'b');
 
   auto& ar = s.at(I{0U});
   static_assert(!std::is_const<std::remove_reference_t<decltype(ar)>>{}, "");
   REQUIRE(ar == 'f');
+  auto& ari = si.at(I{0U});
+  static_assert(!std::is_const<std::remove_reference_t<decltype(ari)>>{}, "");
+  REQUIRE(ari == 'f');
   auto& acr = c.at(I{0U});
   static_assert(std::is_const<std::remove_reference_t<decltype(acr)>>{}, "");
   REQUIRE(acr == 'b');
+  auto& acri = ci.at(I{0U});
+  static_assert(std::is_const<std::remove_reference_t<decltype(acri)>>{}, "");
+  REQUIRE(acri == 'b');
 }
 
 TEST_CASE("affine_point types can be subtracted")
