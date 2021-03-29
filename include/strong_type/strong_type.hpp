@@ -26,7 +26,7 @@
 #define STRONG_NODISCARD
 #endif
 
-#if defined(_MSC_VER) && __MSC_VER < 1922
+#if defined(_MSC_VER) && !defined(__clang__) && __MSC_VER < 1922
 #define STRONG_CONSTEXPR
 #else
 #define STRONG_CONSTEXPR constexpr
