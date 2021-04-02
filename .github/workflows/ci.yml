@@ -29,8 +29,8 @@ jobs:
           - { cxx: g++-8, std: 14 }
           - { cxx: g++-8, std: 17 }
           - { cxx: g++-8, std: 20 }
-          - { cxx: clang++-7, std: 14 }
-          - { cxx: clang++-7, std: 17 }
+          #- { cxx: clang++-7, std: 14 }
+          #- { cxx: clang++-7, std: 17 }
           - { cxx: g++-7, std: 14 }
           - { cxx: g++-7, std: 17 }
           #- { cxx: "clang++-6.0", std: 14 }
