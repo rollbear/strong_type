@@ -29,15 +29,41 @@ jobs:
           - { cxx: g++-8, std: 14 }
           - { cxx: g++-8, std: 17 }
           - { cxx: g++-8, std: 20 }
-          #- { cxx: clang++-7, std: 14 }
-          #- { cxx: clang++-7, std: 17 }
+          - { cxx: clang++-7, std: 14 }
+          - { cxx: clang++-7, std: 17 }
           - { cxx: g++-7, std: 14 }
           - { cxx: g++-7, std: 17 }
           #- { cxx: "clang++-6.0", std: 14 }
           #- { cxx: "clang}++-6.0", std: 17 }
+
     name: "Linux ${{matrix.config.cxx}} C++${{matrix.config.std}} ${{matrix.config.stdlib}}"
     steps:
       - uses: actions/checkout@v2
+
+      - name: Install GCC 7
+        id: install_gcc_7
+        if: ( matrix.config.cxx == 'g++-7' )
+        shell: bash
+        working-directory: ${{ env.HOME }}
+        run: |
+          sudo apt-get install -y gcc-7 g++-7
+
+      - name: Install GCC 8
+        id: install_gcc_8
+        if: ( matrix.config.cxx == 'g++-8' )
+        shell: bash
+        working-directory: ${{ env.HOME }}
+        run: |
+          sudo apt-get install -y gcc-8 g++-8
+
+      - name: Install Clang 8
+        id: install_clang_8
+        if: ( matrix.config.cxx == 'clang++-8' )
+        shell: bash
+        working-directory: ${{ env.HOME }}
+        run: |
+          sudo apt-get install -y clang-8
+
       - name: "setup"
         shell: bash
         run: |
