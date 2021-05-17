@@ -575,22 +575,23 @@ struct incrementable
   class modifier
   {
   public:
+    friend
     STRONG_CONSTEXPR
     T&
-    operator++()
+    operator++(T& t)
     noexcept(noexcept(++std::declval<T&>().value_of()))
     {
-      auto &self = static_cast<T&>(*this);
-      ++value_of(self);
-      return self;
+      ++value_of(t);
+      return t;
     }
 
+    friend
     STRONG_CONSTEXPR
     T
-    operator++(int)
+    operator++(T& t, int)
     {
-      auto copy = static_cast<T&>(*this);
-      ++*this;
+      auto copy = t;
+      ++t;
       return copy;
     }
   };
