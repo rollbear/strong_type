@@ -2,7 +2,7 @@
 An additive strong typedef library for C++14/17/20 using the
 Boost Software License 1.0
 
-[![Build Status](https://api.cirrus-ci.com/github/rollbear/strong_type.svg)](https://cirrus-ci.com/github/rollbear/strong_type)
+[![CI Build Status](https://github.com/rollbear/strong_type/actions/workflows/ci.yml/badge.svg)](https://github.com/rollbear/strong_type/actions/workflows/ci.yml)
 
 Very much inspired by [@foonathan's](https://twitter.com/foonathan)
 [`type_safe`](https://github.com/foonathan/type_safe) library, but aim is
