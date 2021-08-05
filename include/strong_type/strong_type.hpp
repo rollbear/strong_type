@@ -997,6 +997,19 @@ struct arithmetic
       return lh;
     }
 
+    template <typename TT = T, typename = decltype(value_of(std::declval<TT>()) % value_of(std::declval<TT>()))>
+    friend
+    STRONG_CONSTEXPR
+    T&
+    operator%=(
+      T &lh,
+      const T &rh)
+    noexcept(noexcept(value_of(lh) %= value_of(rh)))
+    {
+      value_of(lh) %= value_of(rh);
+      return lh;
+    }
+
     STRONG_NODISCARD
     friend
     STRONG_CONSTEXPR
@@ -1044,6 +1057,20 @@ struct arithmetic
       lh /= rh;
       return lh;
     }
+
+    template <typename TT = T, typename = decltype(value_of(std::declval<TT>()) % value_of(std::declval<TT>()))>
+    STRONG_NODISCARD
+    friend
+    STRONG_CONSTEXPR
+    T
+    operator%(
+      T lh,
+      const T &rh)
+    {
+      lh %= rh;
+      return lh;
+    }
+
   };
 };
 

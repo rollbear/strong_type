@@ -48,6 +48,9 @@ using multiply = decltype(std::declval<const T&>() * std::declval<const U&>());
 template <typename T, typename U>
 using divide = decltype(std::declval<const T&>() / std::declval<const U&>());
 
+template <typename T, typename U>
+using modulo = decltype(std::declval<const T&>() % std::declval<const U&>());
+
 template <typename T>
 using begin_type = decltype(std::declval<T&>().begin());
 
@@ -116,6 +119,9 @@ using is_addable = is_detected<add, T, U>;
 
 template <typename T, typename U = T>
 using is_divisible = is_detected<divide, T, U>;
+
+template <typename T, typename U = T>
+using is_modulo_able = is_detected<modulo, T, U>;
 
 template <typename T, typename U = T>
 using is_multipliable = is_detected<multiply, T, U>;
@@ -229,6 +235,7 @@ static_assert(!std::is_constructible<bool, ahandle>{}, "");
 static_assert(!is_incrementable<ahandle>{},"");
 static_assert(!is_decrementable<ahandle>{},"");
 static_assert(std::is_arithmetic<ahandle>{},"");
+static_assert(is_modulo_able<ahandle>{},"");
 static_assert(!is_hashable<ahandle>{},"");
 static_assert(is_subtractable<ahandle>{}, "");
 static_assert(!is_subtractable<ahandle, bhandle>{},"");
@@ -238,6 +245,9 @@ static_assert(!is_range<ahandle>{}, "");
 using ahandle2 = strong::type<int, struct ahandle2_tag, strong::arithmetic>;
 
 static_assert(!is_subtractable<ahandle, ahandle2>{},"");
+
+using afhandle = strong::type<float, struct afloat_tag, strong::arithmetic>;
+static_assert(!is_modulo_able<afhandle>{},"");
 
 using hhandle = strong::type<int, struct hhandle_tag, strong::hashable>;
 
@@ -809,6 +819,20 @@ TEST_CASE("arithmetic types can be divided")
   i /= j;
   REQUIRE(value_of(i) == 4);
   REQUIRE(value_of(j) == 3);
+}
+
+TEST_CASE("the remainder of integral arithmetic types can be calculated")
+{
+    using T = strong::type<int, struct i_, strong::arithmetic>;
+
+    T i{12};
+    T j{5};
+    REQUIRE(value_of(i % j) == 2);
+    REQUIRE(value_of(i) == 12);
+    REQUIRE(value_of(j) == 5);
+    i %= j;
+    REQUIRE(value_of(i) == 2);
+    REQUIRE(value_of(j) == 5);
 }
 
 TEST_CASE("an aritmmetic type can be negated")
