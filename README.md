@@ -106,7 +106,7 @@ can thus be used as key in `std::map`<> or `std::set<>`.
   the underlying type supports it, the remainder after division of two
   differences yields the underlying type, and the remainder after division of
   a difference and the underlying type yields a difference.
-  A `strong::difference` is also `strong::ordered`
+  A `strong::difference` is also `strong::ordered` and `strong::equality`
 
 * `strong::affine_point<D>` allows instances to be subtracted (yielding a `D`) or
   to add or subtract a `D` to an instance.

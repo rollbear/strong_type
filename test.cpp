@@ -411,7 +411,7 @@ static_assert(std::is_nothrow_destructible<crhi>{},"");
 using uhandle = strong::type<int, struct uh_, strong::difference>;
 static_assert(!std::is_default_constructible<uhandle>{},"");
 static_assert(std::is_copy_constructible<uhandle>{},"");
-static_assert(!is_equal_comparable<uhandle>{}, "");
+static_assert(is_equal_comparable<uhandle>{}, "");
 static_assert(std::is_nothrow_assignable<uhandle, const uhandle&>{}, "");
 static_assert(std::is_nothrow_assignable<uhandle, uhandle&&>{}, "");
 static_assert(is_less_than_comparable<uhandle>{},"");
@@ -1091,6 +1091,31 @@ TEST_CASE("dividing a difference type with its base type yields a difference")
   auto r = u/2;
   static_assert(std::is_same<decltype(r), U>{}, "");
   REQUIRE(value_of(r) == 4);
+}
+
+TEST_CASE("difference types are ordered and equality comparable")
+{
+    using U = strong::type<int, struct U_, strong::difference>;
+
+    U u1{1};
+    U u2{2};
+    U u3{1};
+
+    REQUIRE(u1 == u3);
+    REQUIRE(!(u1 == u2));
+    REQUIRE(u1 != u2);
+    REQUIRE(!(u1 != u3));
+    REQUIRE(u1 < u2);
+    REQUIRE(!(u1 < u3));
+    REQUIRE(u1 <= u2);
+    REQUIRE(u1 <= u3);
+    REQUIRE(!(u2 <= u1));
+    REQUIRE(u2 > u1);
+    REQUIRE(!(u3 > u1));
+    REQUIRE(!(u3 > u2));
+    REQUIRE(u3 >= u1);
+    REQUIRE(u3 >= u1);
+    REQUIRE(!(u3 >= u2));
 }
 
 TEST_CASE("multiplying a difference with its base type yields a difference")

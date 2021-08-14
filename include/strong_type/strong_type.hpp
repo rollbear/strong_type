@@ -665,6 +665,7 @@ struct difference
 template <typename T, typename Tag, typename ... M>
 class difference::modifier<::strong::type<T, Tag, M...>>
 : public ordered::modifier<::strong::type<T, Tag, M...>>
+, public equality::modifier<::strong::type<T, Tag, M...>>
 {
   using type = ::strong::type<T, Tag, M...>;
 public:
