@@ -781,7 +781,7 @@ public:
   }
 };
 
-template <typename D>
+template <typename D = void>
 struct affine_point
 {
   template <typename T>
@@ -808,18 +808,19 @@ class affine_point<D>::modifier<::strong::type<T, Tag, M...>>
 {
   using type = ::strong::type<T, Tag, M...>;
   static_assert(impl::subtractable<T>::value, "it must be possible to subtract instances of your underlying type");
-  using diff_type = decltype(std::declval<const T&>() - std::declval<const T&>());
-  static_assert(std::is_constructible<D, diff_type>::value,"");
+  using base_diff_type = decltype(std::declval<const T&>() - std::declval<const T&>());
 public:
+  using difference_type = std::conditional_t<std::is_same<D, void>{}, strong::type<base_diff_type, Tag, strong::difference>, D>;
+  static_assert(std::is_constructible<difference_type, base_diff_type>::value,"");
   STRONG_NODISCARD
   friend
   STRONG_CONSTEXPR
-  D
+  difference_type
   operator-(
     const type& lh,
     const type& rh)
   {
-    return D(value_of(lh) - value_of(rh));
+    return difference_type(value_of(lh) - value_of(rh));
   }
 
   friend
@@ -827,7 +828,7 @@ public:
   type&
   operator+=(
     type& lh,
-    const D& d)
+    const difference_type& d)
   noexcept(noexcept(value_of(lh) += impl::access(d)))
   {
     value_of(lh) += impl::access(d);
@@ -839,7 +840,7 @@ public:
   type&
   operator-=(
     type& lh,
-    const D& d)
+    const difference_type& d)
   noexcept(noexcept(value_of(lh) -= impl::access(d)))
   {
     value_of(lh) -= impl::access(d);
@@ -852,7 +853,7 @@ public:
   type
   operator+(
     type lh,
-    const D& d)
+    const difference_type& d)
   {
     return lh += d;
   }
@@ -862,7 +863,7 @@ public:
   STRONG_CONSTEXPR
   type
   operator+(
-    const D& d,
+    const difference_type& d,
     type rh)
   {
     return rh+= d;
@@ -874,11 +875,12 @@ public:
   type
   operator-(
     type lh,
-    const D& d)
+    const difference_type& d)
   {
     return lh -= d;
   }
 };
+
 
 struct pointer
 {

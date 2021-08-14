@@ -114,6 +114,8 @@ can thus be used as key in `std::map`<> or `std::set<>`.
   one dimentional affine points are pointer (with `D` being `ptrdiff_t`,) or
   `std::time_point<>` (with `std::duration<>` as `D`.) An example of a
   multidimensional affine point is a coordinate (with a vector type for `D`.)
+  `D` can be defaulted, using `strong::affine_point<>`, in which case the
+  difference type shares the same tag.
   It is natural that `D` is of a `strong::difference` type. This is a good name
   from a mathematical point of view, but perhaps a bit too academic, and not
   well aligned with the other names.

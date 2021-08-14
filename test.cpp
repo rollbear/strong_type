@@ -319,6 +319,9 @@ static_assert(is_addable<dhandle,handle>{},"");
 static_assert(is_addable<handle,dhandle>{},"");
 static_assert(!is_range<dhandle>{}, "");
 
+using ddhandle = strong::type<int, struct int_tag, strong::affine_point<>>;
+static_assert(std::is_same<ddhandle::difference_type, strong::type<int, struct int_tag, strong::difference>>{},"");
+
 using ri = strong::type<int*, struct ipt, strong::iterator>;
 
 static_assert(!std::is_default_constructible<ri>{},"");
@@ -985,6 +988,17 @@ TEST_CASE("affine_point types can be subtracted")
   auto d = t2 - t1;
   static_assert(std::is_same<decltype(d), D>{}, "");
   REQUIRE(value_of(d) == 5);
+}
+
+TEST_CASE("affine point type with defaulted difference type yields it when subtracting")
+{
+    using T = strong::type<int, struct i_, strong::affine_point<>>;
+
+    T t1{3};
+    T t2{8};
+    auto d = t2 - t1;
+    static_assert(std::is_same<decltype(d), strong::type<int, struct i_, strong::difference>>{},"");
+    REQUIRE(value_of(d) == 5);
 }
 
 TEST_CASE("affine_point types can be added with the delta type")
