@@ -1,6 +1,10 @@
         * operator% is now conditionally supported for arithmetic types,
           provided that the underlying type supports the operation.
 
+        * operator% is also conditionally supported for difference types,
+          difference % difference => underlying type, and
+          difference % underlying type => difference.
+
 v3 2021-08-02
 
         * increment/decrement operators are now hidden friends
