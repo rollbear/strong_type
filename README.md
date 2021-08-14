@@ -102,8 +102,11 @@ can thus be used as key in `std::map`<> or `std::set<>`.
 
 * `strong::difference` allows instances to be subtracted and added (yielding a
   `strong::difference`,) divided (yielding the base type), or multiplied or
-  divided with the base type, yielding another `strong::difference`. A
-  `strong::difference` is also `strong::ordered`
+  divided with the base type, yielding another `strong::difference`, and if 
+  the underlying type supports it, the remainder after division of two
+  differences yields the underlying type, and the remainder after division of
+  a difference and the underlying type yields a difference.
+  A `strong::difference` is also `strong::ordered`
 
 * `strong::affine_point<D>` allows instances to be subtracted (yielding a `D`) or
   to add or subtract a `D` to an instance.

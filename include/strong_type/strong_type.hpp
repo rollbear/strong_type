@@ -704,6 +704,16 @@ public:
     return lh;
   }
 
+  template <typename TT = T, typename = decltype(std::declval<TT&>()%= std::declval<const TT&>())>
+  friend
+  STRONG_CONSTEXPR
+  type& operator%=(type& lh, const T& rh)
+    noexcept(noexcept(value_of(lh) %= rh))
+  {
+    value_of(lh)%= rh;
+    return lh;
+  }
+
   friend
   STRONG_CONSTEXPR
   type operator+(type lh, const type& rh)
@@ -749,6 +759,25 @@ public:
   T operator/(const type& lh, const type& rh)
   {
     return value_of(lh) / value_of(rh);
+  }
+
+  template <typename TT = T, typename = decltype(std::declval<TT&>() %= std::declval<const TT&>())>
+  friend
+  STRONG_CONSTEXPR
+  type operator%(type lh, const T& rh)
+    noexcept(noexcept(lh%= rh))
+  {
+      lh %= rh;
+      return lh;
+  }
+
+  template <typename TT = T, typename = decltype(std::declval<TT>() % std::declval<TT>())>
+  friend
+  STRONG_CONSTEXPR
+  T operator%(type lh, type rh)
+    noexcept(noexcept(value_of(lh) % value_of(rh)))
+  {
+      return value_of(lh) % value_of(rh);
   }
 };
 

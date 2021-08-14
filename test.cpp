@@ -51,6 +51,7 @@ using divide = decltype(std::declval<const T&>() / std::declval<const U&>());
 template <typename T, typename U>
 using modulo = decltype(std::declval<const T&>() % std::declval<const U&>());
 
+
 template <typename T>
 using begin_type = decltype(std::declval<T&>().begin());
 
@@ -137,6 +138,7 @@ using is_nothrow_swappable = std::integral_constant<bool, noexcept(swap(std::dec
 
 template <typename T1, typename T2>
 using is_strong_swappable_with = is_detected<swapping, T1, T2>;
+
 
 using handle = strong::type<int, struct handle_tag>;
 
@@ -431,9 +433,15 @@ static_assert(is_divisible<uhandle, int>{}, "");
 static_assert(is_multipliable<uhandle, int>{}, "");
 static_assert(is_multipliable<int, uhandle>{}, "");
 static_assert(!is_multipliable<uhandle, uhandle>{}, "");
+static_assert(is_modulo_able<uhandle>{},"");
+static_assert(is_modulo_able<uhandle, int>{},"");
 static_assert(!is_addable<uhandle,li>{},"");
 static_assert(!is_range<uhandle>{}, "");
 static_assert(!is_range<const uhandle>{}, "");
+
+using ufhandle = strong::type<float, struct uf_, strong::difference>;
+static_assert(!is_modulo_able<ufhandle>{},"");
+static_assert(!is_modulo_able<ufhandle, float>{},"");
 
 static_assert(is_strong_swappable_with<handle, handle>::value, "");
 static_assert(!is_strong_swappable_with<handle, handle2>::value, "");
@@ -1047,6 +1055,31 @@ TEST_CASE("dividing difference types yields a base type")
   auto r = u1/u2;
   static_assert(std::is_same<decltype(r), int>{}, "");
   REQUIRE(r == 4);
+}
+
+TEST_CASE("remainder after division between difference types yields a base type")
+{
+    using U = strong::type<int, struct U_, strong::difference>;
+
+    U u1{15};
+    U u2{6};
+
+    auto r = u1 % u2;
+
+    static_assert(std::is_same<decltype(r), int>{},"");
+    REQUIRE(r == 3);
+}
+
+TEST_CASE("remainder after division between difference type and base type yields a difference type")
+{
+    using U = strong::type<int, struct U_, strong::difference, strong::regular>;
+
+    U u{15};
+
+    auto r = u % 6;
+
+    static_assert(std::is_same<decltype(r), U>{}, "");
+    REQUIRE(r == U{3});
 }
 
 TEST_CASE("dividing a difference type with its base type yields a difference")
