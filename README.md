@@ -116,6 +116,8 @@ can thus be used as key in `std::map`<> or `std::set<>`.
   multidimensional affine point is a coordinate (with a vector type for `D`.)
   `D` can be defaulted, using `strong::affine_point<>`, in which case the
   difference type shares the same tag.
+  The difference type from a `strong::affine_point<D>` can be obtained using
+  `type::difference`, regardless of whether `D` is explicit or defaulted.
   It is natural that `D` is of a `strong::difference` type. This is a good name
   from a mathematical point of view, but perhaps a bit too academic, and not
   well aligned with the other names.
@@ -136,7 +138,7 @@ can thus be used as key in `std::map`<> or `std::set<>`.
 
 * `strong::iterator` adds functionality needed depending on iterator category.
   If the iterator type is a `random_access_iterator`, the strong type
-  is `strong::indexed<>` and `strong::affine_point<difference_type>`. It should be
+  is `strong::indexed<>` and `strong::affine_point<difference>`. It should be
   possible to specify the index type and affine_point type.
 
 * `strong::range` adds the functionality needed to iterate over the elements.

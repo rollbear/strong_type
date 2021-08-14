@@ -810,17 +810,17 @@ class affine_point<D>::modifier<::strong::type<T, Tag, M...>>
   static_assert(impl::subtractable<T>::value, "it must be possible to subtract instances of your underlying type");
   using base_diff_type = decltype(std::declval<const T&>() - std::declval<const T&>());
 public:
-  using difference_type = std::conditional_t<std::is_same<D, void>{}, strong::type<base_diff_type, Tag, strong::difference>, D>;
-  static_assert(std::is_constructible<difference_type, base_diff_type>::value,"");
+  using difference = std::conditional_t<std::is_same<D, void>{}, strong::type<base_diff_type, Tag, strong::difference>, D>;
+  static_assert(std::is_constructible<difference, base_diff_type>::value, "");
   STRONG_NODISCARD
   friend
   STRONG_CONSTEXPR
-  difference_type
+  difference
   operator-(
     const type& lh,
     const type& rh)
   {
-    return difference_type(value_of(lh) - value_of(rh));
+    return difference(value_of(lh) - value_of(rh));
   }
 
   friend
@@ -828,7 +828,7 @@ public:
   type&
   operator+=(
     type& lh,
-    const difference_type& d)
+    const difference& d)
   noexcept(noexcept(value_of(lh) += impl::access(d)))
   {
     value_of(lh) += impl::access(d);
@@ -840,7 +840,7 @@ public:
   type&
   operator-=(
     type& lh,
-    const difference_type& d)
+    const difference& d)
   noexcept(noexcept(value_of(lh) -= impl::access(d)))
   {
     value_of(lh) -= impl::access(d);
@@ -853,7 +853,7 @@ public:
   type
   operator+(
     type lh,
-    const difference_type& d)
+    const difference& d)
   {
     return lh += d;
   }
@@ -863,7 +863,7 @@ public:
   STRONG_CONSTEXPR
   type
   operator+(
-    const difference_type& d,
+    const difference& d,
     type rh)
   {
     return rh+= d;
@@ -875,7 +875,7 @@ public:
   type
   operator-(
     type lh,
-    const difference_type& d)
+    const difference& d)
   {
     return lh -= d;
   }

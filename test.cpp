@@ -320,7 +320,7 @@ static_assert(is_addable<handle,dhandle>{},"");
 static_assert(!is_range<dhandle>{}, "");
 
 using ddhandle = strong::type<int, struct int_tag, strong::affine_point<>>;
-static_assert(std::is_same<ddhandle::difference_type, strong::type<int, struct int_tag, strong::difference>>{},"");
+static_assert(std::is_same<ddhandle::difference, strong::type<int, struct int_tag, strong::difference>>{}, "");
 
 using ri = strong::type<int*, struct ipt, strong::iterator>;
 
