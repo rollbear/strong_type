@@ -1,3 +1,7 @@
+        * strong::affine_point<D> can now be defaulted as
+          strong::affine_point<>, in which case a difference type will be
+          generated using the same tag as the strong affine point type.
+
         * operator% is now conditionally supported for arithmetic types,
           provided that the underlying type supports the operation.
 
