@@ -32,6 +32,34 @@
 #define STRONG_CONSTEXPR constexpr
 #endif
 
+#ifndef STRONG_HAS_STD_FORMAT
+#if __has_include(<format>)
+#define STRONG_HAS_STD_FORMAT 1
+#else
+#define STRONG_HAS_STD_FORMAT 0
+#endif
+#endif
+
+#ifndef STRONG_HAS_FMT_FORMAT
+#if __has_include(<fmt/format.h>)
+#define STRONG_HAS_FMT_FORMAT 1
+#else
+#define STRONG_HAS_FMT_FORMAT 0
+#endif
+#endif
+
+#if STRONG_HAS_STD_FORMAT
+#include <format>
+#if !defined(__cpp_lib_format) || __cpp_lib_format < 201907
+#undef STRONG_HAS_STD_FORMAT
+#define STRONG_HAS_STD_FORMAT 0
+#endif
+#endif
+
+#if STRONG_HAS_FMT_FORMAT
+#include <fmt/format.h>
+#endif
+
 namespace strong
 {
 
@@ -1561,6 +1589,12 @@ struct implicitly_convertible_to
 
 };
 
+struct formattable
+{
+    template <typename T>
+    class modifier{};
+};
+
 }
 
 namespace std {
@@ -1594,5 +1628,60 @@ struct is_arithmetic<::strong::type<T, Tag, M...>>
 {
 };
 
+#if STRONG_HAS_STD_FORMAT
+template<typename T, typename Tag, typename... M, typename Char>
+struct formatter<::strong::type<T, Tag, M...>, Char,
+                 std::enable_if_t<
+                     std::is_base_of<
+                         ::strong::formattable::modifier<
+                             ::strong::type<T, Tag, M...>
+                             >,
+                         ::strong::type<T, Tag, M...>
+                         >::value
+                     >>
+    : formatter<T>
+{
+  using type = ::strong::type<T, Tag, M...>;
+  template<typename FormatContext>
+  STRONG_CONSTEXPR
+  decltype(auto)
+  format(const ::strong::formattable::modifier<type>& t, FormatContext& fc)
+      noexcept(noexcept(std::declval<formatter<T, Char>>().format(value_of(std::declval<const type&>()), fc)))
+  {
+    const auto& tt = static_cast<const type&>(t);
+    return formatter<T, Char>::format(value_of(tt), fc);
+  }
+};
+#endif
+
 }
+
+#if STRONG_HAS_FMT_FORMAT
+namespace fmt
+{
+template<typename T, typename Tag, typename... M, typename Char>
+struct formatter<::strong::type<T, Tag, M...>, Char,
+                 std::enable_if_t<
+                   std::is_base_of<
+                     ::strong::formattable::modifier<
+                       ::strong::type<T, Tag, M...>
+                     >,
+                     ::strong::type<T, Tag, M...>
+                   >::value
+                 >>
+  : formatter<T>
+{
+  using type = ::strong::type<T, Tag, M...>;
+  template<typename FormatContext>
+  STRONG_CONSTEXPR
+  decltype(auto)
+  format(const ::strong::formattable::modifier<type>& t, FormatContext& fc)
+      noexcept(noexcept(std::declval<formatter<T, Char>>().format(value_of(std::declval<const type&>()), fc)))
+  {
+    const auto& tt = static_cast<const type&>(t);
+    return formatter<T, Char>::format(value_of(tt), fc);
+  }
+};
+}
+#endif
 #endif //ROLLBEAR_STRONG_TYPE_HPP_INCLUDED
