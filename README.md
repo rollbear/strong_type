@@ -145,7 +145,13 @@ can thus be used as key in `std::map`<> or `std::set<>`.
   the iterator types are using the same tag as using in the range. Only
   implements types `iterator` and `const_iterator`, and thus `.begin()`,
   `.end()`, `.cbegin()`, `.cend()`, `.begin() const` and `.end() const`.
-    
+
+* `strong::formattable` adds `std::format` and/or `fmt::format` capability, based
+  on availability of the formatting library. This can further be controlled
+  (globally) with the defines `STRONG_HAS_STD_FORMAT` respectively
+  `STRONG_HAS_FMT_FORMAT`. With 0 to disable the support completly, and with 1 to
+  force the support, disable the auto detection.
+
 For modifier `strong::arithmetic`, the type trait `std::is_arithmetic<>` is true.
 
 For modifier `strong::iterator`, the type trait `std::iterator_traits` mirrors

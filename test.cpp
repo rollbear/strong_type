@@ -1266,3 +1266,22 @@ TEST_CASE("ordered_with")
   REQUIRE(2 > i1);
   REQUIRE_FALSE(1 > i1);
 }
+
+#if STRONG_HAS_STD_FORMAT || STRONG_HAS_FMT_FORMAT
+TEST_CASE("format")
+{
+  using formatint = strong::type<int, struct formattag, strong::formattable>;
+
+  formatint fi{5};
+
+#if STRONG_HAS_FMT_FORMAT
+  CHECK(fmt::format("{:d}", fi) == fmt::format("{:d}", 5));
+  CHECK_THROWS_AS(fmt::format("{:s}", fi), fmt::format_error);
+#endif
+
+#if STRONG_HAS_STD_FORMAT
+  CHECK(std::format("{:d}", fi) == std::format("{:d}", 5));
+  CHECK_THROWS_AS(std::format("{:s}", fi), std::format_error);
+#endif
+}
+#endif
