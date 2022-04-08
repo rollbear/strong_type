@@ -12,4 +12,4 @@
 #
 
 
-include( "${CMAKE_CURRENT_LIST_DIR}/trompeloeil-targets.cmake" )
+include( "${CMAKE_CURRENT_LIST_DIR}/strong_type-targets.cmake" )
