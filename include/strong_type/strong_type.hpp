@@ -131,8 +131,8 @@ public:
   {}
 
   friend STRONG_CONSTEXPR void swap(type& a, type& b) noexcept(
-                                                        std::is_nothrow_move_constructible<type>::value &&
-                                                        std::is_nothrow_move_assignable<type>::value
+                                                        std::is_nothrow_move_constructible<T>::value &&
+                                                        std::is_nothrow_move_assignable<T>::value
                                                       )
   {
     using std::swap;
