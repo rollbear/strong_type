@@ -1410,34 +1410,37 @@ public:
     return value_of(std::move(self))[impl::access(i)];
   }
 
+  template <typename TT = T>
   STRONG_NODISCARD
   auto
   at(
     const I& i)
   const &
-  -> decltype(std::declval<const T&>().at(impl::access(i)))
+  -> decltype(std::declval<const TT&>().at(impl::access(i)))
   {
     auto& self = static_cast<const type&>(*this);
     return value_of(self).at(impl::access(i));
   }
 
+  template <typename TT = T>
   STRONG_NODISCARD
   auto
   at(
     const I& i)
   &
-  -> decltype(std::declval<T&>().at(impl::access(i)))
+  -> decltype(std::declval<TT&>().at(impl::access(i)))
   {
     auto& self = static_cast<type&>(*this);
     return value_of(self).at(impl::access(i));
   }
 
+  template <typename TT = T>
   STRONG_NODISCARD
   auto
   at(
     const I& i)
   &&
-  -> decltype(std::declval<T&&>().at(impl::access(i)))
+  -> decltype(std::declval<TT&&>().at(impl::access(i)))
   {
     auto& self = static_cast<type&>(*this);
     return value_of(std::move(self)).at(impl::access(i));

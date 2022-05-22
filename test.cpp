@@ -51,6 +51,8 @@ using divide = decltype(std::declval<const T&>() / std::declval<const U&>());
 template <typename T, typename U>
 using modulo = decltype(std::declval<const T&>() % std::declval<const U&>());
 
+template <typename R, typename I>
+using at = decltype(std::declval<const R&>().at(std::declval<I>()));
 
 template <typename T>
 using begin_type = decltype(std::declval<T&>().begin());
@@ -139,6 +141,8 @@ using is_nothrow_swappable = std::integral_constant<bool, noexcept(swap(std::dec
 template <typename T1, typename T2>
 using is_strong_swappable_with = is_detected<swapping, T1, T2>;
 
+template <typename R, typename I>
+using has_at = is_detected<at, R, I>;
 
 using handle = strong::type<int, struct handle_tag>;
 
@@ -292,6 +296,7 @@ static_assert(!is_decrementable<ihandle>{},"");
 static_assert(!std::is_arithmetic<ihandle>{},"");
 static_assert(!is_hashable<ihandle>{},"");
 static_assert(is_indexable<ihandle, int>{}, "");
+static_assert(has_at<ihandle, int>{}, "");
 static_assert(!is_range<ihandle>{}, "");
 
 using dhandle = strong::type<int, struct int_tag, strong::affine_point<handle>>;
@@ -940,7 +945,7 @@ TEST_CASE("bitarithmetic types can be inverted")
   REQUIRE(value_of(i) == u(0x0f0f));
 }
 
-TEST_CASE("indexed can be accessed using operator []")
+TEST_CASE("indexed can be accessed using operator [] and .at()")
 {
   using I = strong::type<unsigned, struct I_>;
   using T = strong::type<std::string, struct s_, strong::indexed<>>;
@@ -976,6 +981,48 @@ TEST_CASE("indexed can be accessed using operator []")
   auto& acri = ci.at(I{0U});
   static_assert(std::is_const<std::remove_reference_t<decltype(acri)>>{}, "");
   REQUIRE(acri == 'b');
+}
+
+template <typename T, size_t N>
+class simple_array
+{
+public:
+    T& operator[](int x) & { return data_[x];}
+    T&& operator[](int x) && { return std::move(data_[x]);}
+    const T& operator[](int x) const & { return data_[x];}
+    const T& operator[](int x) const && { return data_[x];}
+private:
+    T data_[N] = {};
+};
+
+template <typename T, size_t N>
+using array = strong::type<simple_array<T, N>, struct array_,
+                           strong::default_constructible,
+                           strong::indexed<int>>;
+template <typename ...> struct S;
+TEST_CASE("indexed can be accessed with operator[] without at()")
+{
+    static auto as_const = [](const auto& x) -> decltype(auto) { return x;};
+    static_assert(is_indexable<array<int, 3>, int>{}, "");
+    static_assert(!has_at<array<int, 3>, int>{}, "");
+
+    using A = array<int, 3>;
+
+    A a{};
+    const A ca{};
+
+    static_assert(std::is_same<decltype(a[1]), int&>{}, "");
+    static_assert(std::is_same<decltype(ca[1]), const int&>{}, "");
+    static_assert(std::is_same<decltype(std::move(a)[1]), int&&>{}, "");
+    static_assert(std::is_same<decltype(std::move(ca)[1]), const int&>{}, "");
+
+    a[0] = 3;
+    a[1] = 4;
+    a[2] = 5;
+
+    REQUIRE(as_const(a)[0] == 3);
+    REQUIRE(a[1] == 4);
+    REQUIRE(std::move(as_const(a))[2] == 5);
 }
 
 TEST_CASE("affine_point types can be subtracted")
