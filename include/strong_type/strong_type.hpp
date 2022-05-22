@@ -1633,16 +1633,16 @@ struct is_arithmetic<::strong::type<T, Tag, M...>>
 
 #if STRONG_HAS_STD_FORMAT
 template<typename T, typename Tag, typename... M, typename Char>
-struct formatter<::strong::type<T, Tag, M...>, Char,
-                 std::enable_if_t<
-                     std::is_base_of<
-                         ::strong::formattable::modifier<
-                             ::strong::type<T, Tag, M...>
-                             >,
-                         ::strong::type<T, Tag, M...>
-                         >::value
-                     >>
-    : formatter<T>
+struct formatter<::strong::type<T, Tag, M...>, Char>
+  : std::enable_if_t<
+        std::is_base_of<
+            ::strong::formattable::modifier<
+                ::strong::type<T, Tag, M...>
+            >,
+            ::strong::type<T, Tag, M...>
+        >::value,
+        formatter<T>
+    >
 {
   using type = ::strong::type<T, Tag, M...>;
   template<typename FormatContext>
@@ -1663,16 +1663,16 @@ struct formatter<::strong::type<T, Tag, M...>, Char,
 namespace fmt
 {
 template<typename T, typename Tag, typename... M, typename Char>
-struct formatter<::strong::type<T, Tag, M...>, Char,
-                 std::enable_if_t<
-                   std::is_base_of<
-                     ::strong::formattable::modifier<
-                       ::strong::type<T, Tag, M...>
-                     >,
-                     ::strong::type<T, Tag, M...>
-                   >::value
-                 >>
-  : formatter<T>
+struct formatter<::strong::type<T, Tag, M...>, Char>
+  : std::enable_if_t<
+        std::is_base_of<
+            ::strong::formattable::modifier<
+                ::strong::type<T, Tag, M...>
+            >,
+            ::strong::type<T, Tag, M...>
+        >::value,
+        formatter<T>
+     >
 {
   using type = ::strong::type<T, Tag, M...>;
   template<typename FormatContext>
