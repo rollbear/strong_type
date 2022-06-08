@@ -667,6 +667,10 @@ TEST_CASE("ordered type can be compared for ordering")
   REQUIRE_FALSE(i2 <= i1);
   REQUIRE_FALSE(i1 > i2);
   REQUIRE_FALSE(i1 >= i2);
+
+#ifdef STRONG_HAS_THREE_WAY_COMPARE
+  REQUIRE((i1 <=> i2) == (1<=>2));
+#endif
 }
 
 TEST_CASE("an ostreamable type can be streamed using stream flags")
@@ -1312,6 +1316,13 @@ TEST_CASE("ordered_with")
   REQUIRE_FALSE(i1 > 1);
   REQUIRE(2 > i1);
   REQUIRE_FALSE(1 > i1);
+
+#ifdef STRONG_HAS_THREE_WAY_COMPARE
+  for (int i : {0, 1, 2}) {
+    REQUIRE((i1 <=> i) == (1<=>i));
+    REQUIRE((i <=> i1) == (i<=>1));
+  }
+#endif
 }
 
 #if STRONG_HAS_STD_FORMAT || STRONG_HAS_FMT_FORMAT

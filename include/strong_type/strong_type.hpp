@@ -60,6 +60,16 @@
 #include <fmt/format.h>
 #endif
 
+#if __has_include(<version>)
+#include <version>
+#endif
+
+#if __cpp_impl_three_way_comparison >= 201907L && __cpp_lib_three_way_comparison >= 201907L
+#include <compare>
+#define STRONG_HAS_THREE_WAY_COMPARE
+#endif
+
+
 namespace strong
 {
 
@@ -394,6 +404,27 @@ namespace impl
     {
       return impl::access(lh) >= value_of(rh) ;
     }
+
+#ifdef STRONG_HAS_THREE_WAY_COMPARE
+    STRONG_NODISCARD
+    friend
+    STRONG_CONSTEXPR
+    auto operator<=>(const T& lh, const Other& rh)
+    noexcept(noexcept(std::declval<const TT&>() <=> std::declval<const OT&>()))
+    -> decltype(std::declval<const TT&>() <=> std::declval<const OT&>())
+    {
+      return value_of(lh) <=> impl::access(rh);
+    }
+    STRONG_NODISCARD
+    friend
+    STRONG_CONSTEXPR
+    auto operator<=>(const Other& lh, const T& rh)
+    noexcept(noexcept(std::declval<const OT&>() <=> std::declval<const TT&>()))
+    -> decltype(std::declval<const OT&>() <=> std::declval<const TT&>())
+    {
+      return impl::access(lh) <=> value_of(rh) ;
+    }
+#endif
   };
 }
 
@@ -541,7 +572,6 @@ public:
   STRONG_NODISCARD
   friend
   STRONG_CONSTEXPR
-
   auto
   operator>=(
     const type& lh,
@@ -551,6 +581,16 @@ public:
   {
     return value_of(lh) >= value_of(rh);
   }
+
+#ifdef STRONG_HAS_THREE_WAY_COMPARE
+  STRONG_NODISCARD
+  friend STRONG_CONSTEXPR auto operator<=>(const type &lh, const type &rh) noexcept(
+      noexcept(std::declval<const T &>() <=> std::declval<const T &>()))
+      -> decltype(std::declval<const T &>() <=> std::declval<const T &>())
+  {
+    return value_of(lh) <=> value_of(rh);
+  }
+#endif
 };
 
 struct ostreamable
