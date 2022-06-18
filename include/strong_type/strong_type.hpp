@@ -33,11 +33,16 @@
 #endif
 
 #ifndef STRONG_HAS_STD_FORMAT
-#if __has_include(<format>)
+#if __has_include(<version>)
+#include <version>
+#if defined(__cpp_lib_format) && __cpp_lib_format >= 201907
 #define STRONG_HAS_STD_FORMAT 1
-#else
-#define STRONG_HAS_STD_FORMAT 0
 #endif
+#endif
+#endif
+
+#ifndef STRONG_HAS_STD_FORMAT
+#define STRONG_HAS_STD_FORMAT 0
 #endif
 
 #ifndef STRONG_HAS_FMT_FORMAT
@@ -50,10 +55,6 @@
 
 #if STRONG_HAS_STD_FORMAT
 #include <format>
-#if !defined(__cpp_lib_format) || __cpp_lib_format < 201907
-#undef STRONG_HAS_STD_FORMAT
-#define STRONG_HAS_STD_FORMAT 0
-#endif
 #endif
 
 #if STRONG_HAS_FMT_FORMAT
