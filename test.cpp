@@ -1323,7 +1323,11 @@ TEST_CASE("format")
 
 #if STRONG_HAS_FMT_FORMAT
   CHECK(fmt::format("{:d}", fi) == fmt::format("{:d}", 5));
+#if FMT_VERSION >= 80000
+  CHECK_THROWS_AS(fmt::format(fmt::runtime("{:s}"), fi), fmt::format_error);
+#else
   CHECK_THROWS_AS(fmt::format("{:s}", fi), fmt::format_error);
+#endif
 #endif
 
 #if STRONG_HAS_STD_FORMAT
