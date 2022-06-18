@@ -1328,7 +1328,8 @@ TEST_CASE("format")
 
 #if STRONG_HAS_STD_FORMAT
   CHECK(std::format("{:d}", fi) == std::format("{:d}", 5));
-  CHECK_THROWS_AS(std::format("{:s}", fi), std::format_error);
+  // Use std::vformat to mitigate the compile time check.
+  CHECK_THROWS_AS(std::vformat("{:s}", std::make_format_args(fi)), std::format_error);
 #endif
 }
 #endif
