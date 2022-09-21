@@ -1,3 +1,8 @@
+        * strong::arithmetic no longer specializes std::is_arithmetic<>. Issue
+          #19. This is expressively disallowed by the stdandard and is undefined
+          behaviour. Sorry for this potentially breaking change, but it was
+          always wrong.
+
 v4 2021-08-16
 
         * strong::affine_point<D> can now be defaulted as

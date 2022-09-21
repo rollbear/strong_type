@@ -152,8 +152,6 @@ can thus be used as key in `std::map`<> or `std::set<>`.
   `STRONG_HAS_FMT_FORMAT`. With 0 to disable the support completly, and with 1 to
   force the support, disable the auto detection.
 
-For modifier `strong::arithmetic`, the type trait `std::is_arithmetic<>` is true.
-
 For modifier `strong::iterator`, the type trait `std::iterator_traits` mirrors
 the traits of the underlying iterator type.
 
