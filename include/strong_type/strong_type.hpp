@@ -483,9 +483,9 @@ struct unique
   public:
     constexpr modifier() = default;
     modifier(const modifier&) = delete;
-    constexpr modifier(modifier&&) = default;
+    constexpr modifier(modifier&&) noexcept = default;
     modifier& operator=(const modifier&) = delete;
-    constexpr modifier& operator=(modifier&&) = default;
+    constexpr modifier& operator=(modifier&&) noexcept = default;
   };
 };
 struct ordered
@@ -1595,9 +1595,12 @@ struct implicitly_convertible_to
 
 struct formattable
 {
-    template <typename T>
-    class modifier{};
+  template <typename T>
+  class modifier{};
 };
+
+template <typename T>
+using is_formattable = std::is_base_of<formattable::modifier<T>, T>;
 
 }
 
@@ -1628,26 +1631,17 @@ struct hash<::strong::type<T, Tag, M...>>
 
 #if STRONG_HAS_STD_FORMAT
 template<typename T, typename Tag, typename... M, typename Char>
-struct formatter<::strong::type<T, Tag, M...>, Char>
-  : std::enable_if_t<
-        std::is_base_of<
-            ::strong::formattable::modifier<
-                ::strong::type<T, Tag, M...>
-            >,
-            ::strong::type<T, Tag, M...>
-        >::value,
-        formatter<T>
-    >
+    requires std::is_base_of_v<::strong::formattable::modifier<::strong::type<T, Tag, M...>>,
+                               ::strong::type<T, Tag, M...>>
+struct formatter<::strong::type<T, Tag, M...>, Char> : formatter<T, Char>
 {
-  using type = ::strong::type<T, Tag, M...>;
-  template<typename FormatContext>
+  template<typename FormatContext, typename Type>
   STRONG_CONSTEXPR
   decltype(auto)
-  format(const ::strong::formattable::modifier<type>& t, FormatContext& fc)
-      noexcept(noexcept(std::declval<formatter<T, Char>>().format(value_of(std::declval<const type&>()), fc)))
+  format(const Type& t, FormatContext& fc)
+      noexcept(noexcept(std::declval<formatter<T, Char>>().format(std::declval<const T&>(), fc)))
   {
-    const auto& tt = static_cast<const type&>(t);
-    return formatter<T, Char>::format(value_of(tt), fc);
+    return formatter<T, Char>::format(value_of(t), fc);
   }
 };
 #endif
@@ -1655,31 +1649,65 @@ struct formatter<::strong::type<T, Tag, M...>, Char>
 }
 
 #if STRONG_HAS_FMT_FORMAT
-namespace fmt
+namespace strong {
+
+template <typename T, typename Char>
+struct formatter;
+
+template <typename T, typename Tag, typename ... M, typename Char>
+struct formatter<type<T, Tag, M...>, Char> : fmt::formatter<T, Char>
 {
-template<typename T, typename Tag, typename... M, typename Char>
-struct formatter<::strong::type<T, Tag, M...>, Char>
-  : std::enable_if_t<
-        std::is_base_of<
-            ::strong::formattable::modifier<
-                ::strong::type<T, Tag, M...>
-            >,
-            ::strong::type<T, Tag, M...>
-        >::value,
-        formatter<T>
-     >
-{
-  using type = ::strong::type<T, Tag, M...>;
-  template<typename FormatContext>
+  template<typename FormatContext, typename Type>
   STRONG_CONSTEXPR
   decltype(auto)
-  format(const ::strong::formattable::modifier<type>& t, FormatContext& fc)
-      noexcept(noexcept(std::declval<formatter<T, Char>>().format(value_of(std::declval<const type&>()), fc)))
+  format(const Type& t, FormatContext& fc)
+      noexcept(noexcept(std::declval<fmt::formatter<T, Char>>().format(std::declval<const T&>(), fc)))
   {
-    const auto& tt = static_cast<const type&>(t);
-    return formatter<T, Char>::format(value_of(tt), fc);
+    return fmt::formatter<T, Char>::format(value_of(t), fc);
   }
 };
+
+#if FMT_VERSION >= 90000
+
+template <typename T, typename Char, bool = is_formattable<T>::value>
+struct select_formatter;
+
+template <typename T, typename Char>
+struct select_formatter<T, Char, true>
+{
+  using type = formatter<T, Char>;
+};
+
+template <typename T, typename Char>
+struct select_formatter<T, Char, false>
+{
+  using type = fmt::ostream_formatter;
+};
+
+#endif
+}
+namespace fmt
+{
+#if FMT_VERSION >= 90000
+template <typename T, typename Tag, typename ... M, typename Char>
+struct formatter<::strong::type<T, Tag, M...>,
+                 Char,
+                 ::strong::impl::void_t<std::enable_if_t<::strong::is_ostreamable<::strong::type<T, Tag, M...>>::value ||
+                                                         ::strong::is_formattable<::strong::type<T, Tag, M...>>::value>>>
+  :  ::strong::select_formatter<::strong::type<T, Tag, M...>, Char>::type
+{
+};
+#else
+template<typename T, typename Tag, typename... M, typename Char>
+struct formatter<::strong::type<T, Tag, M...>,
+                 Char,
+                 ::strong::impl::void_t<std::enable_if_t<::strong::is_formattable<::strong::type<T, Tag, M...>>::value>>
+                 >
+  :  ::strong::formatter<::strong::type<T, Tag, M...>, Char>
+{
+};
+#endif
+
 }
 #endif
 #endif //ROLLBEAR_STRONG_TYPE_HPP_INCLUDED

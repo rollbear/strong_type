@@ -1,3 +1,9 @@
+        * Fixed issue #22, a regression with strong::formattable and fmtlib.
+          A type that is strong::ostreamable con be formatted with fmt. A
+          type that is both strong::formattable and strong::ostreamable will
+          use the types formatter<> when using fmt. The behaviour of std::format
+          is unchanged.
+
         * strong::arithmetic no longer specializes std::is_arithmetic<>. Issue
           #19. This is expressively disallowed by the stdandard and is undefined
           behaviour. Sorry for this potentially breaking change, but it was

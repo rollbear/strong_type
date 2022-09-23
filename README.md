@@ -152,6 +152,8 @@ can thus be used as key in `std::map`<> or `std::set<>`.
   `STRONG_HAS_FMT_FORMAT`. With 0 to disable the support completly, and with 1 to
   force the support, disable the auto detection.
 
+  `fmt::format` allows formatting also types that are `strong::ostreamable`.
+
 For modifier `strong::iterator`, the type trait `std::iterator_traits` mirrors
 the traits of the underlying iterator type.
 
