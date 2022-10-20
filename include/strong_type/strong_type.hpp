@@ -571,6 +571,9 @@ struct ostreamable
   };
 };
 
+template<typename T>
+using is_ostreamable = std::is_base_of<ostreamable::modifier<T>, T>;
+
 struct istreamable
 {
   template <typename T>
