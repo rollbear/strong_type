@@ -18,7 +18,7 @@ project(strong_type)
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
-set(STRONG_TYPE_VERSION 5)
+set(STRONG_TYPE_VERSION 6)
 set(INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(MASTER_PROJECT OFF)
 if (${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})

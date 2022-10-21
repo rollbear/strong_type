@@ -1,3 +1,8 @@
+v6 2022-10-21
+
+        * Added missing strong::is_ostreamable<> predicate needed for fmtlib 9.
+          Thank you Tim Blechman @timblechmann for submitting the fix.
+
 v5 2022-10-20
 
         * Fixed issue #22, a regression with strong::formattable and fmtlib.
