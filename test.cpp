@@ -22,7 +22,7 @@
 #include <vector>
 #include <sstream>
 
-#include <catch.hpp>
+#include <catch2/catch.hpp>
 
 template <typename T, typename U>
 using equality_compare = decltype(std::declval<const T&>() == std::declval<const U&>());

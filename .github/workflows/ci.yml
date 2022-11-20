@@ -10,9 +10,9 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - { cxx: clang++-10, std: 14, stdlib: "-stdlib=libc++", linker: "-fuse-ld=gold -lc++abi", container: "clang:10" }
-          - { cxx: clang++-10, std: 17, stdlib: "-stdlib=libc++", linker: "-fuse-ld=gold -lc++abi", container: "clang:10" }
-          - { cxx: clang++-10, std: 20, stdlib: "-stdlib=libc++", linker: "-fuse-ld=gold -lc++abi", container: "clang:10" }
+          - { cxx: clang++-10, std: 14, stdlib: "libc++", linker: "-fuse-ld=gold -lc++abi", container: "clang:10" }
+          - { cxx: clang++-10, std: 17, stdlib: "libc++", linker: "-fuse-ld=gold -lc++abi", container: "clang:10" }
+          - { cxx: clang++-10, std: 20, stdlib: "libc++", linker: "-fuse-ld=gold -lc++abi", container: "clang:10" }
           - { cxx: clang++-10, std: 14, container: "clang:10" }
           - { cxx: clang++-10, std: 17, container: "clang:10" }
           - { cxx: clang++-10, std: 20, container: "clang:10" }
@@ -45,12 +45,19 @@ jobs:
       - name: "setup"
         shell: bash
         run: |
+          STDLIB=""
+          if [ -n "${{matrix.config.stdlib}}" ]
+          then
+            STDLIB="-stdlib=libc++"
+          fi
+          CATCH_PREFIX="/usr/lical/catch2-3-c++${STD}${{matrix.config.stdlib}}"
           cmake \
             -S . \
             -B build \
             -DCMAKE_CXX_COMPILER=${{matrix.config.cxx}} \
             -DCMAKE_CXX_STANDARD=${{matrix.config.std}} \
-            -DCMAKE_CXX_FLAGS="${{matrix.config.stdlib}} -Wall -Wextra -pedantic -Werror" \
+            -DCMAKE_CXX_FLAGS="${STDLIB} -Wall -Wextra -pedantic -Werror" \
+            -DCATCH2_PREFIX="${CATCH_PREFIX}" \
             -DCMAKE_BUILD_TYPE=Debug
       - name: "build"
         run: |
