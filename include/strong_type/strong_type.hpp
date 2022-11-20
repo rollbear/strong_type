@@ -1157,7 +1157,8 @@ struct bitarithmetic
       const T &rh)
     noexcept(noexcept(value_of(lh) &= value_of(rh)))
     {
-      value_of(lh) &= value_of(rh);
+      using type = underlying_type_t<T>;
+      value_of(lh) = type(value_of(lh) & value_of(rh));
       return lh;
     }
 
@@ -1169,7 +1170,8 @@ struct bitarithmetic
       const T &rh)
     noexcept(noexcept(value_of(lh) |= value_of(rh)))
     {
-      value_of(lh) |= value_of(rh);
+      using type = underlying_type_t<T>;
+      value_of(lh) = type(value_of(lh) | value_of(rh));
       return lh;
     }
 
@@ -1181,7 +1183,8 @@ struct bitarithmetic
       const T &rh)
     noexcept(noexcept(value_of(lh) ^= value_of(rh)))
     {
-      value_of(lh) ^= value_of(rh);
+      using type = underlying_type_t<T>;
+      value_of(lh) = type(value_of(lh) ^ value_of(rh));
       return lh;
     }
 
@@ -1194,7 +1197,8 @@ struct bitarithmetic
       C c)
     noexcept(noexcept(value_of(lh) <<= c))
     {
-      value_of(lh) <<= c;
+      using type = underlying_type_t <T>;
+      value_of(lh) = type(value_of(lh) << c);
       return lh;
     }
 
@@ -1207,7 +1211,8 @@ struct bitarithmetic
       C c)
     noexcept(noexcept(value_of(lh) >>= c))
     {
-      value_of(lh) >>= c;
+      using type = underlying_type_t<T>;
+      value_of(lh) = type(value_of(lh) >> c);
       return lh;
     }
 
@@ -1218,9 +1223,9 @@ struct bitarithmetic
     operator~(
       const T &lh)
     {
+      using type = underlying_type_t<T>;
       auto v = value_of(lh);
-      v = ~v;
-      return T(v);
+      return T(type(~v));
     }
 
     STRONG_NODISCARD

@@ -65,7 +65,7 @@ jobs:
             -B build \
             -DCMAKE_CXX_COMPILER=${{matrix.config.cxx}} \
             -DCMAKE_CXX_STANDARD=${{matrix.config.std}} \
-            -DCMAKE_CXX_FLAGS="${STDLIB} -Wall -Wextra -pedantic -Werror" \
+            -DCMAKE_CXX_FLAGS="${STDLIB} -Wall -Wextra -Wconversion -pedantic -Werror" \
             -DCATCH2_PREFIX="${CATCH_PREFIX}" \
             -DCMAKE_BUILD_TYPE=Debug
       - name: "build"
