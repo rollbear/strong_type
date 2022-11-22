@@ -59,10 +59,7 @@
 
 #if STRONG_HAS_FMT_FORMAT
 #include <fmt/format.h>
-
-#if FMT_VERSION >= 90000
 #include <fmt/ostream.h>
-#endif
 #endif
 
 namespace strong

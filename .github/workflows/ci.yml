@@ -59,21 +59,26 @@ jobs:
           then
             STDLIB="-stdlib=libc++"
           fi
-          CATCH_PREFIX="/usr/lical/catch2-3-c++${STD}${{matrix.config.stdlib}}"
+          LIBRARY_SUFFIX="c++${{matrix.config.std}}${{matrix.config.stdlib}}"
           cmake \
             -S . \
             -B build \
             -DCMAKE_CXX_COMPILER=${{matrix.config.cxx}} \
             -DCMAKE_CXX_STANDARD=${{matrix.config.std}} \
             -DCMAKE_CXX_FLAGS="${STDLIB} -Wall -Wextra -Wconversion -pedantic -Werror" \
-            -DCATCH2_PREFIX="${CATCH_PREFIX}" \
+            -DCATCH2_PREFIX="/usr/local/catch2-3-${LIBRARY_SUFFIX}" \
+            -DFMT8_PREFIX="/usr/local/fmt-8-${LIBRARY_SUFFIX}" \
+            -DFMT9_PREFIX="/usr/local/fmt-9-${LIBRARY_SUFFIX}" \
             -DCMAKE_BUILD_TYPE=Debug
       - name: "build"
         run: |
-          cmake --build build --target self_test
+          cmake --build build -t self_test test_fmt8 test_fmt9
+
       - name: "test"
         run: |
-          ./build/self_test
+          ./build/self_test && \
+          ./build/test_fmt8 && \
+          ./build/test_fmt9
 
   build_windows:
     runs-on: windows-latest

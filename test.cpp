@@ -22,8 +22,11 @@
 #include <vector>
 #include <sstream>
 
+#ifdef CATCH2_PREBUILT
+#include <catch2/catch_test_macros.hpp>
+#else
 #include <catch2/catch.hpp>
-
+#endif
 template <typename T, typename U>
 using equality_compare = decltype(std::declval<const T&>() == std::declval<const U&>());
 
@@ -1307,26 +1310,14 @@ TEST_CASE("ordered_with")
   REQUIRE_FALSE(1 > i1);
 }
 
-#if STRONG_HAS_STD_FORMAT || STRONG_HAS_FMT_FORMAT
+#if STRONG_HAS_STD_FORMAT
 TEST_CASE("format")
 {
   using formatint = strong::type<int, struct formattag, strong::formattable>;
 
   formatint fi{5};
-
-#if STRONG_HAS_FMT_FORMAT
-  CHECK(fmt::format("{:d}", fi) == fmt::format("{:d}", 5));
-#if FMT_VERSION >= 80000
-  CHECK_THROWS_AS(fmt::format(fmt::runtime("{:s}"), fi), fmt::format_error);
-#else
-  CHECK_THROWS_AS(fmt::format("{:s}", fi), fmt::format_error);
-#endif
-#endif
-
-#if STRONG_HAS_STD_FORMAT
   CHECK(std::format("{:d}", fi) == std::format("{:d}", 5));
   // Use std::vformat to mitigate the compile time check.
   CHECK_THROWS_AS(std::vformat("{:s}", std::make_format_args(fi)), std::format_error);
-#endif
 }
 #endif
