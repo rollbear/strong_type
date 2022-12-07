@@ -5,7 +5,7 @@ on: [push, pull_request]
 jobs:
   build_linux:
     runs-on: ubuntu-20.04
-    container: "ghcr.io/rollbear/${{matrix.config.container}}"
+    container: { image: "ghcr.io/rollbear/${{matrix.config.container}}", options: "--security-opt seccomp=unconfined" }
     strategy:
       fail-fast: false
       matrix:
@@ -70,6 +70,21 @@ jobs:
           ./build/self_test && \
           ./build/test_fmt8/test_fmt8 && \
           ./build/test_fmt9/test_fmt9
+
+      - name: "collect coverage"
+        run: |
+          kcov --skip-solibs  ./coverage --include-pattern='strong_type/*.hpp' ./build/self_test || true
+          kcov --skip-solibs  ./coverage --include-pattern='strong_type/*.hpp' ./build/test_fmt8/test_fmt8 || true
+          kcov --skip-solibs  ./coverage --include-pattern='strong_type/*.hpp' ./build/test_fmt9/test_fmt9 || true
+
+      - name: "upload coverage"
+        uses: codecov/codecov-action@v3
+        with:
+          directory: coverage
+          files: "*test*/cobertura.xml"
+          name: "Linux ${{matrix.config.cxx}} C++${{matrix.config.std}} ${{matrix.config.stdlib}}"
+          fail_ci_if_error: false
+          verbose: true
 
   build_windows:
     runs-on: windows-latest
