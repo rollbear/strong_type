@@ -1,5 +1,5 @@
 #include <strong_type/strong_type.hpp>
-#ifdef CATCH2_PREBUILT
+#if CATCH2 == 3
 #include <catch2/catch_test_macros.hpp>
 #else
 #include <catch2/catch.hpp>

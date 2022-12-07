@@ -32,15 +32,21 @@ if (MASTER_PROJECT AND CMAKE_BUILD_TYPE MATCHES Debug)
   set(CMAKE_CXX_STANDARD_REQUIRED YES)
   set(CMAKE_CXX_EXTENSIONS OFF)
 
-  if (CATCH2_PREFIX)
-    set(CATCH_DIR "")
-    set(TEST_MAIN "")
-  else()
+  find_package(Catch2 3 QUIET)
+  if (${Catch2_FOUND})
+    add_compile_definitions(CATCH2=3)
+  else ()
+      find_package(Catch2 2 QUIET)
+  endif()
+  if (TARGET Catch2::Catch2WithMain)
+    set(CATCHLIBS Catch2::Catch2WithMain)
+  endif()
+  if (NOT ${Catch2_FOUND})
     set(TEST_MAIN "test_main.cpp")
     set(CATCH_DIR ${CMAKE_CURRENT_BINARY_DIR}/catch)
     if(NOT EXISTS ${CATCH_DIR}/catch2/catch.hpp)
       if (NOT EXISTS ${CATCH_DIR}/catch2)
-        make_directory(${CATCH_DIR}/catch2)
+        file(MAKE_DIRECTORY "${CATCH_DIR}/catch2")
       endif()
       file(
         DOWNLOAD
@@ -57,7 +63,17 @@ if (MASTER_PROJECT AND CMAKE_BUILD_TYPE MATCHES Debug)
         message(FATAL_ERROR "error downloading catch: ${status_string}"
           "${log}")
       endif()
+
     endif()
+    add_library(Catch2 INTERFACE)
+    add_library(Catch2::Catch2 ALIAS Catch2)
+    target_include_directories(
+            Catch2
+            INTERFACE
+            ${CATCH_DIR}
+    )
+    set(CATCH_MAIN "${CMAKE_SOURCE_DIR}/test_main.cpp")
+    add_compile_definitions(CATCH2=2)
   endif()
 endif()
 
@@ -85,134 +101,19 @@ add_executable(
   EXCLUDE_FROM_ALL
     test.cpp
     include/strong_type/strong_type.hpp
-    ${TEST_MAIN})
-target_include_directories(
-    self_test
-  PRIVATE
-    ${CATCH_DIR}
+    ${CATCH_MAIN}
 )
-
-if (CATCH2_PREFIX)
-  target_compile_definitions(
-          self_test
-          PRIVATE
-          CATCH2_PREBUILT)
-  target_link_libraries(
-          self_test
-          PUBLIC
-          Catch2Main
-          Catch2
-  )
-  target_link_directories(
-          self_test
-          PRIVATE
-          "${CATCH2_PREFIX}/lib"
-  )
-  target_include_directories(
-          self_test
-          PRIVATE
-          ${CATCH2_PREFIX}/include
-  )
-endif()
-
-if (FMT8_PREFIX)
-  add_executable(
-          test_fmt8
-          EXCLUDE_FROM_ALL
-          test_fmt.cpp
-          ${TEST_MAIN})
-  target_link_libraries(
-          test_fmt8
-          PRIVATE
-          fmt
-          strong_type
-  )
-  target_link_directories(
-          test_fmt8
-          PRIVATE
-          ${FMT8_PREFIX}/lib
-  )
-  target_include_directories(
-          test_fmt8
-          PRIVATE
-          ${FMT8_PREFIX}/include
-          ${CATCH_DIR}
-  )
-  if (CATCH2_PREFIX)
-    target_compile_definitions(
-            test_fmt8
-            PRIVATE
-            CATCH2_PREBUILT)
-    target_link_libraries(
-            test_fmt8
-            PUBLIC
-            Catch2Main
-            Catch2
-    )
-    target_link_directories(
-            test_fmt8
-            PRIVATE
-            "${CATCH2_PREFIX}/lib"
-    )
-    target_include_directories(
-            test_fmt8
-            PRIVATE
-            ${CATCH2_PREFIX}/include
-    )
-  endif()
-endif()
-if (FMT9_PREFIX)
-  add_executable(
-          test_fmt9
-          EXCLUDE_FROM_ALL
-          test_fmt.cpp
-          ${TEST_MAIN})
-  target_link_libraries(
-          test_fmt9
-          PRIVATE
-          fmt
-          strong_type
-  )
-  target_link_directories(
-          test_fmt9
-          PRIVATE
-          ${FMT9_PREFIX}/lib
-  )
-  target_include_directories(
-          test_fmt9
-          PRIVATE
-          ${FMT9_PREFIX}/include
-          ${CATCH_DIR}
-  )
-  if (CATCH2_PREFIX)
-    target_compile_definitions(
-            test_fmt9
-            PRIVATE
-            CATCH2_PREBUILT)
-    target_link_libraries(
-            test_fmt9
-            PUBLIC
-            Catch2Main
-            Catch2
-    )
-    target_link_directories(
-            test_fmt9
-            PRIVATE
-            "${CATCH2_PREFIX}/lib"
-    )
-    target_include_directories(
-            test_fmt9
-            PRIVATE
-            ${CATCH2_PREFIX}/include
-    )
-  endif()
-endif()
 
 target_link_libraries(
     self_test
-  PRIVATE
+  PUBLIC
+    Catch2::Catch2
+    ${CATCHLIBS}
     strong_type
-)
+  )
+
+add_subdirectory(test_fmt8)
+add_subdirectory(test_fmt9)
 
 install(
   TARGETS

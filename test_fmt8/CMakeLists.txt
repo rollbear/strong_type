@@ -1,0 +1,5 @@
+find_package(fmt 8...<9 QUIET)
+if (fmt_FOUND)
+  add_executable(test_fmt8 ../test_fmt.cpp ${CATCH_MAIN})
+  target_link_libraries(test_fmt8 ${CATCHLIBS} Catch2::Catch2 fmt::fmt strong_type)
+endif()
