@@ -73,9 +73,9 @@ jobs:
 
       - name: "collect coverage"
         run: |
-          kcov --skip-solibs  ./coverage  ./build/self_test || true
-          kcov --skip-solibs  ./coverage  ./build/test_fmt8/test_fmt8 || true
-          kcov --skip-solibs  ./coverage  ./build/test_fmt9/test_fmt9 || true
+          kcov --skip-solibs  ./coverage --include-pattern=strong_type.hpp ./build/self_test || true
+          kcov --skip-solibs  ./coverage --include-pattern=strong_type.hpp ./build/test_fmt8/test_fmt8 || true
+          kcov --skip-solibs  ./coverage --include-pattern=strong_type.hpp ./build/test_fmt9/test_fmt9 || true
 
       - name: "upload coverage"
         uses: codecov/codecov-action@v3
