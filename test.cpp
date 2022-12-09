@@ -549,6 +549,14 @@ static_assert(is_less_than_comparable<iov, int>{},"");
 static_assert(is_less_than_comparable<int, iov>{},"");
 static_assert(!is_less_than_comparable<iov, iov>{},"");
 
+TEST_CASE("default_constructible initializes with underlying default constructor")
+{
+    constexpr strong::type<int, struct i_, strong::default_constructible> vc;
+    STATIC_REQUIRE(value_of(vc) == 0);
+    strong::type<int, struct i_, strong::default_constructible> vr;
+    REQUIRE(value_of(vr) == 0);
+}
+
 TEST_CASE("Construction from a value type lvalue copies it")
 {
   auto orig = std::make_shared<int>(3);
