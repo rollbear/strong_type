@@ -795,6 +795,17 @@ TEST_CASE("member value_of() gets the underlying value")
     }
 }
 
+TEST_CASE("equality_with can compare with defined type")
+{
+    using t1 = strong::type<int, struct t1_>;
+    using t2 = strong::type<int, struct t2_, strong::equality_with<t1>>;
+
+    REQUIRE(t1{1} == t2{1});
+    REQUIRE(t2{1} == t1{1});
+    REQUIRE(t1{1} != t2{2});
+    REQUIRE(t2{2} != t1{1});
+}
+
 TEST_CASE("an ostreamable type can be streamed using stream flags")
 {
   strong::type<int, struct i_, strong::ostreamable> i{3};
