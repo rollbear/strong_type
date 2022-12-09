@@ -1513,6 +1513,18 @@ TEST_CASE("ordered_with")
   REQUIRE_FALSE(1 > i1);
 }
 
+TEST_CASE("strong::hashable in unordered_set")
+{
+  using hs = strong::type<std::string, struct hs_, strong::hashable, strong::regular>;
+
+  using sset = std::unordered_set<hs>;
+
+  sset strings{hs{"foo"}, hs{"bar"}};
+
+  REQUIRE(strings.find(hs{"foo"}) != strings.end());
+  REQUIRE(strings.find(hs{"bar"}) != strings.end());
+  REQUIRE(strings.find(hs{"baz"}) == strings.end());
+}
 #if STRONG_HAS_STD_FORMAT
 TEST_CASE("format")
 {
