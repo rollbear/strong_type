@@ -663,6 +663,130 @@ TEST_CASE("ordered type can be compared for ordering")
   REQUIRE_FALSE(i1 >= i2);
 }
 
+TEST_CASE("freestanding value_of() gets the underlying value")
+{
+    GIVEN("a strong value")
+    {
+        using type = strong::type<int, struct type_>;
+        type var{3};
+        WHEN("calling value_of() on a const lvalue")
+        {
+            auto &&v = value_of(std::as_const(var));
+            THEN("a const lvalue reference is returned")
+            {
+                STATIC_REQUIRE(std::is_same_v<decltype(v), const int&>);
+            }
+            AND_THEN("the value is the one constructed from")
+            {
+                REQUIRE(v ==  3);
+            }
+        }
+        AND_WHEN("calling value_of() on a non-const lvalue")
+        {
+            auto&& v = value_of(var);
+            THEN("a non-const lvalue reference is returned")
+            {
+                STATIC_REQUIRE(std::is_same_v<decltype(v), int&>);
+            }
+            AND_THEN("the value is the one constructed from")
+            {
+                REQUIRE(v == 3);
+            }
+            AND_THEN("a write to the returned reference changes the value")
+            {
+                v = 4;
+                REQUIRE(value_of(var) == 4);
+            }
+        }
+        AND_WHEN("calling value_of() on a non-const rvalue")
+        {
+            auto&& v = value_of(std::move(var));
+            THEN("a non-const rvalue reference is returned")
+            {
+                STATIC_REQUIRE(std::is_same_v<decltype(v), int&&>);
+            }
+            AND_THEN("the value is the one constructed from")
+            {
+                REQUIRE(v == 3);
+            }
+        }
+        AND_WHEN("calling value_of() on a const rvalue")
+        {
+            auto&& v = value_of(std::move(std::as_const(var)));
+            THEN("a const lvalue refercence is returned")
+            {
+                STATIC_REQUIRE(std::is_same_v<decltype(v), const int&>);
+            }
+            AND_THEN("the value is the one constructed from")
+            {
+                REQUIRE(v == 3);
+            }
+        }
+    }
+}
+
+TEST_CASE("member value_of() gets the underlying value")
+{
+    GIVEN("a strong value")
+    {
+        using type = strong::type<int, struct type_>;
+        type var{3};
+        WHEN("calling value_of() on a const lvalue")
+        {
+            auto &&v = std::as_const(var).value_of();
+            THEN("a const lvalue reference is returned")
+            {
+                STATIC_REQUIRE(std::is_same_v<decltype(v), const int&>);
+            }
+            AND_THEN("the value is the one constructed from")
+            {
+                REQUIRE(v ==  3);
+            }
+        }
+        AND_WHEN("calling value_of() on a non-const lvalue")
+        {
+            auto&& v = var.value_of();
+            THEN("a non-const lvalue reference is returned")
+            {
+                STATIC_REQUIRE(std::is_same_v<decltype(v), int&>);
+            }
+            AND_THEN("the value is the one constructed from")
+            {
+                REQUIRE(v == 3);
+            }
+            AND_THEN("a write to the returned reference changes the value")
+            {
+                v = 4;
+                REQUIRE(value_of(var) == 4);
+            }
+        }
+        AND_WHEN("calling value_of() on a non-const rvalue")
+        {
+            auto&& v = std::move(var).value_of();
+            THEN("a non-const rvalue reference is returned")
+            {
+                STATIC_REQUIRE(std::is_same_v<decltype(v), int&&>);
+            }
+            AND_THEN("the value is the one constructed from")
+            {
+                REQUIRE(v == 3);
+            }
+        }
+        AND_WHEN("calling value_of() on a const rvalue")
+        {
+            auto&& v = std::move(std::as_const(var)).value_of();
+            THEN("a const lvalue refercence is returned")
+            {
+                STATIC_REQUIRE(std::is_same_v<decltype(v), const int&>);
+            }
+            AND_THEN("the value is the one constructed from")
+            {
+                REQUIRE(v == 3);
+            }
+        }
+    }
+}
+
 TEST_CASE("an ostreamable type can be streamed using stream flags")
 {
   strong::type<int, struct i_, strong::ostreamable> i{3};
