@@ -549,6 +549,11 @@ static_assert(is_less_than_comparable<iov, int>{},"");
 static_assert(is_less_than_comparable<int, iov>{},"");
 static_assert(!is_less_than_comparable<iov, iov>{},"");
 
+template <typename T>
+const T& as_const(T& t) { return t;}
+template <typename T>
+const T&& as_const(T&& t) { return std::move(t);}
+
 TEST_CASE("default_constructible initializes with underlying default constructor")
 {
     constexpr strong::type<int, struct i_, strong::default_constructible> vc;
@@ -670,7 +675,6 @@ TEST_CASE("ordered type can be compared for ordering")
   REQUIRE_FALSE(i1 > i2);
   REQUIRE_FALSE(i1 >= i2);
 }
-
 TEST_CASE("freestanding value_of() gets the underlying value")
 {
     GIVEN("a strong value")
@@ -679,10 +683,10 @@ TEST_CASE("freestanding value_of() gets the underlying value")
         type var{3};
         WHEN("calling value_of() on a const lvalue")
         {
-            auto &&v = value_of(std::as_const(var));
+            auto &&v = value_of(as_const(var));
             THEN("a const lvalue reference is returned")
             {
-                STATIC_REQUIRE(std::is_same_v<decltype(v), const int&>);
+                STATIC_REQUIRE(std::is_same<decltype(v), const int&>{});
             }
             AND_THEN("the value is the one constructed from")
             {
@@ -694,7 +698,7 @@ TEST_CASE("freestanding value_of() gets the underlying value")
             auto&& v = value_of(var);
             THEN("a non-const lvalue reference is returned")
             {
-                STATIC_REQUIRE(std::is_same_v<decltype(v), int&>);
+                STATIC_REQUIRE(std::is_same<decltype(v), int&>{});
             }
             AND_THEN("the value is the one constructed from")
             {
@@ -711,7 +715,7 @@ TEST_CASE("freestanding value_of() gets the underlying value")
             auto&& v = value_of(std::move(var));
             THEN("a non-const rvalue reference is returned")
             {
-                STATIC_REQUIRE(std::is_same_v<decltype(v), int&&>);
+                STATIC_REQUIRE(std::is_same<decltype(v), int&&>{});
             }
             AND_THEN("the value is the one constructed from")
             {
@@ -720,10 +724,10 @@ TEST_CASE("freestanding value_of() gets the underlying value")
         }
         AND_WHEN("calling value_of() on a const rvalue")
         {
-            auto&& v = value_of(std::move(std::as_const(var)));
+            auto&& v = value_of(std::move(as_const(var)));
             THEN("a const lvalue refercence is returned")
             {
-                STATIC_REQUIRE(std::is_same_v<decltype(v), const int&>);
+                STATIC_REQUIRE(std::is_same<decltype(v), const int&>{});
             }
             AND_THEN("the value is the one constructed from")
             {
@@ -741,10 +745,10 @@ TEST_CASE("member value_of() gets the underlying value")
         type var{3};
         WHEN("calling value_of() on a const lvalue")
         {
-            auto &&v = std::as_const(var).value_of();
+            auto &&v = as_const(var).value_of();
             THEN("a const lvalue reference is returned")
             {
-                STATIC_REQUIRE(std::is_same_v<decltype(v), const int&>);
+                STATIC_REQUIRE(std::is_same<decltype(v), const int&>{});
             }
             AND_THEN("the value is the one constructed from")
             {
@@ -756,7 +760,7 @@ TEST_CASE("member value_of() gets the underlying value")
             auto&& v = var.value_of();
             THEN("a non-const lvalue reference is returned")
             {
-                STATIC_REQUIRE(std::is_same_v<decltype(v), int&>);
+                STATIC_REQUIRE(std::is_same<decltype(v), int&>{});
             }
             AND_THEN("the value is the one constructed from")
             {
@@ -773,7 +777,7 @@ TEST_CASE("member value_of() gets the underlying value")
             auto&& v = std::move(var).value_of();
             THEN("a non-const rvalue reference is returned")
             {
-                STATIC_REQUIRE(std::is_same_v<decltype(v), int&&>);
+                STATIC_REQUIRE(std::is_same<decltype(v), int&&>{});
             }
             AND_THEN("the value is the one constructed from")
             {
@@ -782,10 +786,10 @@ TEST_CASE("member value_of() gets the underlying value")
         }
         AND_WHEN("calling value_of() on a const rvalue")
         {
-            auto&& v = std::move(std::as_const(var)).value_of();
+            auto&& v = std::move(as_const(var)).value_of();
             THEN("a const lvalue refercence is returned")
             {
-                STATIC_REQUIRE(std::is_same_v<decltype(v), const int&>);
+                STATIC_REQUIRE(std::is_same<decltype(v), const int&>{});
             }
             AND_THEN("the value is the one constructed from")
             {
@@ -1159,24 +1163,24 @@ TEST_CASE("indexed can be accessed using operator [] and .at()")
   REQUIRE(acri == 'b');
 
   // operator[] on std::string returns lvalue reference
-  static_assert(std::is_same_v<decltype(std::declval<std::string&&>()[1]), char&>);
+  static_assert(std::is_same<decltype(std::declval<std::string&&>()[1]), char&>{},"");
   // hence ...
 
   auto&& tmp = std::move(s)[1U];
-  STATIC_REQUIRE(std::is_same_v<decltype(tmp), char&>);
+  STATIC_REQUIRE(std::is_same<decltype(tmp), char&>{});
   REQUIRE(tmp == 'o');
 
   auto&& tmpat = std::move(s).at(1U);
-  STATIC_REQUIRE(std::is_same_v<decltype(tmpat), char&>);
+  STATIC_REQUIRE(std::is_same<decltype(tmpat), char&>{});
   REQUIRE(tmpat == 'o');
 
 
   auto&& tmpi = std::move(si)[I{1U}];
-  STATIC_REQUIRE(std::is_same_v<decltype(tmpi), char&>);
+  STATIC_REQUIRE(std::is_same<decltype(tmpi), char&>{});
   REQUIRE(tmpi == 'o');
 
   auto&& tmpiat = std::move(si).at(I{1U});
-  STATIC_REQUIRE(std::is_same_v<decltype(tmpiat), char&>);
+  STATIC_REQUIRE(std::is_same<decltype(tmpiat), char&>{});
   REQUIRE(tmpiat == 'o');
 }
 
@@ -1199,7 +1203,6 @@ using array = strong::type<simple_array<T, N>, struct array_,
 template <typename ...> struct S;
 TEST_CASE("indexed can be accessed with operator[] without at()")
 {
-    static auto as_const = [](const auto& x) -> decltype(auto) { return x;};
     static_assert(is_indexable<array<int, 3>, int>{}, "");
     static_assert(!has_at<array<int, 3>, int>{}, "");
 
