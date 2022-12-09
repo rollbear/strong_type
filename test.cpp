@@ -1157,6 +1157,27 @@ TEST_CASE("indexed can be accessed using operator [] and .at()")
   auto& acri = ci.at(I{0U});
   static_assert(std::is_const<std::remove_reference_t<decltype(acri)>>{}, "");
   REQUIRE(acri == 'b');
+
+  // operator[] on std::string returns lvalue reference
+  static_assert(std::is_same_v<decltype(std::declval<std::string&&>()[1]), char&>);
+  // hence ...
+
+  auto&& tmp = std::move(s)[1U];
+  STATIC_REQUIRE(std::is_same_v<decltype(tmp), char&>);
+  REQUIRE(tmp == 'o');
+
+  auto&& tmpat = std::move(s).at(1U);
+  STATIC_REQUIRE(std::is_same_v<decltype(tmpat), char&>);
+  REQUIRE(tmpat == 'o');
+
+
+  auto&& tmpi = std::move(si)[I{1U}];
+  STATIC_REQUIRE(std::is_same_v<decltype(tmpi), char&>);
+  REQUIRE(tmpi == 'o');
+
+  auto&& tmpiat = std::move(si).at(I{1U});
+  STATIC_REQUIRE(std::is_same_v<decltype(tmpiat), char&>);
+  REQUIRE(tmpiat == 'o');
 }
 
 template <typename T, size_t N>
