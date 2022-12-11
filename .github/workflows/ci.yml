@@ -58,7 +58,7 @@ jobs:
             -B build \
             -DCMAKE_CXX_COMPILER=${{matrix.config.cxx}} \
             -DCMAKE_CXX_STANDARD=${{matrix.config.std}} \
-            -DCMAKE_CXX_FLAGS="${STDLIB} -Wall -Wextra -Wconversion -pedantic -Werror" \
+            -DCMAKE_CXX_FLAGS="${STDLIB} -Wall -Wextra -Wconversion -pedantic -Werror --coverage" \
             -DCMAKE_PREFIX_PATH="${LIBRARY_PREFIX}" \
             -DCMAKE_BUILD_TYPE=Debug
       - name: "build"
@@ -73,15 +73,14 @@ jobs:
 
       - name: "collect coverage"
         run: |
-          kcov --skip-solibs  ./coverage --include-pattern=strong_type.hpp ./build/self_test || true
-          kcov --skip-solibs  ./coverage --include-pattern=strong_type.hpp ./build/test_fmt8/test_fmt8 || true
-          kcov --skip-solibs  ./coverage --include-pattern=strong_type.hpp ./build/test_fmt9/test_fmt9 || true
+          COV=`echo ${{matrix.config.cxx}} | grep -q clang && echo "llvm-cov gcov"|| echo gcov`
+          echo ${COV} -abcfu `find . -name "test*.gcno"`
+          ${COV} -abcfu `find . -name "test*.gcno"`
 
       - name: "upload coverage"
         uses: codecov/codecov-action@v3
         with:
-          directory: coverage
-          files: "*test*/cobertura.xml"
+          files: "strong_type.hpp.gcov"
           name: "Linux ${{matrix.config.cxx}} C++${{matrix.config.std}} ${{matrix.config.stdlib}}"
           fail_ci_if_error: false
           verbose: true
