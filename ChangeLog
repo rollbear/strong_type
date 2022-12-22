@@ -2,7 +2,7 @@ v7 2022-12-22
 
         * Added missing #include for <fmt/ostream.h>. Thank you Björn Schäpers
 
-        * Fixed MSVC check (typo) for constexpr. Thhank you Sergei Soloviev
+        * Fixed MSVC check (typo) for constexpr. Thank you Sergei Soloviev
 
         * Builds cleanly with -Wconversion
 
