@@ -17,7 +17,7 @@ programmers.
 Example use:
 
 ```Cpp
-#include <strong_type.hpp>
+#include <strong_type/strong_type.hpp>
 using myint = strong::type<int, struct my_int_>;
 ```
 
