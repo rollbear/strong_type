@@ -50,7 +50,6 @@ endif()
 
 add_executable(
         self_test
-        EXCLUDE_FROM_ALL
         test.cpp
         ${CATCH_MAIN}
 )
