@@ -59,6 +59,7 @@ add_executable(
         test_semiregular.cpp
         test_regular.cpp
         test_unique.cpp
+        test_ostreamable.cpp
         empty.cpp
         ${CATCH_MAIN}
 )

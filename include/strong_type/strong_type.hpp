@@ -22,6 +22,7 @@
 #include "semiregular.hpp"
 #include "regular.hpp"
 #include "unique.hpp"
+#include "ostreamable.hpp"
 
 #include <istream>
 #include <ostream>
@@ -60,25 +61,6 @@
 namespace strong
 {
 
-struct ostreamable
-{
-  template <typename T>
-  class modifier
-  {
-  public:
-    friend
-    std::ostream&
-    operator<<(
-      std::ostream &os,
-      const T &t)
-    {
-      return os << value_of(t);
-    }
-  };
-};
-
-template<typename T>
-using is_ostreamable = std::is_base_of<ostreamable::modifier<T>, T>;
 
 struct istreamable
 {
