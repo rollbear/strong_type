@@ -76,6 +76,7 @@ add_executable(
         test_iterator.cpp
         test_range.cpp
         test_convertible_to.cpp
+        test_implicitly_convertible_to.cpp
         empty.cpp
         ${CATCH_MAIN}
         )

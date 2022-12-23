@@ -35,6 +35,7 @@
 #include "iterator.hpp"
 #include "range.hpp"
 #include "convertible_to.hpp"
+#include "implicitly_convertible_to.hpp"
 
 #include <istream>
 #include <ostream>
@@ -72,30 +73,6 @@
 
 namespace strong
 {
-
-namespace impl {
-
-  template<typename T, typename D>
-  struct implicit_converter
-  {
-    STRONG_CONSTEXPR operator D() const
-    noexcept(noexcept(static_cast<D>(std::declval<const underlying_type_t<T>&>())))
-    {
-      auto& self = static_cast<const T&>(*this);
-      return static_cast<D>(value_of(self));
-    }
-  };
-}
-
-template <typename ... Ts>
-struct implicitly_convertible_to
-{
-  template <typename T>
-  struct modifier : impl::implicit_converter<T, Ts>...
-  {
-  };
-
-};
 
 struct formattable
 {
