@@ -1230,31 +1230,6 @@ TEST_CASE("conversions")
 #endif
 }
 
-TEST_CASE("ordered_with")
-{
-  const iov i1{1};
-
-  REQUIRE(i1 < 2);
-  REQUIRE(0 < i1);
-  REQUIRE_FALSE(i1 < 1);
-  REQUIRE_FALSE(1 < i1);
-  REQUIRE(i1 <= 1);
-  REQUIRE(i1 <= 2);
-  REQUIRE_FALSE(i1 <= 0);
-  REQUIRE(1 <= i1);
-  REQUIRE(0 <= i1);
-  REQUIRE_FALSE(2<= i1);
-  REQUIRE(i1 >= 1);
-  REQUIRE(i1 >= 0);
-  REQUIRE_FALSE(i1 >= 2);
-  REQUIRE(1 >= i1);
-  REQUIRE(2 >= i1);
-  REQUIRE_FALSE(0 >= i1);
-  REQUIRE(i1 > 0);
-  REQUIRE_FALSE(i1 > 1);
-  REQUIRE(2 > i1);
-  REQUIRE_FALSE(1 > i1);
-}
 
 TEST_CASE("strong::hashable in unordered_set")
 {
