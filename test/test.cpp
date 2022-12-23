@@ -549,16 +549,6 @@ static_assert(is_less_than_comparable<int, iov>{},"");
 static_assert(!is_less_than_comparable<iov, iov>{},"");
 
 
-TEST_CASE("a decrementable can be decremented")
-{
-  using C = strong::type<int, struct i_, strong::decrementable>;
-
-  C c{10};
-  REQUIRE(value_of(--c) == 9);
-  REQUIRE(value_of(c) == 9);
-  REQUIRE(value_of(c--) == 9);
-  REQUIRE(value_of(c) == 8);
-}
 
 TEST_CASE("a bicrementable goes both ways")
 {

@@ -24,6 +24,7 @@
 #include "unique.hpp"
 #include "iostreamable.hpp"
 #include "incrementable.hpp"
+#include "decrementable.hpp"
 
 #include <istream>
 #include <ostream>
@@ -61,35 +62,6 @@
 
 namespace strong
 {
-
-
-struct decrementable
-{
-  template <typename T>
-  class modifier
-  {
-  public:
-    friend
-    STRONG_CONSTEXPR
-    T&
-    operator--(T& t)
-    noexcept(noexcept(--std::declval<T&>().value_of()))
-    {
-      --value_of(t);
-      return t;
-    }
-
-    friend
-    STRONG_CONSTEXPR
-    T
-    operator--(T& t, int)
-    {
-      auto copy = t;
-      --t;
-      return copy;
-    }
-  };
-};
 
 struct bicrementable
 {

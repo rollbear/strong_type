@@ -63,6 +63,7 @@ add_executable(
         test_istreamable.cpp
         test_iostreamable.cpp
         test_incrementable.cpp
+        test_decrementable.cpp
         empty.cpp
         ${CATCH_MAIN}
 )
