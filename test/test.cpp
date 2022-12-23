@@ -548,15 +548,6 @@ static_assert(is_less_than_comparable<iov, int>{},"");
 static_assert(is_less_than_comparable<int, iov>{},"");
 static_assert(!is_less_than_comparable<iov, iov>{},"");
 
-TEST_CASE("an incrementable can be incremented")
-{
-  using C = strong::type<int, struct i_, strong::incrementable>;
-
-  C c{3};
-  REQUIRE(value_of(++c) == 4);
-  REQUIRE(value_of(c) == 4);
-  REQUIRE(value_of(c++) == 4);
-  REQUIRE(value_of(c) == 5); }
 
 TEST_CASE("a decrementable can be decremented")
 {
