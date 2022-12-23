@@ -228,6 +228,9 @@ template <bool> struct valid_type;
 template <>
 struct valid_type<true> {};
 
+template <typename ...>
+using void_t = void;
+
 }
 }
 #endif //ROLLBEAR_STRONG_TYPE_TYPE_HPP_INCLUDED

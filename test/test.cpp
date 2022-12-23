@@ -563,28 +563,6 @@ TEST_CASE("swap")
   CHECK(v2.value_of() == 6);
 }
 
-TEST_CASE("conversions")
-{
-  using ssbe = strong::type<const char*, struct ssbe_, strong::convertible_to<bool, std::string>>;
-
-  ssbi validi{"value"};
-  ssbi invalidi(nullptr);
-  ssbe valide("value");
-  ssbe invalide(nullptr);
-
-  REQUIRE(validi);
-  REQUIRE(valide);
-  REQUIRE_FALSE(invalidi);
-  REQUIRE_FALSE(invalide);
-
-  std::string svalidi = validi;
-  REQUIRE(svalidi == "value");
-#if !defined(__GNUC__) || __GNUC__ > 7
-  std::string svalide{valide};
-  REQUIRE(svalide == "value");
-#endif
-}
-
 
 #if STRONG_HAS_STD_FORMAT
 TEST_CASE("format")

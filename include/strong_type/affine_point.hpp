@@ -27,9 +27,6 @@ struct affine_point
 
 namespace impl
 {
-template <typename ...>
-using void_t = void;
-
 template <typename T, typename = void>
 struct subtractable : std::false_type {};
 
