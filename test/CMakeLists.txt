@@ -51,6 +51,7 @@ endif()
 add_executable(
         self_test
         test.cpp
+        empty.cpp
         ${CATCH_MAIN}
 )
 
