@@ -109,7 +109,7 @@ jobs:
             -DSTRONG_TYPE_UNIT_TEST=yes
       - name: "build"
         run: |
-          cmake --build build --target self_test
+          cmake --build build --target self_test --parallel
       - name: "test"
         run: |
           build\test\Debug\self_test.exe
