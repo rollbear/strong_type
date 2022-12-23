@@ -549,22 +549,6 @@ static_assert(is_less_than_comparable<int, iov>{},"");
 static_assert(!is_less_than_comparable<iov, iov>{},"");
 
 
-
-TEST_CASE("a bicrementable goes both ways")
-{
-  using C = strong::type<int, struct i_, strong::bicrementable>;
-
-  C c{3};
-  REQUIRE(value_of(++c) == 4);
-  REQUIRE(value_of(c) == 4);
-  REQUIRE(value_of(c++) == 4);
-  REQUIRE(value_of(c) == 5);
-  REQUIRE(value_of(--c) == 4);
-  REQUIRE(value_of(c) == 4);
-  REQUIRE(value_of(c--) == 4);
-  REQUIRE(value_of(c) == 3);
-}
-
 TEST_CASE("a boolean value can be tested for truth")
 {
   using I = strong::type<int, struct i_, strong::boolean>;

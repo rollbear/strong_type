@@ -23,8 +23,7 @@
 #include "regular.hpp"
 #include "unique.hpp"
 #include "iostreamable.hpp"
-#include "incrementable.hpp"
-#include "decrementable.hpp"
+#include "bicrementable.hpp"
 
 #include <istream>
 #include <ostream>
@@ -62,16 +61,6 @@
 
 namespace strong
 {
-
-struct bicrementable
-{
-  template <typename T>
-  class modifier
-    : public incrementable::modifier<T>
-    , public decrementable::modifier<T>
-  {
-  };
-};
 
 struct boolean
 {
