@@ -548,40 +548,6 @@ static_assert(is_less_than_comparable<iov, int>{},"");
 static_assert(is_less_than_comparable<int, iov>{},"");
 static_assert(!is_less_than_comparable<iov, iov>{},"");
 
-TEST_CASE("pointer types can be compared with nullptr")
-{
-  using P = strong::type<std::unique_ptr<int>, struct p_, strong::pointer>;
-
-  P p{nullptr};
-  REQUIRE(p == nullptr);
-  REQUIRE(nullptr == p);
-  REQUIRE_FALSE(p != nullptr);
-  REQUIRE_FALSE(nullptr != p);
-
-  p = P{std::make_unique<int>(3)};
-
-  REQUIRE_FALSE(p == nullptr);
-  REQUIRE_FALSE(nullptr == p);
-  REQUIRE(p != nullptr);
-  REQUIRE(nullptr != p);
-}
-
-TEST_CASE("pointer types can be dereferenced using operator ->")
-{
-  struct S { int i;};
-  S s {3};
-  strong::type<S*, struct s_, strong::pointer> p{&s};
-
-  REQUIRE(p->i == 3);
-}
-
-TEST_CASE("pointer types can be dereferenced using operator *")
-{
-  int i = 0;
-  strong::type<int*, struct s_, strong::pointer> p{&i};
-  *p = 3;
-  REQUIRE(i == 3);
-}
 
 TEST_CASE("arithmetic types can be added")
 {

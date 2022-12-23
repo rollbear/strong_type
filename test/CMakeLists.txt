@@ -68,7 +68,7 @@ add_executable(
         test_boolean.cpp
         empty.cpp
         ${CATCH_MAIN}
-)
+        test_pointer.cpp)
 
 target_link_libraries(
         self_test
