@@ -13,7 +13,7 @@
 
 
 // include first to ensure there aren't any unmet header dependencies
-#include <strong_type/strong_type.hpp>
+#include "strong_type/strong_type.hpp"
 
 #include <iomanip>
 #include <unordered_set>

@@ -1,4 +1,4 @@
-#include <strong_type/strong_type.hpp>
+#include "strong_type/strong_type.hpp"
 #if CATCH2 == 3
 #include <catch2/catch_test_macros.hpp>
 #else

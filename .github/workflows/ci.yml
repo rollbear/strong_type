@@ -68,9 +68,9 @@ jobs:
 
       - name: "test"
         run: |
-          ./build/self_test && \
-          ./build/test_fmt8/test_fmt8 && \
-          ./build/test_fmt9/test_fmt9
+          ./build/test/self_test && \
+          ./build/test/test_fmt8/test_fmt8 && \
+          ./build/test/test_fmt9/test_fmt9
 
       - name: "collect coverage"
         run: |
@@ -112,4 +112,4 @@ jobs:
           cmake --build build --target self_test
       - name: "test"
         run: |
-          build\Debug\self_test.exe
+          build\test\Debug\self_test.exe
