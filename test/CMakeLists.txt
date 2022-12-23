@@ -74,6 +74,7 @@ add_executable(
         test_bitarithmetic.cpp
         test_indexed.cpp
         test_iterator.cpp
+        test_range.cpp
         empty.cpp
         ${CATCH_MAIN}
         )
