@@ -56,6 +56,7 @@ add_executable(
         test_equality_with.cpp
         test_ordered.cpp
         test_ordered_with.cpp
+        test_semiregular.cpp
         empty.cpp
         ${CATCH_MAIN}
 )
