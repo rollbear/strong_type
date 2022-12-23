@@ -23,6 +23,7 @@
 #include "regular.hpp"
 #include "unique.hpp"
 #include "ostreamable.hpp"
+#include "istreamable.hpp"
 
 #include <istream>
 #include <ostream>
@@ -61,23 +62,6 @@
 namespace strong
 {
 
-
-struct istreamable
-{
-  template <typename T>
-  class modifier
-  {
-  public:
-    friend
-    std::istream&
-    operator>>(
-      std::istream &is,
-      T &t)
-    {
-      return is >> value_of(t);
-    }
-  };
-};
 
 struct iostreamable
 {

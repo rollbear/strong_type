@@ -60,6 +60,7 @@ add_executable(
         test_regular.cpp
         test_unique.cpp
         test_ostreamable.cpp
+        test_istreamable.cpp
         empty.cpp
         ${CATCH_MAIN}
 )

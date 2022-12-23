@@ -548,17 +548,6 @@ static_assert(is_less_than_comparable<iov, int>{},"");
 static_assert(is_less_than_comparable<int, iov>{},"");
 static_assert(!is_less_than_comparable<iov, iov>{},"");
 
-
-TEST_CASE("an istreamable type can be read from a istream")
-{
-  strong::type<int, struct i_, strong::istreamable> i{0}, j{0};
-
-  std::istringstream is{" 3 4"};
-  is >> i >> j;
-  REQUIRE(value_of(i) == 3);
-  REQUIRE(value_of(j) == 4);
-}
-
 TEST_CASE("an iostreamable type can be both read and written using streams")
 {
   strong::type<int, struct i_, strong::iostreamable> i{0};
