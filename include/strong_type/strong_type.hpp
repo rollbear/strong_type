@@ -24,6 +24,7 @@
 #include "unique.hpp"
 #include "iostreamable.hpp"
 #include "bicrementable.hpp"
+#include "boolean.hpp"
 
 #include <istream>
 #include <ostream>
@@ -62,20 +63,6 @@
 namespace strong
 {
 
-struct boolean
-{
-  template <typename T>
-  class modifier
-  {
-  public:
-    explicit STRONG_CONSTEXPR operator bool() const
-    noexcept(noexcept(static_cast<bool>(value_of(std::declval<const T&>()))))
-    {
-      const auto& self = static_cast<const T&>(*this);
-      return static_cast<bool>(value_of(self));
-    }
-  };
-};
 
 struct hashable
 {

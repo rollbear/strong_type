@@ -548,19 +548,6 @@ static_assert(is_less_than_comparable<iov, int>{},"");
 static_assert(is_less_than_comparable<int, iov>{},"");
 static_assert(!is_less_than_comparable<iov, iov>{},"");
 
-
-TEST_CASE("a boolean value can be tested for truth")
-{
-  using I = strong::type<int, struct i_, strong::boolean>;
-
-  I i{3};
-  REQUIRE(i);
-  REQUIRE_FALSE(!i);
-  i = I{0};
-  REQUIRE(!i);
-  REQUIRE_FALSE(i);
-}
-
 TEST_CASE("pointer types can be compared with nullptr")
 {
   using P = strong::type<std::unique_ptr<int>, struct p_, strong::pointer>;

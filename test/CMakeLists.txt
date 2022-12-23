@@ -65,6 +65,7 @@ add_executable(
         test_incrementable.cpp
         test_decrementable.cpp
         test_bicrementable.cpp
+        test_boolean.cpp
         empty.cpp
         ${CATCH_MAIN}
 )
