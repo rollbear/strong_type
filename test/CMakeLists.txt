@@ -75,6 +75,7 @@ add_executable(
         test_indexed.cpp
         test_iterator.cpp
         test_range.cpp
+        test_convertible_to.cpp
         empty.cpp
         ${CATCH_MAIN}
         )
