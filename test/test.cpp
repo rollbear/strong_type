@@ -549,25 +549,6 @@ static_assert(is_less_than_comparable<int, iov>{},"");
 static_assert(!is_less_than_comparable<iov, iov>{},"");
 
 
-TEST_CASE("ordered type can be compared for ordering")
-{
-  using type = strong::type<int, struct i_, strong::ordered>;
-
-  const type i1{1};
-  const type i2{2};
-
-  REQUIRE(i1 < i2);
-  REQUIRE(i1 <= i2);
-  REQUIRE(i1 <= i1);
-  REQUIRE(i2 > i1);
-  REQUIRE(i2 >= i2);
-  REQUIRE(i2 >= i1);
-
-  REQUIRE_FALSE(i2 < i1);
-  REQUIRE_FALSE(i2 <= i1);
-  REQUIRE_FALSE(i1 > i2);
-  REQUIRE_FALSE(i1 >= i2);
-}
 
 TEST_CASE("strong::unique is movable")
 {

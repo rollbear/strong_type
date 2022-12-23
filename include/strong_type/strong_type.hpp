@@ -17,6 +17,7 @@
 #include "type.hpp"
 #include "equality.hpp"
 #include "equality_with.hpp"
+#include "ordered.hpp"
 
 #include <istream>
 #include <ostream>
@@ -231,71 +232,6 @@ struct unique
     modifier& operator=(const modifier&) = delete;
     constexpr modifier& operator=(modifier&&) noexcept = default;
   };
-};
-struct ordered
-{
-  template <typename T>
-  class modifier;
-};
-
-
-template <typename T, typename Tag, typename ... M>
-class ordered::modifier<::strong::type<T, Tag, M...>>
-{
-  using type = ::strong::type<T, Tag, M...>;
-public:
-  STRONG_NODISCARD
-  friend
-  STRONG_CONSTEXPR
-  auto
-  operator<(
-    const type& lh,
-    const type& rh)
-  noexcept(noexcept(std::declval<const T&>() < std::declval<const T&>()))
-  -> decltype(std::declval<const T&>() < std::declval<const T&>())
-  {
-    return value_of(lh) < value_of(rh);
-  }
-
-  STRONG_NODISCARD
-  friend
-  STRONG_CONSTEXPR
-  auto
-  operator<=(
-    const type& lh,
-    const type& rh)
-  noexcept(noexcept(std::declval<const T&>() <= std::declval<const T&>()))
-  -> decltype(std::declval<const T&>() <= std::declval<const T&>())
-  {
-    return value_of(lh) <= value_of(rh);
-  }
-
-  STRONG_NODISCARD
-  friend
-  STRONG_CONSTEXPR
-  auto
-  operator>(
-    const type& lh,
-    const type& rh)
-  noexcept(noexcept(std::declval<const T&>() > std::declval<const T&>()))
-  -> decltype(std::declval<const T&>() > std::declval<const T&>())
-  {
-    return value_of(lh) > value_of(rh);
-  }
-
-  STRONG_NODISCARD
-  friend
-  STRONG_CONSTEXPR
-
-  auto
-  operator>=(
-    const type& lh,
-    const type& rh)
-  noexcept(noexcept(std::declval<const T&>() >= std::declval<const T&>()))
-  -> decltype(std::declval<const T&>() >= std::declval<const T&>())
-  {
-    return value_of(lh) >= value_of(rh);
-  }
 };
 
 struct ostreamable

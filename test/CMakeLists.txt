@@ -54,6 +54,7 @@ add_executable(
         test_type.cpp
         test_equality.cpp
         test_equality_with.cpp
+        test_ordered.cpp
         empty.cpp
         ${CATCH_MAIN}
 )
