@@ -70,6 +70,7 @@ add_executable(
         test_hashable.cpp
         test_difference.cpp
         test_affine_point.cpp
+        test_arithmetic.cpp
         empty.cpp
         ${CATCH_MAIN}
         )
