@@ -68,6 +68,7 @@ add_executable(
         test_boolean.cpp
         test_pointer.cpp
         test_hashable.cpp
+        test_difference.cpp
         empty.cpp
         ${CATCH_MAIN}
         )
