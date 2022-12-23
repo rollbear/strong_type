@@ -569,17 +569,6 @@ TEST_CASE("ordered type can be compared for ordering")
   REQUIRE_FALSE(i1 >= i2);
 }
 
-TEST_CASE("equality_with can compare with defined type")
-{
-    using t1 = strong::type<int, struct t1_>;
-    using t2 = strong::type<int, struct t2_, strong::equality_with<t1>>;
-
-    REQUIRE(t1{1} == t2{1});
-    REQUIRE(t2{1} == t1{1});
-    REQUIRE(t1{1} != t2{2});
-    REQUIRE(t2{2} != t1{1});
-}
-
 TEST_CASE("strong::unique is movable")
 {
     using t = strong::type<std::unique_ptr<int>, struct t_, strong::unique>;

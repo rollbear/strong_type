@@ -16,6 +16,7 @@
 
 #include "type.hpp"
 #include "equality.hpp"
+#include "equality_with.hpp"
 
 #include <istream>
 #include <ostream>
@@ -53,63 +54,6 @@
 
 namespace strong
 {
-
-
-namespace impl
-{
-  template <typename T, typename Other>
-  class typed_equality
-  {
-  private:
-    using TT = underlying_type_t<T>;
-    using OT = underlying_type_t<Other>;
-  public:
-    STRONG_NODISCARD
-    friend
-    STRONG_CONSTEXPR
-    auto operator==(const T& lh, const Other& rh)
-    noexcept(noexcept(std::declval<const TT&>() == std::declval<const OT&>()))
-    -> decltype(std::declval<const TT&>() == std::declval<const OT&>())
-    {
-      return value_of(lh) == impl::access(rh);
-    }
-    STRONG_NODISCARD
-    friend
-    STRONG_CONSTEXPR
-    auto operator==(const Other& lh, const T& rh)
-    noexcept(noexcept(std::declval<const OT&>() == std::declval<const TT&>()))
-    -> decltype(std::declval<const OT&>() == std::declval<const TT&>())
-    {
-      return impl::access(lh) == value_of(rh) ;
-    }
-    STRONG_NODISCARD
-    friend
-    STRONG_CONSTEXPR
-    auto operator!=(const T& lh, const Other rh)
-    noexcept(noexcept(std::declval<const TT&>() != std::declval<const OT&>()))
-    -> decltype(std::declval<const TT&>() != std::declval<const OT&>())
-    {
-      return value_of(lh) != impl::access(rh);
-    }
-    STRONG_NODISCARD
-    friend
-    STRONG_CONSTEXPR
-    auto operator!=(const Other& lh, const T& rh)
-    noexcept(noexcept(std::declval<const OT&>() != std::declval<const TT&>()))
-    -> decltype(std::declval<const OT&>() != std::declval<const TT&>())
-    {
-      return impl::access(lh) != value_of(rh) ;
-    }
-  };
-}
-template <typename ... Ts>
-struct equality_with
-{
-  template <typename T>
-  class modifier : public impl::typed_equality<T, Ts>...
-  {
-  };
-};
 
 namespace impl
 {
