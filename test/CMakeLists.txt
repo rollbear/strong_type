@@ -71,6 +71,7 @@ add_executable(
         test_difference.cpp
         test_affine_point.cpp
         test_arithmetic.cpp
+        test_bitarithmetic.cpp
         empty.cpp
         ${CATCH_MAIN}
         )
