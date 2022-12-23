@@ -69,6 +69,7 @@ add_executable(
         test_pointer.cpp
         test_hashable.cpp
         test_difference.cpp
+        test_affine_point.cpp
         empty.cpp
         ${CATCH_MAIN}
         )
