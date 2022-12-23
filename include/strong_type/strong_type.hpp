@@ -15,6 +15,7 @@
 #define ROLLBEAR_STRONG_TYPE_HPP_INCLUDED
 
 #include "type.hpp"
+#include "equality.hpp"
 
 #include <istream>
 #include <ostream>
@@ -53,44 +54,6 @@
 namespace strong
 {
 
-struct equality
-{
-  template <typename T>
-  class modifier;
-};
-
-
-template <typename T, typename Tag, typename ... M>
-class equality::modifier<::strong::type<T, Tag, M...>>
-{
-  using type = ::strong::type<T, Tag, M...>;
-public:
-  STRONG_NODISCARD
-  friend
-  STRONG_CONSTEXPR
-  auto
-  operator==(
-    const type& lh,
-    const type& rh)
-  noexcept(noexcept(std::declval<const T&>() == std::declval<const T&>()))
-  -> decltype(std::declval<const T&>() == std::declval<const T&>())
-  {
-    return value_of(lh) == value_of(rh);
-  }
-
-  STRONG_NODISCARD
-  friend
-  STRONG_CONSTEXPR
-  auto
-  operator!=(
-    const type& lh,
-    const type& rh)
-  noexcept(noexcept(std::declval<const T&>() != std::declval<const T&>()))
-  -> decltype(std::declval<const T&>() != std::declval<const T&>())
-  {
-    return value_of(lh) != value_of(rh);
-  }
-};
 
 namespace impl
 {

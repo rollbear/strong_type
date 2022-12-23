@@ -52,6 +52,7 @@ add_executable(
         self_test
         test.cpp
         test_type.cpp
+        test_equality.cpp
         empty.cpp
         ${CATCH_MAIN}
 )

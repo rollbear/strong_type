@@ -549,29 +549,6 @@ static_assert(is_less_than_comparable<int, iov>{},"");
 static_assert(!is_less_than_comparable<iov, iov>{},"");
 
 
-
-TEST_CASE("values can be compared using operator==")
-{
-  using type = strong::type<int, struct i_, strong::equality>;
-
-  type i{3};
-  type j{4};
-  type k{3};
-  REQUIRE_FALSE(i == j);
-  REQUIRE(i == k);
-}
-
-TEST_CASE("values can be compared using operator!=")
-{
-  using type = strong::type<int, struct i_, strong::equality>;
-
-  type i{3};
-  type j{4};
-  type k{3};
-  REQUIRE(i != j);
-  REQUIRE(!(i != k));
-}
-
 TEST_CASE("ordered type can be compared for ordering")
 {
   using type = strong::type<int, struct i_, strong::ordered>;
