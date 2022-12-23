@@ -26,6 +26,8 @@
 #include "bicrementable.hpp"
 #include "boolean.hpp"
 #include "pointer.hpp"
+#include "hashable.hpp"
+
 
 #include <istream>
 #include <ostream>
@@ -63,13 +65,6 @@
 
 namespace strong
 {
-
-
-struct hashable
-{
-  template <typename T>
-  class modifier{};
-};
 
 struct difference
 {
@@ -914,30 +909,6 @@ using is_formattable = std::is_base_of<formattable::modifier<T>, T>;
 
 }
 
-namespace std {
-template <typename T, typename Tag, typename ... M>
-struct hash<::strong::type<T, Tag, M...>>
-  : std::conditional_t<
-    std::is_base_of<
-      ::strong::hashable::modifier<
-        ::strong::type<T, Tag, M...>
-      >,
-      ::strong::type<T, Tag, M...>
-    >::value,
-    hash<T>,
-    std::false_type>
-{
-  using type = ::strong::type<T, Tag, M...>;
-  decltype(auto)
-  operator()(
-    const ::strong::hashable::modifier<type>& t)
-  const
-  noexcept(noexcept(std::declval<hash<T>>()(value_of(std::declval<const type&>()))))
-  {
-    auto& tt = static_cast<const type&>(t);
-    return hash<T>::operator()(value_of(tt));
-  }
-};
 
 #if STRONG_HAS_STD_FORMAT
 template<typename T, typename Tag, typename... M, typename Char>
@@ -955,8 +926,6 @@ struct formatter<::strong::type<T, Tag, M...>, Char> : formatter<T, Char>
   }
 };
 #endif
-
-}
 
 #if STRONG_HAS_FMT_FORMAT
 namespace strong {

@@ -66,9 +66,11 @@ add_executable(
         test_decrementable.cpp
         test_bicrementable.cpp
         test_boolean.cpp
+        test_pointer.cpp
+        test_hashable.cpp
         empty.cpp
         ${CATCH_MAIN}
-        test_pointer.cpp)
+        )
 
 target_link_libraries(
         self_test
