@@ -21,6 +21,7 @@
 #include "ordered_with.hpp"
 #include "semiregular.hpp"
 #include "regular.hpp"
+#include "unique.hpp"
 
 #include <istream>
 #include <ostream>
@@ -58,25 +59,6 @@
 
 namespace strong
 {
-
-
-struct unique
-{
-  template <typename T>
-  class modifier
-    : private impl::valid_type<
-      impl::require_move_constructible<T>::value &&
-      impl::require_move_assignable<T>::value
-    >
-  {
-  public:
-    constexpr modifier() = default;
-    modifier(const modifier&) = delete;
-    constexpr modifier(modifier&&) noexcept = default;
-    modifier& operator=(const modifier&) = delete;
-    constexpr modifier& operator=(modifier&&) noexcept = default;
-  };
-};
 
 struct ostreamable
 {

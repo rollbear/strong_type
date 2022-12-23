@@ -20,34 +20,6 @@ namespace strong
 {
 namespace impl
 {
-template <typename T>
-struct require_copy_constructible
-{
-    static constexpr bool value = std::is_copy_constructible<underlying_type_t<T>>::value;
-    static_assert(value, "underlying type must be copy constructible");
-};
-template <typename T>
-struct require_move_constructible
-{
-    static constexpr bool value = std::is_move_constructible<underlying_type_t<T>>::value;
-    static_assert(value, "underlying type must be move constructible");
-};
-template <typename T>
-struct require_copy_assignable
-{
-    static constexpr bool value = std::is_copy_assignable<underlying_type_t<T>>::value;
-    static_assert(value, "underlying type must be copy assignable");
-};
-template <typename T>
-struct require_move_assignable
-{
-    static constexpr bool value = std::is_move_assignable<underlying_type_t<T>>::value;
-    static_assert(value, "underlying type must be move assignable");
-};
-
-template <bool> struct valid_type;
-template <>
-struct valid_type<true> {};
 
 template <typename T>
 struct require_semiregular

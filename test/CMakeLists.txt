@@ -58,6 +58,7 @@ add_executable(
         test_ordered_with.cpp
         test_semiregular.cpp
         test_regular.cpp
+        test_unique.cpp
         empty.cpp
         ${CATCH_MAIN}
 )
