@@ -72,6 +72,7 @@ add_executable(
         test_affine_point.cpp
         test_arithmetic.cpp
         test_bitarithmetic.cpp
+        test_indexed.cpp
         empty.cpp
         ${CATCH_MAIN}
         )
