@@ -22,8 +22,7 @@
 #include "semiregular.hpp"
 #include "regular.hpp"
 #include "unique.hpp"
-#include "ostreamable.hpp"
-#include "istreamable.hpp"
+#include "iostreamable.hpp"
 
 #include <istream>
 #include <ostream>
@@ -63,15 +62,6 @@ namespace strong
 {
 
 
-struct iostreamable
-{
-  template <typename T>
-  class modifier
-    : public ostreamable::modifier<T>
-    , public istreamable::modifier<T>
-  {
-  };
-};
 
 struct incrementable
 {

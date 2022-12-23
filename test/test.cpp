@@ -548,16 +548,6 @@ static_assert(is_less_than_comparable<iov, int>{},"");
 static_assert(is_less_than_comparable<int, iov>{},"");
 static_assert(!is_less_than_comparable<iov, iov>{},"");
 
-TEST_CASE("an iostreamable type can be both read and written using streams")
-{
-  strong::type<int, struct i_, strong::iostreamable> i{0};
-  std::istringstream is{"3"};
-  is >> i;
-  std::ostringstream os;
-  os << i;
-  REQUIRE(os.str() == "3");
-}
-
 TEST_CASE("an incrementable can be incremented")
 {
   using C = strong::type<int, struct i_, strong::incrementable>;
