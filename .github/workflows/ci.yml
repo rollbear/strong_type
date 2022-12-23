@@ -75,13 +75,13 @@ jobs:
       - name: "collect coverage"
         run: |
           COV=`echo ${{matrix.config.cxx}} | grep -q clang && echo "llvm-cov gcov"|| echo gcov`
-          echo ${COV} -abcfu `find . -name "test*.gcno"`
-          ${COV} -abcfu `find . -name "test*.gcno"`
+          ${COV} -abcfup `find . -name "test*.gcno"`
+          ls *.gcov| grep -v 'include#strong_type'|xargs rm
 
       - name: "upload coverage"
         uses: codecov/codecov-action@v3
         with:
-          files: "strong_type.hpp.gcov"
+          gcov_include: "include/strong_type"
           name: "Linux ${{matrix.config.cxx}} C++${{matrix.config.std}} ${{matrix.config.stdlib}}"
           fail_ci_if_error: false
           verbose: true
