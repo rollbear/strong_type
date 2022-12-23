@@ -57,6 +57,7 @@ add_executable(
         test_ordered.cpp
         test_ordered_with.cpp
         test_semiregular.cpp
+        test_regular.cpp
         empty.cpp
         ${CATCH_MAIN}
 )

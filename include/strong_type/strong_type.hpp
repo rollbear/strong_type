@@ -20,6 +20,7 @@
 #include "ordered.hpp"
 #include "ordered_with.hpp"
 #include "semiregular.hpp"
+#include "regular.hpp"
 
 #include <istream>
 #include <ostream>
@@ -58,17 +59,6 @@
 namespace strong
 {
 
-
-
-struct regular
-{
-  template <typename T>
-  class modifier
-    : public semiregular::modifier<T>
-    , public equality::modifier<T>
-  {
-  };
-};
 
 struct unique
 {
