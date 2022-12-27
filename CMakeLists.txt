@@ -18,6 +18,8 @@ project(strong_type)
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
+option(STRONG_TYPE_UNIT_TEST off "Decide whether to build unit tests or not")
+
 set(STRONG_TYPE_VERSION 7)
 set(INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(MASTER_PROJECT OFF)
@@ -25,7 +27,7 @@ if (${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
   set(MASTER_PROJECT ON)
 endif()
 
-if (MASTER_PROJECT AND CMAKE_BUILD_TYPE MATCHES Debug)
+if (${STRONG_TYPE_UNIT_TEST})
   if (!CMAKE_CXX_STANDARD)
     set(CMAKE_CXX_STANDARD 14)
   endif()
@@ -75,6 +77,24 @@ if (MASTER_PROJECT AND CMAKE_BUILD_TYPE MATCHES Debug)
     set(CATCH_MAIN "${CMAKE_SOURCE_DIR}/test_main.cpp")
     add_compile_definitions(CATCH2=2)
   endif()
+
+  add_executable(
+          self_test
+          test.cpp
+          include/strong_type/strong_type.hpp
+          ${CATCH_MAIN}
+  )
+
+  target_link_libraries(
+          self_test
+          PUBLIC
+          Catch2::Catch2
+          ${CATCHLIBS}
+          strong_type
+  )
+
+  add_subdirectory(test_fmt8)
+  add_subdirectory(test_fmt9)
 endif()
 
 write_basic_package_version_file(
@@ -96,24 +116,6 @@ target_include_directories(
   $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>
 )
 
-add_executable(
-    self_test
-  EXCLUDE_FROM_ALL
-    test.cpp
-    include/strong_type/strong_type.hpp
-    ${CATCH_MAIN}
-)
-
-target_link_libraries(
-    self_test
-  PUBLIC
-    Catch2::Catch2
-    ${CATCHLIBS}
-    strong_type
-  )
-
-add_subdirectory(test_fmt8)
-add_subdirectory(test_fmt9)
 
 install(
   TARGETS

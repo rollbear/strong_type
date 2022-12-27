@@ -60,6 +60,7 @@ jobs:
             -DCMAKE_CXX_STANDARD=${{matrix.config.std}} \
             -DCMAKE_CXX_FLAGS="${STDLIB} -Wall -Wextra -Wconversion -pedantic -Werror --coverage" \
             -DCMAKE_PREFIX_PATH="${LIBRARY_PREFIX}" \
+            -DSTRONG_TYPE_UNIT_TEST=yes \
             -DCMAKE_BUILD_TYPE=Debug
       - name: "build"
         run: |
@@ -104,7 +105,8 @@ jobs:
             -S . \
             -B build \
             -DCMAKE_CXX_STANDARD=${{matrix.config.std}} \
-            -DCMAKE_BUILD_TYPE=Debug
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DSTRONG_TYPE_UNIT_TEST=yes
       - name: "build"
         run: |
           cmake --build build --target self_test

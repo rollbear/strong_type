@@ -178,11 +178,11 @@ the traits of the underlying iterator type.
   }
   ```
   
-To build the self-test program:
+To build the self-test program(s):
 
 ```bash
-cmake <strong_type_dir> -DCMAKE_BUILD_TYPE=Debug
-cmake --build . --target self_test
+cmake <strong_type_dir> -DSTRONG_TYPE_UNIT_TEST=yes
+cmake --build .
 ```
 
 N.B. Microsoft Visual Studio MSVC compiler < 19.22 does not handle `constexpr`
