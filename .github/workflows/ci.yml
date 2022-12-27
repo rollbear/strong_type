@@ -110,8 +110,7 @@ jobs:
             -B build \
             -DCMAKE_CXX_STANDARD=${{matrix.config.std}} \
             -DCMAKE_BUILD_TYPE=Debug \
-            -DSTRONG_TYPE_UNIT_TEST=yes
-            -DCMAKE_BUILD_TYPE=Debug \
+            -DSTRONG_TYPE_UNIT_TEST=yes \
             -G Ninja
 
       - name: "build"
