@@ -127,3 +127,29 @@ TEST_CASE("multiplying a difference with its base type yields a difference")
     static_assert(std::is_same<decltype(r2), U>{}, "");
     REQUIRE(value_of(r2) == 9);
 }
+
+namespace {
+struct S {
+    int v;
+
+    S(int v_) : v(v_) {}
+    template <typename ...>
+    S &operator+=(const S &rh) { v += rh.v; return *this; }
+    template <typename...>
+    friend S operator+(S lh, const S &rh) { return lh += rh; }
+    template <typename...>
+    S &operator-=(const S &rh) { v -= rh.v; return *this; }
+    template <typename...>
+    friend S operator-(S lh, const S &rh) { return lh -= rh; }
+    template <typename...>
+    friend bool operator==(const S &lh, const S &rh) { return lh.v == rh.v; }
+    template <typename...>
+    friend bool operator!=(const S &lh, const S &rh) { return lh.v != rh.v; }
+};
+}
+
+TEST_CASE("an equality comparable arithmetic type without ordering can be a difference")
+{
+    using type = strong::type<S, struct S_, strong::difference>;
+    REQUIRE(type{3} - type{2} == type{1});
+}

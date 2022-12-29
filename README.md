@@ -168,13 +168,15 @@ some situations.
 
 
 * <A name="difference"/>`strong::difference` allows instances to be subtracted
-  and added (yielding a `strong::difference`,) divided (yielding the base type),
-  or multiplied or  divided with the base type, yielding another
-  `strong::difference`, and if the underlying type supports it, the remainder
+  and added (yielding a `strong::difference`).
+
+  Conditionally, if the underlying
+  type supports it, `strong_difference` is ordered, may be divided (yielding
+  the base type), or multiplied or divided with the base type, yielding another
+  `strong::difference`. Also, conditionally, the remainder
   after division of two differences yields the underlying type, and the
   remainder after division of a difference and the underlying type yields a
-  difference.  A `strong::difference` is also [`strong::ordered`](#ordered) and
-  [`strong::equality`](#equality).
+  difference.  A `strong::difference` is also [`strong::equality`](#equality).
 
   Available in `strong_type/difference.hpp`.
 

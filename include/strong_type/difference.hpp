@@ -19,6 +19,72 @@
 
 namespace strong
 {
+namespace impl
+{
+struct conditionally_ordered
+{
+    template <typename T>
+    class modifier;
+};
+template <typename T, typename Tag, typename ... M>
+class conditionally_ordered::modifier<::strong::type<T, Tag, M...>>
+{
+    using type = ::strong::type<T, Tag, M...>;
+public:
+    template <typename TT = T>
+    STRONG_NODISCARD
+    friend
+    STRONG_CONSTEXPR
+    auto
+    operator<(
+        const type& lh,
+        const type& rh)
+    noexcept(noexcept(std::declval<const TT&>() < std::declval<const TT&>()))
+    -> decltype(std::declval<const TT&>() < std::declval<const TT&>())
+    {
+        return value_of(lh) < value_of(rh);
+    }
+    template <typename TT = T>
+    STRONG_NODISCARD
+    friend
+    STRONG_CONSTEXPR
+    auto
+    operator<=(
+        const type& lh,
+        const type& rh)
+    noexcept(noexcept(std::declval<const TT&>() <= std::declval<const TT&>()))
+    -> decltype(std::declval<const TT&>() <= std::declval<const TT&>())
+    {
+        return value_of(lh) <= value_of(rh);
+    }
+    template <typename TT = T>
+    STRONG_NODISCARD
+    friend
+    STRONG_CONSTEXPR
+    auto
+    operator>(
+        const type& lh,
+        const type& rh)
+    noexcept(noexcept(std::declval<const TT&>() > std::declval<const TT&>()))
+    -> decltype(std::declval<const TT&>() > std::declval<const TT&>())
+    {
+        return value_of(lh) > value_of(rh);
+    }
+    template <typename TT = T>
+    STRONG_NODISCARD
+    friend
+    STRONG_CONSTEXPR
+    auto
+    operator>=(
+        const type& lh,
+        const type& rh)
+    noexcept(noexcept(std::declval<const TT&>() >= std::declval<const TT&>()))
+    -> decltype(std::declval<const TT&>() >= std::declval<const TT&>())
+    {
+        return value_of(lh) >= value_of(rh);
+    }
+};
+}
 struct difference
 {
     template <typename T>
@@ -27,8 +93,8 @@ struct difference
 
 template <typename T, typename Tag, typename ... M>
 class difference::modifier<::strong::type<T, Tag, M...>>
-    : public ordered::modifier<::strong::type<T, Tag, M...>>
-        , public equality::modifier<::strong::type<T, Tag, M...>>
+    : public impl::conditionally_ordered::modifier<::strong::type<T, Tag, M...>>
+    , public equality::modifier<::strong::type<T, Tag, M...>>
 {
     using type = ::strong::type<T, Tag, M...>;
 public:
