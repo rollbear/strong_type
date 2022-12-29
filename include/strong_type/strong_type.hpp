@@ -37,5 +37,6 @@
 #include "convertible_to.hpp"
 #include "implicitly_convertible_to.hpp"
 #include "formattable.hpp"
+#include "scalable_with.hpp"
 
 #endif //ROLLBEAR_STRONG_TYPE_HPP_INCLUDED

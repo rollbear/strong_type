@@ -167,6 +167,15 @@ some situations.
   Available in `strong_type::hashable.hpp`.
 
 
+* <A name="scalable_with"/>`strong::scalable_with<Ts...>` Allows multiplying and
+  dividing the value with each type `Ts`, providing the underlying type supports
+  it. It also allows dividing instances of `scalable_with<>`, if the underlying
+  type supports it, and returns the type of the operation of the underlying
+  type.
+  
+  Available in `strong_type/scalable_with.hpp`
+
+
 * <A name="difference"/>`strong::difference` allows instances to be subtracted
   and added (yielding a `strong::difference`).
 
