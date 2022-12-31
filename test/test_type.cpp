@@ -223,3 +223,17 @@ TEST_CASE("member value_of() gets the underlying value")
         }
     }
 }
+
+TEST_CASE("swap")
+{
+    using strong_int = strong::type<int, struct si_>;
+
+    strong_int v1{6};
+    strong_int v2{34};
+
+    swap(v1, v2);
+
+    CHECK(v1.value_of() == 34);
+    CHECK(v2.value_of() == 6);
+}
+
