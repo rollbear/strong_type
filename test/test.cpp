@@ -548,6 +548,22 @@ static_assert(is_less_than_comparable<iov, int>{},"");
 static_assert(is_less_than_comparable<int, iov>{},"");
 static_assert(!is_less_than_comparable<iov, iov>{},"");
 
+using scild = strong::type<int, struct scild_, strong::scalable_with<int, long, double>>;
+using schdi = strong::type<int, struct scldi_, strong::scalable_with<handle, double, int>>;
+
+static_assert(is_divisible<scild, scild>{},"");
+static_assert(is_divisible<scild, int>{},"");
+static_assert(is_divisible<scild, long>{},"");
+static_assert(is_divisible<scild, double>{},"");
+static_assert(!is_divisible<scild, handle>{},"");
+
+static_assert(is_divisible<schdi, schdi>{},"");
+static_assert(is_divisible<schdi, handle>{},"");
+static_assert(is_divisible<schdi, double>{},"");
+static_assert(is_divisible<schdi, int>{},"");
+static_assert(std::is_same<int, decltype(scild{3}/scild{2})>{},"");
+static_assert(std::is_same<handle, decltype(schdi{3} / schdi{1})>{},"");
+
 #if STRONG_HAS_STD_FORMAT
 TEST_CASE("format")
 {

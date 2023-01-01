@@ -272,8 +272,7 @@ some situations.
 * <A name="scalable_with"/>`strong::scalable_with<Ts...>` Allows multiplying and
   dividing the value with each type `Ts`, providing the underlying type supports
   it. It also allows dividing instances of `scalable_with<>`, if the underlying
-  type supports it, and returns the type of the operation of the underlying
-  type.
+  type supports it, and returns the first type in the list of `Ts...`.
 
   Available in `strong_type/scalable_with.hpp`
 

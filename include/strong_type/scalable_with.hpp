@@ -20,6 +20,20 @@ namespace strong
 {
 namespace impl
 {
+template <typename ...>
+struct first_type;
+template <typename T>
+struct first_type<T>
+{
+    using type = T;
+};
+template <typename T, typename ...Ts>
+struct first_type<T, Ts...> {
+    using type = T;
+};
+template <typename ... Ts>
+using first_type_t = typename first_type<Ts...>::type;
+
 template <typename T, typename Other>
 class typed_scalable
 {
@@ -82,13 +96,14 @@ public:
 template <typename ... Ts>
 struct scalable_with
 {
+    using R = impl::first_type_t<Ts...>;
     template <typename T>
     class modifier : public impl::typed_scalable<T, Ts>...
     {
         template <
             typename TT = T,
             typename UT = underlying_type_t<TT>,
-            typename R = decltype(std::declval<const UT&>() / std::declval<const UT&>())
+            typename = std::enable_if_t<std::is_constructible<R, decltype(std::declval<const UT&>() / std::declval<const UT&>())>::value>
         >
         STRONG_NODISCARD
         friend
@@ -97,7 +112,7 @@ struct scalable_with
         noexcept(noexcept(std::declval<const UT&>() / std::declval<const UT&>()))
         -> R
         {
-            return value_of(lh) / value_of(rh);
+            return R{value_of(lh) / value_of(rh)};
         }
     };
 };
