@@ -117,26 +117,49 @@ some situations.
   Available in `strong_type/unique.hpp`
 
   
-* <A name="ostreamable"/>`strong::ostreamable`,
-  <A name="istreamable"/>`strong::istreamable`,
-  <A name="iostreamable"/>`strong::iostreamable`, which
-  provide the default iostream integrations (as handled by the underlying
-  type.) Provide your own operators instead if you prefer that.
+* <A name="ostreamable"/>`strong::ostreamable`. Provides the default
+  [`ostream`](https://en.cppreference.com/w/cpp/io/basic_ostream) insertion
+  `operator<<` for the strong type, as handled by the underlying type. Provide
+  your own operator instead if you prefer a custom  ostream insertion operator.
 
-  Available in
-  `strong´type/ostreamable.hpp`, `strong_type/istreamable.hpp` and
-  `strong_type/iostreamable.hpp` respectively.
+  Available in `strong_type/ostreamable.hpp`
 
 
-* <A name="incrementable"/>`strong::incrementable`,
-  <A name="decrementable"/>`strong::decrementable`,
-  <A name="bicrementable"/>`strong::bicrementable`.
-  Support `operator++` and `operator--`. *bicrementable* is obviously a made-
-  up word for the occasion, but I think its meaning is clear.
+* <A name="istreamable"/>`strong::istreamable`. Provides the default
+  [`istream`](https://en.cppreference.com/w/cpp/io/basic_istream) extraction
+  `operator>>` for the strong type, as handled by the underfying type. Provide
+  your own operator istead if you prefer a custom istream extraction operator.
 
-  Available in
-  `strong´type/incrementable.hpp`, `strong_type/decrementable.hpp` and
-  `strong_type/bicrementable.hpp` respectively.
+  Available in `strong_type/istreamable.hpp`
+
+
+* <A name="iostreamable"/>`strong::iostreamable`. Both
+  [`strong::istreamable`](#istreamable) and
+  [`strong::ostreamable`](#ostreamable).
+
+  Available in `strong_type/iostreamable.hpp`
+
+
+* <A name="incrementable"/>`strong::incrementable`. Provides
+  [`operator++](https://en.cppreference.com/w/cpp/language/operator_incdec) for
+  the strong type, using the operator of the underlying type.
+
+  Available in `strong_type/incrementable.hpp`
+
+
+* <A name="decrementable"/>`strong::decrementable`. Provides
+  [`operator--](https://en.cppreference.com/w/cpp/language/operator_incdec) for
+  the strong type, using the operator of the underlying type.
+
+  Available in `strong_type/incrementable.hpp`
+
+
+* <A name="bicrementable"/>`strong::bicrementable`. Obviously a made up word
+  for the occation. Implements both
+  [`strong::incrementable`](#incrementable) and
+  [`strong::decrementable`](#decrementable).
+
+  Available in `strong_type/bicrementable.hpp`
 
 
 * <A name="boolean"/>`strong::boolean` provides
