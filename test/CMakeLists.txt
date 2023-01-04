@@ -87,7 +87,7 @@ target_link_libraries(
         PUBLIC
         Catch2::Catch2
         ${CATCHLIBS}
-        strong_type
+        strong_type::strong_type
 )
 
 add_subdirectory(test_fmt8)

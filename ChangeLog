@@ -1,3 +1,5 @@
+        * Add Cmake alias target strong_type::strong_type
+
         * Use the CMake option -DSTRONG_TYPE_UNIT_TEST=yes to build unit tests
 
 v7 2022-12-22

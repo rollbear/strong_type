@@ -37,6 +37,7 @@ write_basic_package_version_file(
   COMPATIBILITY AnyNewerVersion)
 
 add_library(strong_type INTERFACE)
+add_library(strong_type::strong_type ALIAS strong_type)
 
 target_include_directories(
   strong_type
@@ -62,6 +63,8 @@ install(
 install(
   EXPORT
     strong_type-targets
+  NAMESPACE
+    strong_type::
   DESTINATION
     lib/cmake/strong_type
 )
