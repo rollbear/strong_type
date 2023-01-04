@@ -1,3 +1,5 @@
+v8 2023-01-04
+
         * Split the header file into one file for each modifier. This can
           in some cases speed up compilation times considerably. The header
           file <strong_type/strong_type.hpp> still includes everything, so
@@ -8,7 +10,7 @@
           divided, the result will be the first of the type in Ts.
 
         * difference types are conditionally ordered, if the underlying type
-          supports it. Previously they were always ordeed, but  e.g. a 2D
+          supports it. Previously they were always ordered, but e.g. a 2D
           vector on a plane is a useful difference type, but it is usually
           not ordered. This change allows the vector in 2D space to be used
           as a difference type.
