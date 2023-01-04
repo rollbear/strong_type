@@ -1,3 +1,18 @@
+        * Split the header file into one file for each modifier. This can
+          in some cases speed up compilation times considerably. The header
+          file <strong_type/strong_type.hpp> still includes everything, so
+          no changes to existing code is necessary.
+
+        * Added new modifier scalable_with<Ts...>. Allows multiplication and
+          division with each of the types Ts. If the underlying type can be
+          divided, the result will be the first of the type in Ts.
+
+        * difference types are conditionally ordered, if the underlying type
+          supports it. Previously they were always ordeed, but  e.g. a 2D
+          vector on a plane is a useful difference type, but it is usually
+          not ordered. This change allows the vector in 2D space to be used
+          as a difference type.
+
         * Add Cmake alias target strong_type::strong_type
 
         * Use the CMake option -DSTRONG_TYPE_UNIT_TEST=yes to build unit tests
