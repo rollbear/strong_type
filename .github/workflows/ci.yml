@@ -99,8 +99,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: "Install ninja"
-        uses: seanmiddleditch/gha-setup-ninja@master
+      - name: Configure MSVC console (Windows)
+        uses: ilammy/msvc-dev-cmd@v1
 
       - name: "setup"
         shell: bash
@@ -108,7 +108,10 @@ jobs:
           cmake \
             -S . \
             -B build \
+            -DCMAKE_CXX_COMPILER=cl \
+            -DCMAKE_C_COMPILER=cl \
             -DCMAKE_CXX_STANDARD=${{matrix.config.std}} \
+            -DCMAKE_CXX_FLAGS="'/permissive- /EHsc /W4 /WX'" \
             -DCMAKE_BUILD_TYPE=Debug \
             -DSTRONG_TYPE_UNIT_TEST=yes \
             -G Ninja
