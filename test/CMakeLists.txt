@@ -4,6 +4,8 @@ endif()
 set(CMAKE_CXX_STANDARD_REQUIRED YES)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+cmake_minimum_required(VERSION 3.22)
+
 find_package(Catch2 3 QUIET)
 if (${Catch2_FOUND})
   add_compile_definitions(CATCH2=3)

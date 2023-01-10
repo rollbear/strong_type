@@ -12,7 +12,7 @@
 #
 
 
-cmake_minimum_required(VERSION 3.19)
+cmake_minimum_required(VERSION 3.7)
 project(strong_type)
 
 include(GNUInstallDirs)
