@@ -19,12 +19,8 @@
 #include <unordered_set>
 #include <memory>
 #include <algorithm>
-#include <vector>
-#include <sstream>
 
 #include "catch2.hpp"
-
-#include "test_utils.hpp"
 
 template <typename T, typename U>
 using equality_compare = decltype(std::declval<const T&>() == std::declval<const U&>());
