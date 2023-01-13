@@ -313,6 +313,26 @@ A number of small utilities are available directly in `strong_type/type.hpp`.
   }
   ```
   
+* `strong::type_is<type, modifier>` is a constexpr predicate to test if a type
+  has a modifier. For variadic modifiers, like `strong::ordered_with<Ts...>`,
+  it tests each of the types `Ts` individually. Example:
+
+  ```C++
+  using handle = strong::type<int, struct handle_, strong::regular>;
+  
+  static_assert(strong::type_is<handle, strong::equality>);
+  static_assert(strong::type_is<handle, strong::regular>);
+  
+  using id = strong::type<int, struct id_, strong::ordered_with<int, long>>;
+  
+  static_assert(strong::type_is<id, strong::ordered_with<int, long>>);   
+  static_assert(strong::type_is<id, strong::ordered_with<long>>);   
+  static_assert(strong::type_is<id, strong::ordered_with<int>>);   
+  static_assert(strong::type_is<id, strong::ordered_with<>>);   
+  ``` 
+  
+  All `static_assert`s above pass.
+   
 # <A name="selftest"/> Self test
 
 To build the self-test program(s):

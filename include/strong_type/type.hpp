@@ -228,9 +228,123 @@ template <bool> struct valid_type;
 template <>
 struct valid_type<true> {};
 
-template <typename ...>
+template<typename ...>
 using void_t = void;
 
+
+template <typename Needle, typename Type, typename Modifier>
+static constexpr bool modifier_is
+= std::is_base_of<modifier<Needle, Type>, modifier<Modifier,Type>>::value;
+
+template <typename Needle, typename Type, typename Haystack>
+static
+constexpr
+bool
+    type_implements
+    = std::is_base_of<modifier<Needle, Type>, modifier<Haystack, Type>>::value;
+
+#if __cplusplus >= 201703
+template <
+    template <typename...> class Modifier,
+    typename Needle,
+    typename Type,
+    typename ... Ms
+>
+static
+constexpr
+bool
+modifier_is<Needle, Type, Modifier<Ms...>>
+= (std::is_base_of<modifier<Needle, Type>, modifier<Modifier<Ms>, Type>>::value || ...);
+
+template <
+    template <typename ...> class Modifier,
+    typename ... Needles,
+    typename Type,
+    typename ... Haystack
+>
+static
+constexpr
+bool type_implements<Modifier<Needles...>, Type, Modifier<Haystack...>>
+= (modifier_is<Modifier<Needles>, Type, Modifier<Haystack...>> && ...);
+#else
+template <typename ...>
+struct conjunction;
+template <typename T, typename ... Ts>
+struct conjunction<T, Ts...>
+    : std::integral_constant<bool, T::value && conjunction<Ts...>::value>
+    {};
+template <>
+struct conjunction<> : std::true_type {};
+
+template <typename ...>
+struct disjunction;
+template <typename T, typename ... Ts>
+struct disjunction<T, Ts...>
+    : std::integral_constant<bool, T::value || disjunction<Ts...>::value>
+    {};
+template <>
+struct disjunction<> : std::false_type {};
+
+template <
+    template <typename...> class Modifier,
+    typename Needle,
+    typename Type,
+    typename ... Ms
+>
+static
+constexpr
+bool
+modifier_is<Needle, Type, Modifier<Ms...>>
+    = disjunction<
+        std::is_base_of<
+            modifier<Needle, Type>,
+            modifier<Modifier<Ms>, Type>
+        >...
+    >::value;
+
+template <
+    template <typename ...> class Modifier,
+    typename ... Needles,
+    typename Type,
+    typename ... Haystack
+>
+static
+constexpr
+bool
+type_implements<Modifier<Needles...>, Type, Modifier<Haystack...>>
+    = conjunction<
+        std::integral_constant<
+            bool,
+            modifier_is<
+                Modifier<Needles>,
+                Type,
+                Modifier<Haystack...>
+            >
+        >...
+    >::value;
+#endif
+
+template <typename T, typename M>
+static constexpr bool type_is = false;
+
+#if __cplusplus >= 201703L
+template <typename T, typename Tag, typename ... Ms, typename M>
+static constexpr bool type_is<strong::type<T, Tag, Ms...>, M>
+    = (impl::type_implements<M, strong::type<T, Tag, Ms...>, Ms> || ...);
+#else
+template <typename T, typename Tag, typename ... Ms, typename M>
+static constexpr bool type_is<strong::type<T, Tag, Ms...>, M>
+    = impl::disjunction<std::integral_constant<bool, impl::type_implements<M, strong::type<T, Tag, Ms...>, Ms>>...>::value;
+#endif
+
+template <typename T, typename Tag, typename ... Ms>
+type<T, Tag, Ms...> get_strong_(const type<T, Tag, Ms...>*);
+
+template <typename T>
+using get_strong = decltype(get_strong_(static_cast<T*>(nullptr)));
 }
+template <typename T, typename M>
+static constexpr bool type_is = impl::type_is<impl::get_strong<T>, M>;
 }
+
 #endif //ROLLBEAR_STRONG_TYPE_TYPE_HPP_INCLUDED
