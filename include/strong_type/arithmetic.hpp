@@ -16,6 +16,8 @@
 
 #include "type.hpp"
 
+#include <limits>
+
 namespace strong
 {
 struct arithmetic {
@@ -162,4 +164,30 @@ public:
 };
 
 }
+
+template <typename T, typename Tag, typename ... Ms>
+class std::numeric_limits<strong::type<T, Tag, Ms...>>
+#if __cplusplus >= 202003L
+    requires strong::type_is<strong::type<T, Tag, Ms...>, strong::arithmetic>
+        : public std::numeric_limits<T>
+#else
+    : public std::conditional<
+        strong::type_is_v<strong::type<T, Tag, Ms...>, strong::arithmetic>,
+        std::numeric_limits<T>,
+        std::numeric_limits<void>
+    >::type
+#endif
+{
+    using type = strong::type<T, Tag, Ms...>;
+public:
+    static constexpr type min() noexcept { return type{std::numeric_limits<T>::min()};}
+    static constexpr type lowest() noexcept { return type{std::numeric_limits<T>::lowest()};}
+    static constexpr type max() noexcept { return type{std::numeric_limits<T>::max()};}
+    static constexpr type epsilon() noexcept { return type{std::numeric_limits<T>::epsilon()};}
+    static constexpr type round_error() noexcept { return type{std::numeric_limits<T>::round_error()};}
+    static constexpr type infinity() noexcept { return type{std::numeric_limits<T>::infinity()};}
+    static constexpr type quiet_NaN() noexcept { return type{std::numeric_limits<T>::quiet_NaN()};}
+    static constexpr type signaling_NaN() noexcept { return type{std::numeric_limits<T>::signaling_NaN()};}
+    static constexpr type denorm_min() noexcept { return type{std::numeric_limits<T>::denorm_min()};}
+};
 #endif //STRONG_TYPE_ARITHMETIC_HPP

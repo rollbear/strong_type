@@ -84,6 +84,9 @@ some situations.
 * <A name="arithmetic"/>`strong::arithmetic` allows addition, subtraction,
   multiplication, division and remainder of instances.
 
+  [`std::numeric_limits<T>`](https://en.cppreference.com/w/cpp/types/numeric_limits)
+  is specialized for types using the `strong::arithmetic` modifier.
+
   Available in `strong_type/arithmetic.hpp`.
 
 

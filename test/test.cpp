@@ -146,6 +146,7 @@ using uint = unsigned int;
 
 using handle = strong::type<int, struct handle_tag>;
 
+static_assert(!std::numeric_limits<handle>::is_specialized, "");
 static_assert(std::is_same<int, strong::underlying_type_t<handle>>{},"");
 static_assert(std::is_same<int, strong::underlying_type_t<int>>{},"");
 
@@ -181,6 +182,7 @@ static_assert(!is_divisible<handle>{}, "");
 
 using handle2 = strong::type<int, struct handle2_tag>;
 
+static_assert(!std::numeric_limits<handle2>::is_specialized, "");
 static_assert(!std::is_constructible<handle, const handle2&>{},"");
 static_assert(!std::is_constructible<handle, handle2&&>{},"");
 static_assert(!std::is_assignable<handle, const handle2&>{},"");
@@ -211,6 +213,7 @@ static_assert(!is_divisible<bhandle>{}, "");
 
 using dchandle = strong::type<int, struct dchandle_tag, strong::default_constructible>;
 
+static_assert(!std::numeric_limits<dchandle>::is_specialized, "");
 static_assert(strong::type_is_v<dchandle, strong::default_constructible>, "");
 static_assert(std::is_default_constructible<dchandle>{},"");
 static_assert(std::is_nothrow_constructible<dchandle, int&&>{},"");
@@ -233,6 +236,9 @@ static_assert(!is_divisible<dchandle>{}, "");
 
 using ahandle = strong::type<int, struct ahandle_tag, strong::arithmetic>;
 
+static_assert(std::numeric_limits<ahandle>::is_specialized, "");
+static_assert(value_of(std::numeric_limits<ahandle>::min()) == std::numeric_limits<int>::min(),"");
+static_assert(value_of(std::numeric_limits<ahandle>::max()) == std::numeric_limits<int>::max(),"");
 static_assert(strong::type_is_v<ahandle, strong::arithmetic>, "");
 static_assert(!std::is_default_constructible<ahandle>{},"");
 static_assert(std::is_nothrow_constructible<ahandle, int&&>{},"");
@@ -261,7 +267,15 @@ using ahandle2 = strong::type<int, struct ahandle2_tag, strong::arithmetic>;
 static_assert(!is_subtractable<ahandle, ahandle2>{},"");
 
 using afhandle = strong::type<float, struct afloat_tag, strong::arithmetic>;
+static_assert(std::numeric_limits<afhandle>::is_specialized, "");
+static_assert(value_of(std::numeric_limits<afhandle>::min()) == std::numeric_limits<float>::min(), "");
+static_assert(value_of(std::numeric_limits<afhandle>::max()) == std::numeric_limits<float>::max(), "");
+static_assert(value_of(std::numeric_limits<afhandle>::lowest()) == std::numeric_limits<float>::lowest(), "");
+static_assert(value_of(std::numeric_limits<afhandle>::denorm_min()) == std::numeric_limits<float>::denorm_min(), "");
+static_assert(std::numeric_limits<afhandle>::min_exponent10 == std::numeric_limits<float>::min_exponent10, "");
+
 static_assert(!is_modulo_able<afhandle>{},"");
+
 
 using hhandle = strong::type<int, struct hhandle_tag, strong::hashable>;
 

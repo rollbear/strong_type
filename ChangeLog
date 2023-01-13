@@ -17,6 +17,9 @@
           There's also a type version, to use as
           strong::is_type<type, modifier>::value;
 
+        * std::numeric_limits<T> is specialized for types using the
+          strong::arithmetic modifier.
+
 v8 2023-01-04
 
         * Split the header file into one file for each modifier. This can
