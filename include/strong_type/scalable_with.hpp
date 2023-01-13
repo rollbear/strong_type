@@ -96,26 +96,29 @@ public:
 template <typename ... Ts>
 struct scalable_with
 {
-    using R = impl::first_type_t<Ts...>;
     template <typename T>
     class modifier : public impl::typed_scalable<T, Ts>...
     {
-        template <
-            typename TT = T,
-            typename UT = underlying_type_t<TT>,
-            typename = std::enable_if_t<std::is_constructible<R, decltype(std::declval<const UT&>() / std::declval<const UT&>())>::value>
-        >
-        STRONG_NODISCARD
-        friend
-        STRONG_CONSTEXPR
-        auto operator/(const T& lh, const T& rh)
-        noexcept(noexcept(std::declval<const UT&>() / std::declval<const UT&>()))
-        -> R
-        {
-            return R{value_of(lh) / value_of(rh)};
-        }
+    public:
+        using scalable_modifier_result_type = impl::first_type_t<Ts...>;
     };
 };
-
 }
+
+template <
+    typename TT,
+    typename UT = strong::underlying_type_t<TT>,
+    typename R = typename TT::scalable_modifier_result_type,
+    typename = std::enable_if_t<std::is_constructible<R, decltype(std::declval<const UT&>() / std::declval<const UT&>())>::value>
+>
+STRONG_NODISCARD
+inline
+STRONG_CONSTEXPR
+auto operator/(const TT& lh, const TT& rh)
+noexcept(noexcept(std::declval<const UT&>() / std::declval<const UT&>()))
+-> R
+{
+    return R{value_of(lh) / value_of(rh)};
+}
+
 #endif //STRONG_TYPE_SCALABLE_HPP
