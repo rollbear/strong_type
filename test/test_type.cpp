@@ -152,7 +152,7 @@ TEST_CASE("freestanding value_of() gets the underlying value")
             auto&& v = value_of(std::move(as_const(var)));
             THEN("a const lvalue refercence is returned")
             {
-                STATIC_REQUIRE(std::is_same<decltype(v), const int&>{});
+                STATIC_REQUIRE(std::is_same<decltype(v), const int&&>{});
             }
             AND_THEN("the value is the one constructed from")
             {
@@ -214,7 +214,7 @@ TEST_CASE("member value_of() gets the underlying value")
             auto&& v = std::move(as_const(var)).value_of();
             THEN("a const lvalue refercence is returned")
             {
-                STATIC_REQUIRE(std::is_same<decltype(v), const int&>{});
+                STATIC_REQUIRE(std::is_same<decltype(v), const int&&>{});
             }
             AND_THEN("the value is the one constructed from")
             {

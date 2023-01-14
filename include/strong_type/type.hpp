@@ -122,6 +122,10 @@ public:
     { return std::move(val); }
 
     STRONG_NODISCARD
+    constexpr const T &&value_of() const && noexcept
+    { return std::move(val); }
+
+    STRONG_NODISCARD
     friend constexpr T &value_of(type &t) noexcept
     { return t.val; }
 
@@ -131,6 +135,10 @@ public:
 
     STRONG_NODISCARD
     friend constexpr T &&value_of(type &&t) noexcept
+    { return std::move(t).val; }
+
+    STRONG_NODISCARD
+    friend constexpr const T &&value_of(const type &&t) noexcept
     { return std::move(t).val; }
 
 private:
