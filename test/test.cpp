@@ -643,7 +643,7 @@ TEST_CASE("format")
 {
   using formatint = strong::type<int, struct formattag, strong::formattable>;
 
-  static_assert(strong::type_is<formatint, strong::formattable>);
+  static_assert(strong::type_is_v<formatint, strong::formattable>);
   formatint fi{5};
   CHECK(std::format("{:d}", fi) == std::format("{:d}", 5));
   // Use std::vformat to mitigate the compile time check.

@@ -10,8 +10,8 @@
 
           Note that for variadic modifiers like strong::ordered_with<>, the
           predicate ensures that all types listed in the test are supported,
-          so in the example above, the test type_is_v<type, ordered_with<long>> is
-          true because 'long' is included in the type definition using
+          so in the example above, the test type_is_v<type, ordered_with<long>>
+          is true because 'long' is included in the type definition using
           ordered_with<int, long>.
 
           There's also a type version, to use as
