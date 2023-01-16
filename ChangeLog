@@ -1,18 +1,21 @@
-        * A type predicate strong::type_is<type, modifier> has been introduced.
+        * A type predicate strong::type_is_v<type, modifier> has been introduced.
           It can be used in compile time tests for generic code to ensute that
           a strong type has the necessary modifiers. Exmple:
 
           using type = strong::type<int, struct type_,
                                     strong::ordered,
                                     strong::ordered_with<int, long>>;
-          static_assert(strong::type_is<type, strong::ordered>);
-          static_assert(strong::type_is<type, strong::ordered_with<long>>);
+          static_assert(strong::type_is_v<type, strong::ordered>);
+          static_assert(strong::type_is_v<type, strong::ordered_with<long>>);
 
           Note that for variadic modifiers like strong::ordered_with<>, the
           predicate ensures that all types listed in the test are supported,
-          so in the example above, the test type_is<type, ordered_with<long>> is
+          so in the example above, the test type_is_v<type, ordered_with<long>> is
           true because 'long' is included in the type definition using
           ordered_with<int, long>.
+
+          There's also a type version, to use as
+          strong::is_type<type, modifier>::value;
 
 v8 2023-01-04
 

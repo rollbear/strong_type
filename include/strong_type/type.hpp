@@ -351,8 +351,13 @@ type<T, Tag, Ms...> get_strong_(const type<T, Tag, Ms...>*);
 template <typename T>
 using get_strong = decltype(get_strong_(static_cast<T*>(nullptr)));
 }
+
 template <typename T, typename M>
-static constexpr bool type_is = impl::type_is<impl::get_strong<T>, M>;
+static constexpr bool type_is_v = impl::type_is<impl::get_strong<T>, M>;
+
+template <typename T, typename M>
+using type_is = std::integral_constant<bool, type_is_v<T,M>>;
+
 }
 
 #endif //ROLLBEAR_STRONG_TYPE_TYPE_HPP_INCLUDED

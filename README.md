@@ -313,23 +313,26 @@ A number of small utilities are available directly in `strong_type/type.hpp`.
       init(&value_of(x)); // hopefully the init() function assigns a value
   }
   ```
-  
-* `strong::type_is<type, modifier>` is a constexpr predicate to test if a type
+
+* `strong::type_is<type, modifier>`, a boolean constant type whith the value of
+  `strong::type_is_v<type, modifier>`.
+
+* `strong::type_is_v<type, modifier>` is a constexpr predicate to test if a type
   has a modifier. For variadic modifiers, like `strong::ordered_with<Ts...>`,
   it tests each of the types `Ts` individually. Example:
 
   ```C++
   using handle = strong::type<int, struct handle_, strong::regular>;
   
-  static_assert(strong::type_is<handle, strong::equality>);
-  static_assert(strong::type_is<handle, strong::regular>);
+  static_assert(strong::type_is_v<handle, strong::equality>);
+  static_assert(strong::type_is_v<handle, strong::regular>);
   
   using id = strong::type<int, struct id_, strong::ordered_with<int, long>>;
   
-  static_assert(strong::type_is<id, strong::ordered_with<int, long>>);   
-  static_assert(strong::type_is<id, strong::ordered_with<long>>);   
-  static_assert(strong::type_is<id, strong::ordered_with<int>>);   
-  static_assert(strong::type_is<id, strong::ordered_with<>>);   
+  static_assert(strong::type_is_v<id, strong::ordered_with<int, long>>);   
+  static_assert(strong::type_is_v<id, strong::ordered_with<long>>);   
+  static_assert(strong::type_is_v<id, strong::ordered_with<int>>);   
+  static_assert(strong::type_is_v<id, strong::ordered_with<>>);   
   ``` 
   
   All `static_assert`s above pass.
@@ -367,7 +370,7 @@ This can already be used, but it's not very useful yet:
 
 ```C++
 using my_type = strong::type<int, struct tag_, optional<0>>;
-static_assert(strong::type_is<my_type, optional<0>);
+static_assert(strong::type_is_v<my_type, optional<0>);
 ```
 
 Let's add some functionality to the mixin. Since the strong type inherits
