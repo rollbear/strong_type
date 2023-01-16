@@ -297,10 +297,12 @@ A number of small utilities are available directly in `strong_type/type.hpp`.
 
 * `strong::type` provides a non-member `swap()` function as a friend, which
    swaps underlying values using.
-  
+
+
 * `strong::underlying_type<Type>` is `T` for `strong::type<T, Tag, Ms...>` and
-   public descendants, and `Type` for other types. 
-      
+   public descendants, and `Type` for other types.
+
+
 * `strong::uninitialized` can be used to construct instances of `strong::type<T...>`
   without initializing the value. This is only possible if the underlying type
   is [`trivially default constructible`](
@@ -317,28 +319,29 @@ A number of small utilities are available directly in `strong_type/type.hpp`.
 * `strong::type_is<type, modifier>`, a boolean constant type whith the value of
   `strong::type_is_v<type, modifier>`.
 
+
 * `strong::type_is_v<type, modifier>` is a constexpr predicate to test if a type
   has a modifier. For variadic modifiers, like `strong::ordered_with<Ts...>`,
   it tests each of the types `Ts` individually. Example:
 
   ```C++
   using handle = strong::type<int, struct handle_, strong::regular>;
-  
+
   static_assert(strong::type_is_v<handle, strong::equality>);
   static_assert(strong::type_is_v<handle, strong::regular>);
-  
+
   using id = strong::type<int, struct id_, strong::ordered_with<int, long>>;
-  
-  static_assert(strong::type_is_v<id, strong::ordered_with<int, long>>);   
-  static_assert(strong::type_is_v<id, strong::ordered_with<long>>);   
-  static_assert(strong::type_is_v<id, strong::ordered_with<int>>);   
-  static_assert(strong::type_is_v<id, strong::ordered_with<>>);   
-  ``` 
-  
+
+  static_assert(strong::type_is_v<id, strong::ordered_with<int, long>>);
+  static_assert(strong::type_is_v<id, strong::ordered_with<long>>);
+  static_assert(strong::type_is_v<id, strong::ordered_with<int>>);
+  static_assert(strong::type_is_v<id, strong::ordered_with<>>);
+  ```
+
   All `static_assert`s above pass.
 
 # <A name="writing_modifier"/>Writing a modifier
- 
+
 A modifier is a nested structure. The outer type, a struct or class, is what
 the user sees. Inside it is a struct/class template that is a
 [CRTP](https://en.cppreference.com/w/cpp/language/crtp) mixin, and
@@ -549,7 +552,7 @@ struct optional
         constexpr decltype(auto) value() &
         {
             return get_value(static_cast<T&>(*this));
-        }      
+        }
         constexpr decltype(auto) value() const &
         {
             return get_value(static_cast<const T&>(*this));
@@ -557,7 +560,7 @@ struct optional
         constexpr decltype(auto) value() &&
         {
             return get_value(static_cast<T&&>(*this));
-        }      
+        }
         constexpr decltype(auto) value() const &&
         {
             return get_value(static_cast<const T&&>(*this));
@@ -592,7 +595,7 @@ N.B. Microsoft Visual Studio MSVC compiler < 19.22 does not handle `constexpr`
 correctly. Those found to cause trouble are disabled for those versions.
 
 ## <A name="other"/> Other libraries:
- 
+
 | Library                                             | Author |
 |-----------------------------------------------------|-------------------|
 | [type_safe](https://github.com/foonathan/type_safe) | Jonathan Müller   |
