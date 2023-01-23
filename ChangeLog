@@ -23,6 +23,8 @@
         * std::numeric_limits<T> is specialized for types using the
           strong::arithmetic modifier.
 
+        * Added missing const&& overloads fore value_of()
+
 v8 2023-01-04
 
         * Split the header file into one file for each modifier. This can
