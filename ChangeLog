@@ -4,8 +4,8 @@ v9 2023-01-23
           are built.
 
         * A type predicate strong::type_is_v<type, modifier> has been introduced.
-          It can be used in compile time tests for generic code to ensute that
-          a strong type has the necessary modifiers. Exmple:
+          It can be used in compile time tests for generic code to ensure that
+          a strong type has the necessary modifiers. Example:
 
           using type = strong::type<int, struct type_,
                                     strong::ordered,
@@ -25,7 +25,7 @@ v9 2023-01-23
         * std::numeric_limits<T> is specialized for types using the
           strong::arithmetic modifier.
 
-        * Added missing const&& overloads fore value_of()
+        * Added missing const&& overloads for value_of()
 
 v8 2023-01-04
 
