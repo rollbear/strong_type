@@ -270,7 +270,7 @@ some situations.
 * <A name="regular"/>`strong::regular`. Same as [`semiregular`](#semiregular)
   and also equality comparable. A good default base for most types.
 
-  Available in `strong´type/regular.hpp`
+  Available in `strong_type/regular.hpp`
 
 
 * <A name="scalable_with"/>`strong::scalable_with<Ts...>` Allows multiplying and
