@@ -60,6 +60,7 @@ jobs:
             -DCMAKE_CXX_STANDARD=${{matrix.config.std}} \
             -DCMAKE_CXX_FLAGS="${STDLIB} -Wall -Wextra -Wconversion -pedantic -Werror --coverage" \
             -DCMAKE_PREFIX_PATH="${LIBRARY_PREFIX}" \
+            -DCMAKE_VERBOSE_MAKEFILE=yes \
             -DSTRONG_TYPE_UNIT_TEST=yes \
             -DCMAKE_BUILD_TYPE=Debug
       - name: "build"
@@ -113,6 +114,7 @@ jobs:
             -DCMAKE_CXX_STANDARD=${{matrix.config.std}} \
             -DCMAKE_CXX_FLAGS="'/permissive- /EHsc /W4 /WX'" \
             -DCMAKE_BUILD_TYPE=Debug \
+            -DCMAKE_VERBOSE_MAKEFILE=yes \
             -DSTRONG_TYPE_UNIT_TEST=yes \
             -G Ninja
 
