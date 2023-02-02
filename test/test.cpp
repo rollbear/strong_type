@@ -147,6 +147,11 @@ using uint = unsigned int;
 using handle = strong::type<int, struct handle_tag>;
 
 static_assert(!std::numeric_limits<handle>::is_specialized, "");
+#if defined(__cpp_concepts)
+static_assert(!std::is_base_of<std::numeric_limits<void>, std::numeric_limits<handle>>{},"");
+#else
+static_assert(std::is_base_of<std::numeric_limits<void>, std::numeric_limits<handle>>{},"");
+#endif
 static_assert(std::is_same<int, strong::underlying_type_t<handle>>{},"");
 static_assert(std::is_same<int, strong::underlying_type_t<int>>{},"");
 

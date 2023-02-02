@@ -166,11 +166,12 @@ public:
 }
 
 template <typename T, typename Tag, typename ... Ms>
+#if defined(__cpp_concepts)
+requires strong::type_is_v<strong::type<T, Tag, Ms...>, strong::arithmetic>
 class std::numeric_limits<strong::type<T, Tag, Ms...>>
-#if __cplusplus >= 202003L
-    requires strong::type_is<strong::type<T, Tag, Ms...>, strong::arithmetic>
-        : public std::numeric_limits<T>
+    : public std::numeric_limits<T>
 #else
+class std::numeric_limits<strong::type<T, Tag, Ms...>>
     : public std::conditional<
         strong::type_is_v<strong::type<T, Tag, Ms...>, strong::arithmetic>,
         std::numeric_limits<T>,
