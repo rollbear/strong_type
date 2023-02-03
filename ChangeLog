@@ -1,3 +1,5 @@
+v10 2023-02-03
+
         * Corrected the test for, and use of, concepts when specializing
           std::numeric_limits<> for strong::arithmetic types. Thank you
           Björn Schäpers for reporting.
