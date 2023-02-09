@@ -73,7 +73,7 @@ public:
     constexpr
     type()
     noexcept(noexcept(T{}))
-        : val{}
+        : _val{}
     {
     }
 
@@ -85,7 +85,7 @@ public:
         std::initializer_list<U> us
     )
     noexcept(noexcept(T{us}))
-        : val{us}
+        : _val{us}
     {
     }
 
@@ -97,7 +97,7 @@ public:
     type(
         U &&... u)
     noexcept(std::is_nothrow_constructible<T, U...>::value)
-        : val(std::forward<U>(u)...)
+        : _val(std::forward<U>(u)...)
     {}
 
     friend STRONG_CONSTEXPR void swap(type &a, type &b) noexcept(
@@ -106,43 +106,45 @@ public:
     )
     {
         using std::swap;
-        swap(a.val, b.val);
+        swap(a._val, b._val);
     }
 
     STRONG_NODISCARD
     constexpr T &value_of() & noexcept
-    { return val; }
+    { return _val; }
 
     STRONG_NODISCARD
     constexpr const T &value_of() const & noexcept
-    { return val; }
+    { return _val; }
 
     STRONG_NODISCARD
     constexpr T &&value_of() && noexcept
-    { return std::move(val); }
+    { return std::move(_val); }
 
     STRONG_NODISCARD
     constexpr const T &&value_of() const && noexcept
-    { return std::move(val); }
+    { return std::move(_val); }
 
     STRONG_NODISCARD
     friend constexpr T &value_of(type &t) noexcept
-    { return t.val; }
+    { return t._val; }
 
     STRONG_NODISCARD
     friend constexpr const T &value_of(const type &t) noexcept
-    { return t.val; }
+    { return t._val; }
 
     STRONG_NODISCARD
     friend constexpr T &&value_of(type &&t) noexcept
-    { return std::move(t).val; }
+    { return std::move(t)._val; }
 
     STRONG_NODISCARD
     friend constexpr const T &&value_of(const type &&t) noexcept
-    { return std::move(t).val; }
+    { return std::move(t)._val; }
 
-private:
-    T val;
+#if __cpp_nontype_template_args < 201911L
+  private:
+#endif
+    T _val;
 };
 
 namespace impl {
