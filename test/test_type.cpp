@@ -244,7 +244,7 @@ template <auto> class foo {};
 TEST_CASE("value can be used as non-type template parameter") {
 
     using strong_int = strong::type<int, struct si_>;
-    foo<strong_int{5}> foo;
+    [[maybe_unused]] foo<strong_int{5}> foo;
 }
 
 #endif
