@@ -141,9 +141,6 @@ public:
     friend constexpr const T &&value_of(const type &&t) noexcept
     { return std::move(t)._val; }
 
-#if __cpp_nontype_template_args < 201911L
-  private:
-#endif
     T _val;
 };
 
