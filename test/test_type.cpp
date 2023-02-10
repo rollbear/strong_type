@@ -238,7 +238,7 @@ TEST_CASE("swap")
 }
 
 #if (__cpp_nontype_template_args >= 201911L) || \
-  (__cpp_nontype_template_args >= 201411 && __clang_major__ >= 12)
+  (__cplusplus >= 202002 && __cpp_nontype_template_args >= 201411 && __clang_major__ >= 12)
 
 template <auto> class foo {};
 
