@@ -1,3 +1,20 @@
+        * A strong type can now be used as an NTTP (Non Type Template Parameter)
+
+            using type = strong::type<int, struct int_>;
+
+            template <type t>
+            struct S {
+                constexpr operator int() const { return value_of(t);}
+            };
+
+            int main()
+            {
+                S<type{3}> obj;
+                return obj;
+            }
+
+          Thank you Toni Neubert for the implementation.
+
 v10 2023-02-03
 
         * Corrected the test for, and use of, concepts when specializing

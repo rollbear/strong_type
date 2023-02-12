@@ -62,6 +62,10 @@ The header file `<strong_type/strong_type.hpp>` brings you all functionality.
 There are more fine-grained headers available, which may speed up builds in
 some situations.
 
+A strong type can be used as an NTTP ([Non Type Template
+Parameter](https://en.cppreference.com/w/cpp/language/template_parameters)), if
+the underlying type can be, for compilers and standards that support it.
+
 # <A name="modifiers"/> Modifiers:
 
 * <A name="affine_point"/>`strong::affine_point<D>` allows instances to be
