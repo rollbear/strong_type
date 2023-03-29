@@ -438,7 +438,11 @@ struct optional
     };
 };
 ```
-This repetition quictly gets old. You can use a template trick to get rid of it:
+
+If you want to move out of r-values, you need special overloads for that too,
+which unfortunately makes the code quite repetitive. Writing the operators as
+friend functions, taking the `T` as a parameter removes the need for the casts.
+
 ```C++
 template <auto no_value>
 struct optional
@@ -447,20 +451,25 @@ struct optional
     struct modifier
     {
         constexpr bool has_value() const noexcept;
-        template <typename TT>
-        constexpr friend decltype(auto) operator*(TT&& tt) noexcept
+        friend constexpr decltype(auto) operator*(T& self) noexcept
         {
-            return value_of(std::forward<TT>(tt));
+            return value_of(self);
+        }
+        friend constexpr decltype(auto) operator*(const T& self) noexcept
+        {
+            return value_of(self);
+        }
+        friend constexpr decltype(auto) operator*(T&& self) noexcept
+        {
+            return value_of(std::move(self));
+        }
+        friend constexpr decltype(auto) operator*(const T&& self) noexcept
+        {
+            return value_of(std::move(self));
         }
     };
 };
 ```
-Yes, operators can be written as inline friends, which then accepts the type
-of the object as the parameter. This is often referred to as the
-["hidden friend idiom"](https://www.justsoftwaresolutions.co.uk/cplusplus/hidden-friends.html).
-By making the type a forwarding reference, this will match `T&`, `T&&`,
-`const T&`, `const T&&`, `volatile T&`, `volatile T&&`,`const volatile T&` and
-`const volatile T&&`. 8 overloads in one definition! Not bad.
 
 `std::optional<>` also has member functions `.value()`, which returns the value
 if there is one, or throws.
@@ -473,8 +482,10 @@ struct optional
     struct modifier
     {
         constexpr bool has_value() const noexcept;
-        template <typename TT>
-        constexpr friend decltype(auto) operator*(TT&& tt) noexcept;
+        constexpr friend decltype(auto) operator*(T& t) noexcept;
+        constexpr friend decltype(auto) operator*(T&& t) noexcept;
+        constexpr friend decltype(auto) operator*(const T& t) noexcept;
+        constexpr friend decltype(auto) operator*(const T&& t) noexcept;
         strong::underlying_type_t<T>& value()
         {
             if (!has_value() {
@@ -496,7 +507,7 @@ struct optional
 };
 ```
 
-Unfortunately there is little that can be done to reduce the repetition here. A
+Unfortunately there is little that can be done to reduce the repetition. A
 bit can be done by writing a static helper function template:
 
 ```C++
@@ -507,8 +518,10 @@ struct optional
     struct modifier
     {
         constexpr bool has_value() const noexcept;
-        template <typename TT>
-        constexpr friend decltype(auto) operator*(TT&& tt) noexcept;
+        constexpr friend decltype(auto) operator*(T& t) noexcept;
+        constexpr friend decltype(auto) operator*(T&& t) noexcept;
+        constexpr friend decltype(auto) operator*(const T& t) noexcept;
+        constexpr friend decltype(auto) operator*(const T&& t) noexcept;
         decltype(auto) value() &
         {
             return get_value(static_cast<T&>(*this));
@@ -551,10 +564,21 @@ struct optional
             auto& self = static_cast<const T&>(*this);
             return value_of(self) != no_value;
         }
-        template <typename TT>
-        friend constexpr decltype(auto) operator*(TT&& self) noexcept
+        friend constexpr decltype(auto) operator*(T&& self) noexcept
         {
-            return value_of(std::forward<TT>(self));
+            return value_of(std::move(self));
+        }
+        friend constexpr decltype(auto) operator*(const T&& self) noexcept
+        {
+            return value_of(std::move(self));
+        }
+        friend constexpr decltype(auto) operator*(T& self) noexcept
+        {
+            return value_of(self);
+        }
+        friend constexpr decltype(auto) operator*(const T& self) noexcept
+        {
+            return value_of(self);
         }
         constexpr decltype(auto) value() &
         {
