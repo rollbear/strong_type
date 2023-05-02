@@ -24,6 +24,9 @@ jobs:
           - { cxx: clang++-16, std: 17, container: "clang:16" }
           - { cxx: clang++-16, std: 20, container: "clang:16" }
           - { cxx: clang++-16, std: 23, container: "clang:16" }
+          - { cxx: g++-13, std: 14, container: "gcc:13" }
+          - { cxx: g++-13, std: 17, container: "gcc:13" }
+          - { cxx: g++-13, std: 20, container: "gcc:13" }
           - { cxx: g++-12, std: 14, container: "gcc:12" }
           - { cxx: g++-12, std: 17, container: "gcc:12" }
           - { cxx: g++-12, std: 20, container: "gcc:12" }
