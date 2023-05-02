@@ -1,3 +1,5 @@
+        * Added support for three way comparison (operator<=>).
+
 v11 2023-05-02
 
         * A strong type can now be used as an NTTP (Non Type Template Parameter)

@@ -285,6 +285,13 @@ the underlying type can be, for compilers and standards that support it.
   Available in `strong_type/scalable_with.hpp`
 
 
+* <A name="three_way"/>`strong::three_way` provides operators `==` and `<=>` and
+  thus all comparison operators. It is only available in C++ 20 or newer and should
+  not be combined with [equality](#equality) or [ordered](#ordered).
+
+  Available in `strong_type/three_way.hpp`.
+
+
 * <A name="semiregular"/>`strong::semiregular`. This gives you default
   constructible, move/copy constructible, move/copy assignable and swappable.
   A decent default for many types.

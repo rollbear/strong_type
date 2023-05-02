@@ -81,6 +81,7 @@ add_executable(
         test_implicitly_convertible_to.cpp
         empty.cpp
         test_scalable_with.cpp
+        test_three_way.cpp
         ${CATCH_MAIN}
         )
 
