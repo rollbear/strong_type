@@ -16,6 +16,9 @@
 
 #include "type.hpp"
 
+#if __cpp_impl_three_way_comparison && __has_include(<compare>)
+#include <compare>
+#endif
 namespace strong
 {
 struct ordered
@@ -83,6 +86,45 @@ public:
         return value_of(lh) >= value_of(rh);
     }
 };
+
+#if __cpp_impl_three_way_comparison && __has_include(<compare>)
+
+namespace detail
+{
+template<typename Ordering>
+struct spaceship_ordering {
+    template <typename>
+    struct modifier;
+};
+
+template<typename Ordering>
+template<typename T, typename Tag, typename ... Ms>
+struct spaceship_ordering<Ordering>::modifier<::strong::type<T, Tag, Ms...>>
+{
+    using type = ::strong::type<T, Tag, Ms...>;
+
+    STRONG_NODISCARD
+    friend
+    STRONG_CONSTEXPR
+
+    Ordering
+    operator<=>(
+            const type &lh,
+            const type &rh)
+    noexcept(noexcept(std::declval<const T &>() <=> std::declval<const T &>()))
+    requires std::is_convertible_v<decltype(std::declval<const T&>() <=> std::declval<const T&>()), Ordering>
+    {
+        return value_of(lh) <=> value_of(rh);
+    }
+};
+
+}
+
+using strongly_ordered = detail::spaceship_ordering<std::strong_ordering>;
+using weakly_ordered = detail::spaceship_ordering<std::weak_ordering>;
+using partially_ordered = detail::spaceship_ordering<std::partial_ordering>;
+
+#endif
 
 }
 
