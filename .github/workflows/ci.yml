@@ -80,9 +80,9 @@ jobs:
 
       - name: "test"
         run: |
-          ./build/test/self_test && \
-          ./build/test/test_fmt8/test_fmt8 && \
-          ./build/test/test_fmt9/test_fmt9
+          ./build/test/self_test -s && \
+          ./build/test/test_fmt8/test_fmt8 -s && \
+          ./build/test/test_fmt9/test_fmt9 -s
 
       - name: "collect coverage"
         run: |
@@ -137,4 +137,4 @@ jobs:
       - name: "test"
         shell: bash
         run: |
-          ./build/test/self_test.exe
+          ./build/test/self_test.exe -s
