@@ -256,6 +256,22 @@ the underlying type can be, for compilers and standards that support it.
   Available in `strong_type/ostreamable.hpp`
 
 
+* <A name="partially_ordered"/>`strong::partially_ordered` provides operator
+  '<=>' The strong type offers the same ordering relatin as the underlying type.
+  The result is [`std::partial_ordering`](https://en.cppreference.com/w/cpp/utility/compare/partial_ordering).
+
+  Available in `strong_type/ordered.hpp`
+
+
+* <A name="partially_ordered_with"/>`strong::partially_ordered_with<Ts...>`
+  provides operator '<=>' between the strong type and each of the types `Ts...`.
+  Note! While `Ts` can include other strong types, it cannot refer to the strong
+  type being defined. Use [`strong::partially_ordered`](#partially_ordered) for
+  that. The result is [`std::partial_ordering`](https://en.cppreference.com/w/cpp/utility/compare/partial_ordering)
+
+  Available in `strong_type/ordered_with.hpp`
+
+
 * <A name="pointer"/>`strong::pointer` allows `operator*` and `operator->`, and
   comparisons with `nullptr` providing the underlying type supports it.
 
@@ -292,10 +308,42 @@ the underlying type can be, for compilers and standards that support it.
   Available in `strong_type/semiregular.hpp`.
 
 
+* <A name="strongly_ordered"/>`strong::strongly_ordered` provides operator '<=>'
+  The strong type offers the same ordering relatin as the underlying type. The
+  result is [`std::strong_ordering`](https://en.cppreference.com/w/cpp/utility/compare/strong_ordering).
+
+  Available in `strong_type/ordered.hpp`
+
+
+* <A name="strongly_ordered_with"/>`strong::strongly_ordered_with<Ts...>`
+  provides operator '<=>' between the strong type and each of the types `Ts...`.
+  Note! While `Ts` can include other strong types, it cannot refer to the strong
+  type being defined. Use [`strong::strongly_ordered`](#strongly_ordered) for
+  that. The result is [`std::strong_ordering`](https://en.cppreference.com/w/cpp/utility/compare/strong_ordering)
+
+  Available in `strong_type/ordered_with.hpp`
+
+
 * <A name="unique"/>`strong::unique`. Make the type move constructible and move
   assignable but not copy constructible nor copy assignable.
 
   Available in `strong_type/unique.hpp`
+
+* <A name="weakly_ordered"/>`strong::weakly_ordered` provides operator '<=>'
+  The strong type offers the same ordering relatin as the underlying type. The
+  result is [`std::weak_ordering`](https://en.cppreference.com/w/cpp/utility/compare/weak_ordering).
+
+  Available in `strong_type/ordered.hpp`
+
+
+* <A name="weakly_ordered_with"/>`strong::weakly_ordered_with<Ts...>` provides
+  operator '<=>' between the strong type and each of the types `Ts...`.
+  Note! While `Ts` can include other strong types, it cannot refer to the strong
+  type being defined. Use [`strong::weakly_ordered`](#weakly_ordered) for
+  that. The result is [`std::weak_ordering`](https://en.cppreference.com/w/cpp/utility/compare/weak_ordering)
+
+  Available in `strong_type/ordered_with.hpp`
+
 
 
 # <A name="utilities"/> Utilities:
