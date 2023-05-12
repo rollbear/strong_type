@@ -75,6 +75,15 @@ struct formatter<::strong::type<T, Tag, M...>, Char> : formatter<T, Char>
   template<typename FormatContext, typename Type>
   STRONG_CONSTEXPR
   decltype(auto)
+  format(const Type& t, FormatContext& fc) const
+      noexcept(noexcept(std::declval<formatter<T, Char>>().format(std::declval<const T&>(), fc)))
+  {
+    return formatter<T, Char>::format(value_of(t), fc);
+  }
+
+  template<typename FormatContext, typename Type>
+  STRONG_CONSTEXPR
+  decltype(auto)
   format(const Type& t, FormatContext& fc)
       noexcept(noexcept(std::declval<formatter<T, Char>>().format(std::declval<const T&>(), fc)))
   {
@@ -94,6 +103,15 @@ struct formatter;
 template <typename T, typename Tag, typename ... M, typename Char>
 struct formatter<type<T, Tag, M...>, Char> : fmt::formatter<T, Char>
 {
+  template<typename FormatContext, typename Type>
+  STRONG_CONSTEXPR
+  decltype(auto)
+  format(const Type& t, FormatContext& fc) const
+      noexcept(noexcept(std::declval<fmt::formatter<T, Char>>().format(std::declval<const T&>(), fc)))
+  {
+    return fmt::formatter<T, Char>::format(value_of(t), fc);
+  }
+
   template<typename FormatContext, typename Type>
   STRONG_CONSTEXPR
   decltype(auto)
