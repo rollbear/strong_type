@@ -1,5 +1,7 @@
+v12 2023-07-20
+
         * Fixed a bug where fmt formatter function was not const, as it must be
-          per the documentation. Thank you Björn Schäpers for submitting the
+          per the documentation. Thank you Tim Blechmann for submitting the
           fix.
 
         * Strong types can be weakly_ordered, strongly_ordered and
