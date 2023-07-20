@@ -259,6 +259,7 @@ the underlying type can be, for compilers and standards that support it.
 * <A name="partially_ordered"/>`strong::partially_ordered` provides operator
   '<=>' The strong type offers the same ordering relatin as the underlying type.
   The result is [`std::partial_ordering`](https://en.cppreference.com/w/cpp/utility/compare/partial_ordering).
+  Note! This does not imply [´strong::equality´](#equality).
 
   Available in `strong_type/ordered.hpp`
 
@@ -267,7 +268,8 @@ the underlying type can be, for compilers and standards that support it.
   provides operator '<=>' between the strong type and each of the types `Ts...`.
   Note! While `Ts` can include other strong types, it cannot refer to the strong
   type being defined. Use [`strong::partially_ordered`](#partially_ordered) for
-  that. The result is [`std::partial_ordering`](https://en.cppreference.com/w/cpp/utility/compare/partial_ordering)
+  that. The result is [`std::partial_ordering`](https://en.cppreference.com/w/cpp/utility/compare/partial_ordering).
+  Note! This does not imply [´strong::equality_with<Ts...>´](#equality_with).
 
   Available in `strong_type/ordered_with.hpp`
 
@@ -311,6 +313,7 @@ the underlying type can be, for compilers and standards that support it.
 * <A name="strongly_ordered"/>`strong::strongly_ordered` provides operator '<=>'
   The strong type offers the same ordering relatin as the underlying type. The
   result is [`std::strong_ordering`](https://en.cppreference.com/w/cpp/utility/compare/strong_ordering).
+  Note! This does not imply [´strong::equality<Ts...>´](#equality).
 
   Available in `strong_type/ordered.hpp`
 
@@ -320,6 +323,7 @@ the underlying type can be, for compilers and standards that support it.
   Note! While `Ts` can include other strong types, it cannot refer to the strong
   type being defined. Use [`strong::strongly_ordered`](#strongly_ordered) for
   that. The result is [`std::strong_ordering`](https://en.cppreference.com/w/cpp/utility/compare/strong_ordering)
+  Note! This does not imply [´strong::equality_with<Ts...>´](#equality_with).
 
   Available in `strong_type/ordered_with.hpp`
 
@@ -332,6 +336,7 @@ the underlying type can be, for compilers and standards that support it.
 * <A name="weakly_ordered"/>`strong::weakly_ordered` provides operator '<=>'
   The strong type offers the same ordering relatin as the underlying type. The
   result is [`std::weak_ordering`](https://en.cppreference.com/w/cpp/utility/compare/weak_ordering).
+  Note! This does not imply [´strong::equality´](#equality).
 
   Available in `strong_type/ordered.hpp`
 
@@ -341,6 +346,7 @@ the underlying type can be, for compilers and standards that support it.
   Note! While `Ts` can include other strong types, it cannot refer to the strong
   type being defined. Use [`strong::weakly_ordered`](#weakly_ordered) for
   that. The result is [`std::weak_ordering`](https://en.cppreference.com/w/cpp/utility/compare/weak_ordering)
+  Note! This does not imply [´strong::equality_with<Ts...>´](#equality_with).
 
   Available in `strong_type/ordered_with.hpp`
 
