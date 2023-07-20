@@ -1,3 +1,7 @@
+        * Fixed a bug where fmt formatter function was not const, as it must be
+          per the documentation. Thank you Björn Schäpers for submitting the
+          fix.
+
         * Strong types can be weakly_ordered, strongly_ordered and
           partially_ordered, using operator <=> in C++20 and later. Huge thanks
           to Björn Schäpers and Tim Blechmann for the suggestions, discussions
