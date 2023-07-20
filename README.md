@@ -123,7 +123,7 @@ the underlying type can be, for compilers and standards that support it.
 
 
 * <A name="decrementable"/>`strong::decrementable`. Provides
-  [`operator--](https://en.cppreference.com/w/cpp/language/operator_incdec) for
+  [`operator--`](https://en.cppreference.com/w/cpp/language/operator_incdec) for
   the strong type, using the operator of the underlying type.
 
   Available in `strong_type/incrementable.hpp`
