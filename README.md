@@ -5,6 +5,8 @@ Boost Software License 1.0
 [![CI Build Status](https://github.com/rollbear/strong_type/actions/workflows/ci.yml/badge.svg)](https://github.com/rollbear/strong_type/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/rollbear/strong_type/branch/main/graph/badge.svg?token=cS97dA6jRV)](https://codecov.io/gh/rollbear/strong_type)
 
+<a href="https://www.buymeacoffee.com/bjornfahller"> <img src="https://cdn.buymeacoffee.com/buttons/v2/default-orange.png" height="50" width="210" alt="Buy me a coffee"/></a>
+
 * [Intro](#intro)
 * [Modifiers](#modifiers)
 * [Utilities](#utilities)
