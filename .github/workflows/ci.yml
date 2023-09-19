@@ -24,6 +24,14 @@ jobs:
           - { cxx: clang++-16, std: 17, container: "clang:16" }
           - { cxx: clang++-16, std: 20, container: "clang:16" }
           - { cxx: clang++-16, std: 23, container: "clang:16" }
+          - { cxx: clang++-17, std: 14, stdlib: "libc++", linker: "-fuse-ld=gold -lc++abi", container: "clang:17" }
+          - { cxx: clang++-17, std: 17, stdlib: "libc++", linker: "-fuse-ld=gold -lc++abi", container: "clang:17" }
+          - { cxx: clang++-17, std: 20, stdlib: "libc++", linker: "-fuse-ld=gold -lc++abi", container: "clang:17" }
+          - { cxx: clang++-17, std: 23, stdlib: "libc++", linker: "-fuse-ld=gold -lc++abi", container: "clang:17" }
+          - { cxx: clang++-17, std: 14, container: "clang:17" }
+          - { cxx: clang++-17, std: 17, container: "clang:17" }
+          - { cxx: clang++-17, std: 20, container: "clang:17" }
+          - { cxx: clang++-17, std: 23, container: "clang:17" }
           - { cxx: g++-13, std: 14, container: "gcc:13" }
           - { cxx: g++-13, std: 17, container: "gcc:13" }
           - { cxx: g++-13, std: 20, container: "gcc:13" }
