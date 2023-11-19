@@ -22,6 +22,7 @@
 #include "semiregular.hpp"
 #include "regular.hpp"
 #include "unique.hpp"
+#include "invocable.hpp"
 #include "iostreamable.hpp"
 #include "bicrementable.hpp"
 #include "boolean.hpp"

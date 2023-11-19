@@ -208,6 +208,12 @@ the underlying type can be, for compilers and standards that support it.
   Available in `strong_type/indexed.hpp`.
 
 
+* <A name="invocable"/>`strong::invocable` provides `operator()` for
+  the strong type, using the operator of the underlying type.
+
+  Available in `strong_type/invocable.hpp`
+
+
 * <A name="iostreamable"/>`strong::iostreamable`. Both
   [`strong::istreamable`](#istreamable) and
   [`strong::ostreamable`](#ostreamable).

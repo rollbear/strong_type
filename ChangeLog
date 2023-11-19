@@ -1,3 +1,6 @@
+        * Added modifier `invocable` for types with operator(). Thank you
+          Dominic Koepke for the suggestion and the draft implementation.
+
 v12 2023-07-20
 
         * Fixed a bug where fmt formatter function was not const, as it must be

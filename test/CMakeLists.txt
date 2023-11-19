@@ -75,6 +75,7 @@ add_executable(
         test_arithmetic.cpp
         test_bitarithmetic.cpp
         test_indexed.cpp
+        test_invocable.cpp
         test_iterator.cpp
         test_range.cpp
         test_convertible_to.cpp
