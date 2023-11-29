@@ -20,96 +20,97 @@ namespace strong
 {
 struct bitarithmetic
 {
-    template <typename T>
+    template <typename T, typename = void>
     class modifier
     {
+        static_assert(impl::always_false<T>,
+                      "Underlying type must support bitarithmetic operations &, | and ^");
+    };
+    template <typename T, typename Tag, typename ... Ms>
+    class modifier<type<T, Tag, Ms...>, impl::void_t<decltype(((std::declval<T&>() |= std::declval<T>()) &= std::declval<T>()) ^= std::declval<T>())>>
+    {
+        using type = strong::type<T, Tag, Ms...>;
     public:
         friend
         STRONG_CONSTEXPR
-        T&
+        type&
         operator&=(
-            T &lh,
-            const T &rh)
+            type &lh,
+            const type &rh)
         noexcept(noexcept(value_of(lh) &= value_of(rh)))
         {
-            using type = underlying_type_t<T>;
-            value_of(lh) = type(value_of(lh) & value_of(rh));
+            value_of(lh) = T(value_of(lh) & value_of(rh));
             return lh;
         }
 
         friend
         STRONG_CONSTEXPR
-        T&
+        type&
         operator|=(
-            T &lh,
-            const T &rh)
+            type &lh,
+            const type &rh)
         noexcept(noexcept(value_of(lh) |= value_of(rh)))
         {
-            using type = underlying_type_t<T>;
-            value_of(lh) = type(value_of(lh) | value_of(rh));
+            value_of(lh) = T(value_of(lh) | value_of(rh));
             return lh;
         }
 
         friend
         STRONG_CONSTEXPR
-        T&
+        type&
         operator^=(
-            T &lh,
-            const T &rh)
+            type &lh,
+            const type &rh)
         noexcept(noexcept(value_of(lh) ^= value_of(rh)))
         {
-            using type = underlying_type_t<T>;
-            value_of(lh) = type(value_of(lh) ^ value_of(rh));
+            value_of(lh) = T(value_of(lh) ^ value_of(rh));
             return lh;
         }
 
         template <typename C>
         friend
         STRONG_CONSTEXPR
-        T&
+        type&
         operator<<=(
-            T &lh,
+            type &lh,
             C c)
         noexcept(noexcept(value_of(lh) <<= c))
         {
-            using type = underlying_type_t <T>;
-            value_of(lh) = type(value_of(lh) << c);
+            value_of(lh) = T(value_of(lh) << c);
             return lh;
         }
 
         template <typename C>
         friend
         STRONG_CONSTEXPR
-        T&
+        type&
         operator>>=(
-            T &lh,
+            type &lh,
             C c)
         noexcept(noexcept(value_of(lh) >>= c))
         {
-            using type = underlying_type_t<T>;
-            value_of(lh) = type(value_of(lh) >> c);
+            value_of(lh) = T(value_of(lh) >> c);
             return lh;
         }
 
         STRONG_NODISCARD
         friend
         STRONG_CONSTEXPR
-        T
+        type
         operator~(
-            const T &lh)
+            const type &lh)
         {
-            using type = underlying_type_t<T>;
             auto v = value_of(lh);
-            return T(type(~v));
+            return type(T(~v));
         }
 
         STRONG_NODISCARD
         friend
         STRONG_CONSTEXPR
-        T
+        type
         operator&(
-            T lh,
-            const T &rh)
+            type lh,
+            const type &rh)
         {
             lh &= rh;
             return lh;
@@ -118,10 +119,10 @@ struct bitarithmetic
         STRONG_NODISCARD
         friend
         STRONG_CONSTEXPR
-        T
+        type
         operator|(
-            T lh,
-            const T &rh)
+            type lh,
+            const type &rh)
         {
             lh |= rh;
             return lh;
@@ -130,10 +131,10 @@ struct bitarithmetic
         STRONG_NODISCARD
         friend
         STRONG_CONSTEXPR
-        T
+        type
         operator^(
-            T lh,
-            const T &rh)
+            type lh,
+            const type &rh)
         {
             lh ^= rh;
             return lh;
@@ -143,9 +144,9 @@ struct bitarithmetic
         STRONG_NODISCARD
         friend
         STRONG_CONSTEXPR
-        T
+        type
         operator<<(
-            T lh,
+            type lh,
             C c)
         {
             lh <<= c;
@@ -156,9 +157,9 @@ struct bitarithmetic
         STRONG_NODISCARD
         friend
         STRONG_CONSTEXPR
-        T
+        type
         operator>>(
-            T lh,
+            type lh,
             C c)
         {
             lh >>= c;

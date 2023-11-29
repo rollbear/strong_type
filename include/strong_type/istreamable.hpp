@@ -22,8 +22,14 @@ namespace strong
 {
 struct istreamable
 {
+    template <typename T, typename = void>
+    class  modifier
+    {
+        static_assert(impl::always_false<T>,
+            "Underlying type must support stream input via operator>>");
+    };
     template <typename T>
-    class modifier
+    class modifier<T, impl::void_t<decltype(std::declval<std::istream&>() >> std::declval<underlying_type_t<T>&>())>>
     {
     public:
         friend

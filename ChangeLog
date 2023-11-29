@@ -1,3 +1,7 @@
+        * Added static_assert() messages explaining why a modifier cannot be
+          used with an underlying type. Thank you SilmaliTech for suggesting
+          the improvement.
+
         * Added modifier `invocable` for types with operator(). Thank you
           Dominic Koepke for the suggestion and the draft implementation.
 

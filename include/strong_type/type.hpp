@@ -231,6 +231,9 @@ struct require_move_assignable
     static_assert(value, "underlying type must be move assignable");
 };
 
+template <typename ...>
+static constexpr bool always_false = false;
+
 template <bool> struct valid_type;
 template <>
 struct valid_type<true> {};

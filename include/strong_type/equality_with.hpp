@@ -20,8 +20,18 @@ namespace strong
 {
 namespace impl
 {
+template <typename T, typename Other, typename = void>
+class typed_equality {
+    static_assert(impl::always_false<T, Other>,
+                  "Underlying type must be equality comparable with target type");
+};
+
 template <typename T, typename Other>
-class typed_equality
+class typed_equality<
+    T,
+    Other,
+    impl::void_t<decltype(std::declval<const underlying_type_t<T>&>() == std::declval<const underlying_type_t<Other>&>())>
+>
 {
 private:
     using TT = underlying_type_t<T>;

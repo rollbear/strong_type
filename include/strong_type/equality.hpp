@@ -20,13 +20,19 @@ namespace strong
 {
 struct equality
 {
-    template <typename T>
-    class modifier;
+    template <typename T, typename = void>
+    class modifier {
+        static_assert(impl::always_false<T>,
+                      "Underlying type must be equality comparable");
+    };
 };
 
 
 template <typename T, typename Tag, typename ... M>
-class equality::modifier<::strong::type<T, Tag, M...>>
+class equality::modifier<
+    ::strong::type<T, Tag, M...>,
+    impl::void_t<decltype(std::declval<const T&>() == std::declval<const T&>())>
+>
 {
     using type = ::strong::type<T, Tag, M...>;
 public:

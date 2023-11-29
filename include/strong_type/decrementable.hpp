@@ -20,8 +20,14 @@ namespace strong
 {
 struct decrementable
 {
-    template <typename T>
+    template <typename T, typename = void>
     class modifier
+    {
+        static_assert(impl::always_false<T>,
+                      "underlying type must be decrementable");
+    };
+    template <typename T>
+    class modifier<T, impl::void_t<decltype(--std::declval<underlying_type_t<T>&>())>>
     {
     public:
         friend

@@ -21,12 +21,21 @@ namespace strong
 class range
 {
 public:
-    template <typename R>
-    class modifier;
+    template <typename R, typename = void>
+    class modifier
+    {
+        static_assert(impl::always_false<R>,
+                      "Underlying type must have members .begin() and .end()");
+    };
 };
 
 template <typename T, typename Tag, typename ... M>
-class range::modifier<type<T, Tag, M...>>
+class range::modifier<
+    type<T, Tag, M...>,
+    impl::void_t<
+        decltype(std::declval<T>().begin() == std::declval<T>().end())
+    >
+>
 {
     using type = ::strong::type<T, Tag, M...>;
     using r_iterator = decltype(std::declval<T&>().begin());

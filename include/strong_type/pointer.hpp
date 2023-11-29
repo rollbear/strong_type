@@ -20,12 +20,18 @@ namespace strong
 {
 struct pointer
 {
-    template <typename T>
+    template <typename T, typename = void>
     class modifier;
 };
 
+template <typename T>
+class pointer::modifier<T, void>
+{
+  static_assert(impl::always_false<T>, "Underlying type must support dereferencing with operator*");
+};
+
 template <typename T, typename Tag, typename ... M>
-class pointer::modifier<::strong::type<T, Tag, M...>>
+class pointer::modifier<::strong::type<T, Tag, M...>, impl::void_t<decltype(*std::declval<T>())>>
 {
     using type = strong::type<T, Tag, M...>;
 public:

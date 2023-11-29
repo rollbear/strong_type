@@ -21,8 +21,12 @@ namespace strong
 template <typename I = void>
 struct indexed
 {
-    template <typename T>
-    class modifier;
+    template <typename T, typename = void>
+    class modifier
+    {
+        static_assert(impl::always_false<T, I>,
+                      "Underlying type must support indexing using operator[]");
+    };
 };
 
 template <>
@@ -110,7 +114,10 @@ struct indexed<void> {
 
 template <typename I>
 template <typename T, typename Tag, typename ... M>
-class indexed<I>::modifier<type<T, Tag, M...>>
+class indexed<I>::modifier<
+    type<T, Tag, M...>,
+    impl::void_t< decltype( std::declval<const T&>()[std::declval<underlying_type_t<I>>()] ) >
+>
 {
     using type = ::strong::type<T, Tag, M...>;
 public:

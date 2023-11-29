@@ -19,8 +19,14 @@
 namespace strong {
 struct incrementable
 {
-    template <typename T>
+    template <typename T, typename = void>
     class modifier
+    {
+        static_assert(impl::always_false<T>,
+                      "Underlying type must be incrementable");
+    };
+    template <typename T>
+    class modifier<T, impl::void_t<decltype(++std::declval<underlying_type_t<T>&>())>>
     {
     public:
         friend

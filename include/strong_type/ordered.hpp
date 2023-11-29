@@ -23,13 +23,24 @@ namespace strong
 {
 struct ordered
 {
-    template <typename T>
-    class modifier;
+    template <typename T, typename = void>
+    class modifier
+    {
+        static_assert(impl::always_false<T>,
+            "Underlying type must support ordering relations using <, <=, > and >=");
+    };
 };
 
 
 template <typename T, typename Tag, typename ... M>
-class ordered::modifier<::strong::type<T, Tag, M...>>
+class ordered::modifier<
+    ::strong::type<T, Tag, M...>,
+        impl::void_t<
+            decltype((std::declval<T>() < std::declval<T>())),
+            decltype((std::declval<T>() <= std::declval<T>())),
+            decltype((std::declval<T>() > std::declval<T>())),
+            decltype((std::declval<T>() >= std::declval<T>()))>
+>
 {
     using type = ::strong::type<T, Tag, M...>;
 public:

@@ -21,30 +21,35 @@
 namespace strong
 {
 struct arithmetic {
-    template<typename T>
-    class modifier;
+    template<typename T, typename = void>
+    class modifier
+    {
+        static_assert(impl::always_false<T>,
+                      "Underlying type must support arithmeric operations");
+    };
 };
 
-template <typename T>
-class arithmetic::modifier
+template <typename T, typename Tag, typename ... Ms>
+class arithmetic::modifier<strong::type<T, Tag, Ms...>, impl::void_t<decltype(std::declval<T>() * std::declval<T>() - std::declval<T>() / std::declval<T>())>>
 {
+    using type = strong::type<T, Tag, Ms...>;
 public:
     STRONG_NODISCARD
     friend
     STRONG_CONSTEXPR
-    T
+    type
     operator-(
-        const T &lh)
+        const type &lh)
     {
-        return T{-value_of(lh)};
+        return type{-value_of(lh)};
     }
 
     friend
     STRONG_CONSTEXPR
-    T&
+    type&
     operator+=(
-        T &lh,
-        const T &rh)
+        type &lh,
+        const type &rh)
     noexcept(noexcept(value_of(lh) += value_of(rh)))
     {
         value_of(lh) += value_of(rh);
@@ -53,10 +58,10 @@ public:
 
     friend
     STRONG_CONSTEXPR
-    T&
+    type&
     operator-=(
-        T &lh,
-        const T &rh)
+        type &lh,
+        const type &rh)
     noexcept(noexcept(value_of(lh) -= value_of(rh)))
     {
         value_of(lh) -= value_of(rh);
@@ -65,10 +70,10 @@ public:
 
     friend
     STRONG_CONSTEXPR
-    T&
+    type&
     operator*=(
-        T &lh,
-        const T &rh)
+        type &lh,
+        const type &rh)
     noexcept(noexcept(value_of(lh) *= value_of(rh)))
     {
         value_of(lh) *= value_of(rh);
@@ -77,23 +82,23 @@ public:
 
     friend
     STRONG_CONSTEXPR
-    T&
+    type&
     operator/=(
-        T &lh,
-        const T &rh)
+        type &lh,
+        const type &rh)
     noexcept(noexcept(value_of(lh) /= value_of(rh)))
     {
         value_of(lh) /= value_of(rh);
         return lh;
     }
 
-    template <typename TT = T, typename = decltype(value_of(std::declval<TT>()) % value_of(std::declval<TT>()))>
+    template <typename TT = T, typename = decltype(std::declval<TT>() % std::declval<TT>())>
     friend
     STRONG_CONSTEXPR
-    T&
+    type&
     operator%=(
-        T &lh,
-        const T &rh)
+        type &lh,
+        const type &rh)
     noexcept(noexcept(value_of(lh) %= value_of(rh)))
     {
         value_of(lh) %= value_of(rh);
@@ -103,10 +108,10 @@ public:
     STRONG_NODISCARD
     friend
     STRONG_CONSTEXPR
-    T
+    type
     operator+(
-        T lh,
-        const T &rh)
+        type lh,
+        const type &rh)
     {
         lh += rh;
         return lh;
@@ -115,10 +120,10 @@ public:
     STRONG_NODISCARD
     friend
     STRONG_CONSTEXPR
-    T
+    type
     operator-(
-        T lh,
-        const T &rh)
+        type lh,
+        const type &rh)
     {
         lh -= rh;
         return lh;
@@ -127,10 +132,10 @@ public:
     STRONG_NODISCARD
     friend
     STRONG_CONSTEXPR
-    T
+    type
     operator*(
-        T lh,
-        const T &rh)
+        type lh,
+        const type &rh)
     {
         lh *= rh;
         return lh;
@@ -139,23 +144,23 @@ public:
     STRONG_NODISCARD
     friend
     STRONG_CONSTEXPR
-    T
+    type
     operator/(
-        T lh,
-        const T &rh)
+        type lh,
+        const type &rh)
     {
         lh /= rh;
         return lh;
     }
 
-    template <typename TT = T, typename = decltype(value_of(std::declval<TT>()) % value_of(std::declval<TT>()))>
+    template <typename TT = T, typename = decltype(std::declval<TT>() % std::declval<TT>())>
     STRONG_NODISCARD
     friend
     STRONG_CONSTEXPR
-    T
+    type
     operator%(
-        T lh,
-        const T &rh)
+        type lh,
+        const type &rh)
     {
         lh %= rh;
         return lh;

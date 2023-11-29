@@ -20,8 +20,14 @@ namespace strong
 {
 struct boolean
 {
-    template <typename T>
+    template <typename T, typename = void>
     class modifier
+    {
+        static_assert(impl::always_false<T>,
+                      "Underlying type must be convertible to bool");
+    };
+    template <typename T>
+    class modifier<T, impl::void_t<decltype(static_cast<bool>(std::declval<const underlying_type_t<T>>()))>>
     {
     public:
         explicit STRONG_CONSTEXPR operator bool() const

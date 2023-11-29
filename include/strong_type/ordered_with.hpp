@@ -24,8 +24,24 @@ namespace strong
 {
 namespace impl
 {
-template <typename T, typename Other>
+template <typename T, typename Other, typename = void>
 class typed_ordering
+{
+    static_assert(impl::always_false<T, Other>,
+                  "Underlying type must support ordering relations with target type using operators <, <=, > and >=");
+};
+
+template <typename T, typename Other>
+class typed_ordering<
+    T,
+    Other,
+    impl::void_t<
+        decltype((std::declval<underlying_type_t<T>>() < std::declval<underlying_type_t<Other>>())),
+        decltype((std::declval<underlying_type_t<T>>() <= std::declval<underlying_type_t<Other>>())),
+        decltype((std::declval<underlying_type_t<T>>() > std::declval<underlying_type_t<Other>>())),
+        decltype((std::declval<underlying_type_t<T>>() >= std::declval<underlying_type_t<Other>>()))
+    >
+>
 {
 private:
     using TT = underlying_type_t<T>;

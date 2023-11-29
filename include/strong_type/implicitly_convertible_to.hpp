@@ -20,13 +20,23 @@ namespace strong
 {
 namespace impl {
 
-template<typename T, typename D>
+template<typename T, typename D, typename = void>
 struct implicit_converter
 {
+    static_assert(impl::always_false<T,D>,
+                  "Underlying type must be convertible to target type");
+};
+template <typename T, typename Tag, typename ... Ms, typename D>
+struct implicit_converter<
+    strong::type<T, Tag, Ms...>,
+    D,
+    void_t<decltype(static_cast<D>(std::declval<const T&>()))>
+>
+{
     STRONG_CONSTEXPR operator D() const
-    noexcept(noexcept(static_cast<D>(std::declval<const underlying_type_t<T>&>())))
+    noexcept(noexcept(static_cast<D>(std::declval<const T&>())))
     {
-        auto& self = static_cast<const T&>(*this);
+        auto& self = static_cast<const strong::type<T, Tag, Ms...>&>(*this);
         return static_cast<D>(value_of(self));
     }
 };

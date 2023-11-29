@@ -34,8 +34,18 @@ struct first_type<T, Ts...> {
 template <typename ... Ts>
 using first_type_t = typename first_type<Ts...>::type;
 
-template <typename T, typename Other>
+template <typename T, typename Other, typename = void>
 class typed_scalable
+{
+    static_assert(impl::always_false<T, Other>,
+                  "Underlying type must be multiplyable and divisible by other type");
+};
+template <typename T, typename Other>
+class typed_scalable<
+    T,
+    Other,
+    impl::void_t<decltype((std::declval<underlying_type_t<T>&>()/=std::declval<underlying_type_t<Other>>())*=std::declval<underlying_type_t<Other>>())>
+>
 {
     using TT = underlying_type_t<T>;
     using OT = underlying_type_t<Other>;
