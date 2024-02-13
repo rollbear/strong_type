@@ -62,7 +62,11 @@ template<typename T, typename Tag, typename ... M>
 class type : public modifier<M, type<T, Tag, M...>> ... {
 public:
     template<typename TT = T, typename = std::enable_if_t<std::is_trivially_constructible<TT>{}>>
-    explicit type(uninitialized_t)
+    constexpr
+    explicit
+    type(
+        uninitialized_t
+    )
     noexcept
     {
     }
