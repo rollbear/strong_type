@@ -19,6 +19,12 @@
 
 #include <memory>
 
+TEST_CASE("Uninitialized construction")
+{
+    STATIC_REQUIRE(std::is_trivially_constructible<int>);
+    constexpr strong::type<int, struct i_> vc(strong::uninitialized);
+    strong::type<int, struct i_> vr(strong::uninitialized);
+}
 
 TEST_CASE("default_constructible initializes with underlying default constructor")
 {
