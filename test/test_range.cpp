@@ -75,6 +75,23 @@ TEST_CASE("iterator type can be used from range")
     }
 }
 
+#if __cplusplus >= 201703L
+TEST_CASE("begin() and end() are constexpr")
+{
+    using ia = strong::type
+            <
+                    std::array<int, 4>,
+                    struct ia_,
+                    strong::range,
+                    strong::default_constructible
+            >;
+    static constexpr ia a{};
+    STATIC_REQUIRE(a.end() == a.begin() + 4);
+    STATIC_REQUIRE(a.cend() == a.cbegin() + 4);
+    STATIC_REQUIRE(*a.begin() == 0);
+}
+#endif
+
 TEST_CASE("range of sized type has size")
 {
     using iv = strong::type<std::vector<int>, struct vi_, strong::range>;
