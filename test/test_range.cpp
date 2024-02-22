@@ -16,6 +16,7 @@
 #include "catch2.hpp"
 
 #include <forward_list>
+#include <array>
 
 namespace {
     template<typename R, typename = int>
@@ -80,4 +81,19 @@ TEST_CASE("range of sized type has size")
 
     iv v{3,2,1, 0};
     REQUIRE(v.size() == 4);
+}
+
+TEST_CASE("constexpr size")
+{
+    using ia = strong::type
+            <
+                    std::array<int, 4>,
+                    struct ia_,
+                    strong::range,
+                    strong::default_constructible
+            >;
+
+    static constexpr ia a{};
+    REQUIRE(a.size() == 4);
+    STATIC_REQUIRE(a.size() == 4);
 }

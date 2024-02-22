@@ -33,7 +33,7 @@ template <typename T, typename Tag, typename ... M>
 class range::modifier<
     type<T, Tag, M...>,
     impl::void_t<
-        decltype(std::declval<T>().begin() == std::declval<T>().end())
+        decltype(std::declval<T&>().begin() == std::declval<T&>().end())
     >
 >
 {
@@ -97,6 +97,7 @@ public:
     }
 
     template <typename TT = const T&>
+    constexpr
     decltype(std::declval<TT>().size())
     size()
     const
