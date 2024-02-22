@@ -292,7 +292,8 @@ the underlying type can be, for compilers and standards that support it.
   the elements. The [iterator types](#iterator) are using the same tag as using
   in the range. Only implements types `iterator` and `const_iterator`, and thus
   `.begin()`, `.end()`, `.cbegin()`, `.cend()`, `.begin() const` and
-  `.end() const`.
+  `.end() const`. The member function `.size() const` is conditionally
+  supported if the underlying range type supports it.
 
   Available in `strong_type/range.hpp`
 

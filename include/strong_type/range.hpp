@@ -95,6 +95,16 @@ public:
         auto& self = static_cast<const type&>(*this);
         return const_iterator{value_of(self).end()};
     }
+
+    template <typename TT = const T&>
+    decltype(std::declval<TT>().size())
+    size()
+    const
+    noexcept(noexcept(std::declval<TT>().size()))
+    {
+        auto& self = static_cast<const type&>(*this);
+        return value_of(self).size();
+    }
 };
 
 }

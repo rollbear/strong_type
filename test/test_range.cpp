@@ -15,6 +15,24 @@
 
 #include "catch2.hpp"
 
+#include <forward_list>
+
+namespace {
+    template<typename R, typename = int>
+    struct has_size : std::false_type {
+    };
+
+    template<typename R>
+    struct has_size<R, decltype(std::declval<const R&>().size(),1)>
+    : std::true_type
+    {
+    };
+    using v = strong::type<std::vector<int>, struct v_, strong::range>;
+    static_assert(has_size<v>{}, "");
+    using f = strong::type<std::forward_list<int>, struct f_, strong::range>;
+    static_assert(!has_size<f>{}, "");
+}
+
 TEST_CASE("a range can be used with range based for")
 {
     using iv = strong::type<std::vector<int>, struct vi_, strong::range>;
@@ -54,4 +72,12 @@ TEST_CASE("iterator type can be used from range")
     {
         REQUIRE(*i == n--);
     }
+}
+
+TEST_CASE("range of sized type has size")
+{
+    using iv = strong::type<std::vector<int>, struct vi_, strong::range>;
+
+    iv v{3,2,1, 0};
+    REQUIRE(v.size() == 4);
 }
