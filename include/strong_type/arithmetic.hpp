@@ -186,14 +186,14 @@ class std::numeric_limits<strong::type<T, Tag, Ms...>>
 {
     using type = strong::type<T, Tag, Ms...>;
 public:
-    static constexpr type min() noexcept { return type{std::numeric_limits<T>::min()};}
-    static constexpr type lowest() noexcept { return type{std::numeric_limits<T>::lowest()};}
-    static constexpr type max() noexcept { return type{std::numeric_limits<T>::max()};}
-    static constexpr type epsilon() noexcept { return type{std::numeric_limits<T>::epsilon()};}
-    static constexpr type round_error() noexcept { return type{std::numeric_limits<T>::round_error()};}
-    static constexpr type infinity() noexcept { return type{std::numeric_limits<T>::infinity()};}
-    static constexpr type quiet_NaN() noexcept { return type{std::numeric_limits<T>::quiet_NaN()};}
-    static constexpr type signaling_NaN() noexcept { return type{std::numeric_limits<T>::signaling_NaN()};}
-    static constexpr type denorm_min() noexcept { return type{std::numeric_limits<T>::denorm_min()};}
+    STRONG_NODISCARD static constexpr type min() noexcept { return type{std::numeric_limits<T>::min()};}
+    STRONG_NODISCARD static constexpr type lowest() noexcept { return type{std::numeric_limits<T>::lowest()};}
+    STRONG_NODISCARD static constexpr type max() noexcept { return type{std::numeric_limits<T>::max()};}
+    STRONG_NODISCARD static constexpr type epsilon() noexcept { return type{std::numeric_limits<T>::epsilon()};}
+    STRONG_NODISCARD static constexpr type round_error() noexcept { return type{std::numeric_limits<T>::round_error()};}
+    STRONG_NODISCARD static constexpr type infinity() noexcept { return type{std::numeric_limits<T>::infinity()};}
+    STRONG_NODISCARD static constexpr type quiet_NaN() noexcept { return type{std::numeric_limits<T>::quiet_NaN()};}
+    STRONG_NODISCARD static constexpr type signaling_NaN() noexcept { return type{std::numeric_limits<T>::signaling_NaN()};}
+    STRONG_NODISCARD static constexpr type denorm_min() noexcept { return type{std::numeric_limits<T>::denorm_min()};}
 };
 #endif //STRONG_TYPE_ARITHMETIC_HPP

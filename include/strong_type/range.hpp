@@ -44,6 +44,7 @@ public:
     using iterator = ::strong::type<r_iterator, Tag, strong::iterator>;
     using const_iterator = ::strong::type<r_const_iterator, Tag, strong::iterator>;
 
+    STRONG_NODISCARD
     constexpr
     iterator
     begin()
@@ -53,6 +54,7 @@ public:
         return iterator{value_of(self).begin()};
     }
 
+    STRONG_NODISCARD
     constexpr
     iterator
     end()
@@ -62,6 +64,7 @@ public:
         return iterator{value_of(self).end()};
     }
 
+    STRONG_NODISCARD
     constexpr
     const_iterator
     cbegin()
@@ -72,6 +75,7 @@ public:
         return const_iterator{value_of(self).begin()};
     }
 
+    STRONG_NODISCARD
     constexpr
     const_iterator
     cend()
@@ -82,6 +86,7 @@ public:
         return const_iterator{value_of(self).end()};
     }
 
+    STRONG_NODISCARD
     constexpr
     const_iterator
     begin()
@@ -92,6 +97,7 @@ public:
         return const_iterator{value_of(self).begin()};
     }
 
+    STRONG_NODISCARD
     constexpr
     const_iterator
     end()
@@ -103,6 +109,7 @@ public:
     }
 
     template <typename TT = const T&>
+    STRONG_NODISCARD
     constexpr
     decltype(std::declval<TT>().size())
     size()

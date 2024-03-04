@@ -30,7 +30,11 @@ struct boolean
     class modifier<T, impl::void_t<decltype(static_cast<bool>(std::declval<const underlying_type_t<T>>()))>>
     {
     public:
-        explicit STRONG_CONSTEXPR operator bool() const
+        STRONG_NODISCARD
+        explicit
+        STRONG_CONSTEXPR
+        operator bool()
+        const
         noexcept(noexcept(static_cast<bool>(value_of(std::declval<const T&>()))))
         {
             const auto& self = static_cast<const T&>(*this);

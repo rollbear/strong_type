@@ -43,6 +43,7 @@ struct hash<::strong::type<T, Tag, M...>>
 {
     using type = ::strong::type<T, Tag, M...>;
 
+    STRONG_NODISCARD
     decltype(auto)
     operator()(
         const ::strong::hashable::modifier<type> &t)

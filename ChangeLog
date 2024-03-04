@@ -1,3 +1,5 @@
+        * Added several missing [[nodiscard]]
+
         * .begin() and .end() are now constexpr for strong::range types. Thanks
           Harald Achitz for reporting the missing specifiers.
 

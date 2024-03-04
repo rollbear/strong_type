@@ -144,6 +144,7 @@ public:
         return lh;
     }
 
+    STRONG_NODISCARD
     friend
     STRONG_CONSTEXPR
     type operator+(type lh, const type& rh)
@@ -152,6 +153,7 @@ public:
         return lh;
     }
 
+    STRONG_NODISCARD
     friend
     STRONG_CONSTEXPR
     type operator-(type lh, const type& rh)
@@ -160,6 +162,7 @@ public:
         return lh;
     }
 
+    STRONG_NODISCARD
     friend
     STRONG_CONSTEXPR
     type operator*(type lh, const T& rh)
@@ -168,6 +171,7 @@ public:
         return lh;
     }
 
+    STRONG_NODISCARD
     friend
     STRONG_CONSTEXPR
     type operator*(const T& lh, type rh)
@@ -176,6 +180,7 @@ public:
         return rh;
     }
 
+    STRONG_NODISCARD
     friend
     STRONG_CONSTEXPR
     type operator/(type lh, const T& rh)
@@ -184,6 +189,7 @@ public:
         return lh;
     }
 
+    STRONG_NODISCARD
     friend
     STRONG_CONSTEXPR
     T operator/(const type& lh, const type& rh)
@@ -192,6 +198,7 @@ public:
     }
 
     template <typename TT = T, typename = decltype(std::declval<TT&>() %= std::declval<const TT&>())>
+    STRONG_NODISCARD
     friend
     STRONG_CONSTEXPR
     type operator%(type lh, const T& rh)
@@ -202,6 +209,7 @@ public:
     }
 
     template <typename TT = T, typename = decltype(std::declval<TT>() % std::declval<TT>())>
+    STRONG_NODISCARD
     friend
     STRONG_CONSTEXPR
     T operator%(type lh, type rh)

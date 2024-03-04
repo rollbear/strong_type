@@ -19,12 +19,14 @@
 #include <array>
 
 namespace {
-    template<typename R, typename = int>
+    template <typename T>
+    constexpr bool ignore(const T&) { return true;}
+    template<typename R, typename = bool>
     struct has_size : std::false_type {
     };
 
     template<typename R>
-    struct has_size<R, decltype(std::declval<const R&>().size(),1)>
+    struct has_size<R, decltype(ignore(std::declval<const R&>().size()))>
     : std::true_type
     {
     };
