@@ -132,8 +132,11 @@ jobs:
         uses: codecov/codecov-action@v4
         with:
           gcov_include: "include/strong_type"
+          plugin: "" # none
+          plugins: "" #none
           name: "Linux ${{matrix.config.cxx}} C++${{matrix.config.std}} ${{matrix.config.stdlib}}"
           fail_ci_if_error: false
+          token: ${{ secrets.CODECOV_TOKEN }}
           verbose: true
 
   build_windows:
