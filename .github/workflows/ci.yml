@@ -127,6 +127,7 @@ jobs:
           COV=`echo ${{matrix.config.cxx}} | grep -q clang && echo "llvm-cov gcov"|| echo gcov`
           ${COV} -abcfup `find . -name "test*.gcno"`
           ls *.gcov| grep -v 'include#strong_type'|xargs rm
+          find . -name "test*.gcno" | xargs rm
 
       - name: "upload coverage"
         uses: codecov/codecov-action@v4
