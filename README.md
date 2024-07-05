@@ -682,7 +682,7 @@ cmake --build .
 ```
 
 This will produce the test programs `self_test`, and conditionally also
-`test_fmt8` and `test_fmt9`, depending on which version(s) of
+`test_fmt8`,`test_fmt9`, `test_fmt10` and `test_fmt11`, depending on which version(s) of
 [`{fmt}`](https://fmt.dev/latest/index.html)
 
 N.B. Microsoft Visual Studio MSVC compiler < 19.22 does not handle `constexpr`

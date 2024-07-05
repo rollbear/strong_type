@@ -29,7 +29,7 @@ struct fmt::formatter<so, Char> : fmt::formatter<int, Char>
 {
     template <typename FormatContext>
     decltype(auto)
-    format(const so& t, FormatContext& fc)
+    format(const so& t, FormatContext& fc) const
     {
         return formatter<int, Char>::format(t.i, fc);
     }

@@ -96,3 +96,4 @@ target_link_libraries(
 add_subdirectory(test_fmt8)
 add_subdirectory(test_fmt9)
 add_subdirectory(test_fmt10)
+add_subdirectory(test_fmt11)

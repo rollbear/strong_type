@@ -113,14 +113,15 @@ jobs:
             -DCMAKE_BUILD_TYPE=Debug
       - name: "build"
         run: |
-          cmake --build build -t self_test test_fmt8 test_fmt9 test_fmt10
+          cmake --build build -t self_test test_fmt8 test_fmt9 test_fmt10 test_fmt11
 
       - name: "test"
         run: |
           ./build/test/self_test -s && \
           ./build/test/test_fmt8/test_fmt8 -s && \
           ./build/test/test_fmt9/test_fmt9 -s && \
-          ./build/test/test_fmt10/test_fmt10 -s
+          ./build/test/test_fmt10/test_fmt10 -s && \
+          ./build/test/test_fmt11/test_fmt11 -s
 
       - name: "collect coverage"
         run: |
