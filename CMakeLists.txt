@@ -12,7 +12,7 @@
 #
 
 
-cmake_minimum_required(VERSION 3.7)
+cmake_minimum_required(VERSION 3.14)
 project(strong_type)
 
 include(GNUInstallDirs)
@@ -34,7 +34,8 @@ endif()
 write_basic_package_version_file(
   "${CMAKE_CURRENT_BINARY_DIR}/strong_type/strong_type-config-version.cmake"
   VERSION ${STRONG_TYPE_VERSION}
-  COMPATIBILITY AnyNewerVersion)
+  COMPATIBILITY AnyNewerVersion
+  ARCH_INDEPENDENT)
 
 add_library(strong_type INTERFACE)
 add_library(strong_type::strong_type ALIAS strong_type)
@@ -84,4 +85,3 @@ install(
   DESTINATION
     "${CMAKE_INSTALL_INCLUDEDIR}/strong_type"
 )
-
