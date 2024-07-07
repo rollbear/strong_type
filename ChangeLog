@@ -1,3 +1,7 @@
+        * Much reworked strong::range, which is now compatible with
+          std::ranges. This was primarily sparked by a discussion with
+          Harald Achitz. Thank you for bringing up the deficiencies.
+
 v14 2024-03-05
 
         * Added several missing [[nodiscard]]
