@@ -1,3 +1,6 @@
+        * CMake package is now ARCH_INDEPENDENT, as it should be when it's
+          header only. Thank you Patrick Kappl for submitting the fix.
+
         * Much reworked strong::range, which is now compatible with
           std::ranges. This was primarily sparked by a discussion with
           Harald Achitz. Thank you for bringing up the deficiencies.
