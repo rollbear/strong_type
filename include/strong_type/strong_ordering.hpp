@@ -23,7 +23,7 @@ public:
     STRONG_CONSTEXPR
     std::strong_ordering operator<=>(const type& lh, const type& rh) noexcept
     {
-      return value_of(lh) <=> alue_of(rh);
+      return value_of(lh) <=> value_of(rh);
     }
 };
 }
