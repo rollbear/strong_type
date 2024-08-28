@@ -12,13 +12,35 @@
 #
 
 
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.30)
+
+if(STRONG_TYPE_IMPORT_STD_LIBRARY)
+  if("${CMAKE_GENERATOR}" STREQUAL "Visual Studio 17 2022")
+    # This can be done before or after project() on MSVC
+    # It works regardless of CMAKE_EXPERIMENTAL_CXX_IMPORT_STD
+    set(CMAKE_CXX_SCAN_FOR_MODULES ON)
+
+    # This does not seem to work on MSVC under any circumstances
+    #set(CMAKE_CXX_MODULE_STD ON)
+  else()
+    # This needs to be done before selecting the languages so the project() command
+    # The CMAKE_EXPERIMENTAL_CXX_IMPORT_STD is required
+    set(CMAKE_EXPERIMENTAL_CXX_IMPORT_STD "0e5b6991-d74f-4b3d-a41c-cf096e0b2508")
+    set(CMAKE_CXX_MODULE_STD ON)
+
+    # Does not work regardless of value of CMAKE_EXPERIMENTAL_CXX_IMPORT_STD
+    # set(CMAKE_CXX_SCAN_FOR_MODULES ON)
+  endif()
+
+  set(CMAKE_CXX_STANDARD 23)
+endif()
+
 project(strong_type)
 
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
-option(STRONG_TYPE_UNIT_TEST off "Decide whether to build unit tests or not")
+option(STRONG_TYPE_UNIT_TEST "Decide whether to build unit tests or not" ON)
 
 set(STRONG_TYPE_VERSION 15)
 set(INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
@@ -27,8 +49,10 @@ if (${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
   set(MASTER_PROJECT ON)
 endif()
 
-if (${STRONG_TYPE_UNIT_TEST})
   add_subdirectory(test)
+
+if (${STRONG_TYPE_UNIT_TEST})
+
 endif()
 
 write_basic_package_version_file(

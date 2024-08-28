@@ -11,9 +11,9 @@
  * Project home: https://github.com/rollbear/strong_type
  */
 
-#include <strong_type/equality_with.hpp>
-
 #include "catch2.hpp"
+
+#include <strong_type/equality_with.hpp>
 
 TEST_CASE("equality_with can compare with defined type")
 {

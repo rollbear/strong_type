@@ -16,8 +16,10 @@
 
 #include "type.hpp"
 
+#if !defined(STRONG_TYPE_IMPORT_STD_LIBRARY)
 #if __cpp_impl_three_way_comparison && __has_include(<compare>)
 #include <compare>
+#endif
 #endif
 
 namespace strong

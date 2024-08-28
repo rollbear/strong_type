@@ -16,7 +16,9 @@
 
 #include "type.hpp"
 
+#if !defined(STRONG_TYPE_IMPORT_STD_LIBRARY)
 #include <ostream>
+#endif
 
 namespace strong
 {

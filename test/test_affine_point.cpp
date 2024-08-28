@@ -11,9 +11,10 @@
  * Project home: https://github.com/rollbear/strong_type
  */
 
+ #include "catch2.hpp"
+
 #include <strong_type/affine_point.hpp>
 
-#include "catch2.hpp"
 
 TEST_CASE("affine_point types can be subtracted")
 {

@@ -11,13 +11,15 @@
  * Project home: https://github.com/rollbear/strong_type
  */
 
-#include <strong_type/iterator.hpp>
-
 #include "catch2.hpp"
 
+#include <strong_type/iterator.hpp>
+
+#if !defined(STRONG_TYPE_IMPORT_STD_LIBRARY)
 #include <unordered_set>
 #include <vector>
 #include <algorithm>
+#endif
 
 TEST_CASE("iterators work with algorithms")
 {

@@ -14,7 +14,11 @@
 #ifndef STRONG_TYPE_TEST_UTILS_HPP
 #define STRONG_TYPE_TEST_UTILS_HPP
 
+#if defined(STRONG_TYPE_IMPORT_STD_LIBRARY)
+import std;
+#else
 #include <utility>
+#endif
 
 template <typename T>
 const T& as_const(T& t) { return t;}

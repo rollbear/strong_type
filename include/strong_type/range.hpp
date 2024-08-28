@@ -15,7 +15,9 @@
 #define STRONG_TYPE_RANGE_HPP
 
 #if __has_include(<ranges>)
+#if !defined(STRONG_TYPE_IMPORT_STD_LIBRARY)
 #    include <ranges>
+#endif
 #endif
 #if defined(_MSC_VER) && __cpp_lib_ranges >= 202110L
 #    define STRONG_TYPE_HAS_RANGES

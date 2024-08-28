@@ -11,14 +11,16 @@
  * Project home: https://github.com/rollbear/strong_type
  */
 
-#include <strong_type/range.hpp>
-
 #include "catch2.hpp"
 
+#include <strong_type/range.hpp>
+
+#if !defined(STRONG_TYPE_IMPORT_STD_LIBRARY)
 #include <forward_list>
 #include <array>
 #include <sstream>
 #include <set>
+#endif
 
 namespace {
     template <typename T>
