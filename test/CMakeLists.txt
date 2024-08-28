@@ -50,6 +50,10 @@ if (NOT ${Catch2_FOUND})
   add_compile_definitions(CATCH2=2)
 endif()
 
+if(${STRONG_TYPE_IMPORT_STD_LIBRARY})
+    add_compile_definitions(STRONG_TYPE_IMPORT_STD_LIBRARY=1)
+endif()
+
 add_executable(
         self_test
         test.cpp

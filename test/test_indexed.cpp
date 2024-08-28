@@ -11,9 +11,9 @@
  * Project home: https://github.com/rollbear/strong_type
  */
 
-#include <strong_type/indexed.hpp>
-
 #include "catch2.hpp"
+
+#include <strong_type/indexed.hpp>
 
 #include "test_utils.hpp"
 

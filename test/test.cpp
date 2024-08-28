@@ -11,16 +11,18 @@
  * Project home: https://github.com/rollbear/strong_type
  */
 
+ #include "catch2.hpp"
 
 // include first to ensure there aren't any unmet header dependencies
 #include "strong_type/strong_type.hpp"
 
+#if !defined(STRONG_TYPE_IMPORT_STD_LIBRARY)
 #include <iomanip>
 #include <unordered_set>
 #include <memory>
 #include <algorithm>
+#endif
 
-#include "catch2.hpp"
 
 template <typename T, typename U>
 using equality_compare = decltype(std::declval<const T&>() == std::declval<const U&>());

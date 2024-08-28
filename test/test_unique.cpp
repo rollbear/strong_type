@@ -11,11 +11,13 @@
  * Project home: https://github.com/rollbear/strong_type
  */
 
-#include <strong_type/unique.hpp>
-
 #include "catch2.hpp"
 
+#include <strong_type/unique.hpp>
+
+#if !defined(STRONG_TYPE_IMPORT_STD_LIBRARY)
 #include <memory>
+#endif
 
 TEST_CASE("strong::unique is movable")
 {

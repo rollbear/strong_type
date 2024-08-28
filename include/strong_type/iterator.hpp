@@ -19,7 +19,9 @@
 #include "affine_point.hpp"
 #include "indexed.hpp"
 
+#if !defined(STRONG_TYPE_IMPORT_STD_LIBRARY)
 #include <iterator>
+#endif
 
 #if __cplusplus >= 202002L && (((! defined(_LIBCPP_VERSION) || _LIBCPP_VERSION >= 15000)) && (!defined(__GLIBCXX__) || __GLIBCXX__ >= 20230528L))
 #define STRONG_TYPE_CONTIGUOUS_ITERATOR 1
@@ -57,7 +59,7 @@ namespace internal {
 #else
         using iterator_category = std::random_access_iterator_tag;
 #endif
-        using difference_type = ptrdiff_t;
+        using difference_type = std::ptrdiff_t;
         using value_type = T;
         using reference = T&;
         using pointer = T*;
