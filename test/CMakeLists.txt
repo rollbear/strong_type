@@ -2,9 +2,19 @@ if (!CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD 14)
 endif()
 set(CMAKE_CXX_STANDARD_REQUIRED YES)
-set(CMAKE_CXX_EXTENSIONS OFF)
 
-cmake_minimum_required(VERSION 3.22)
+if(${STRONG_TYPE_IMPORT_STD_LIBRARY})
+  # This is currently required to be ON for a clang module build
+  # https://gitlab.kitware.com/cmake/cmake/-/issues/25916
+  # https://gitlab.kitware.com/cmake/cmake/-/issues/25539
+  set(CMAKE_CXX_EXTENSIONS ON)
+else()
+  set(CMAKE_CXX_EXTENSIONS OFF)
+endif()
+
+if(NOT ${STRONG_TYPE_IMPORT_STD_LIBRARY})
+  cmake_minimum_required(VERSION 3.22)
+endif()
 
 find_package(Catch2 3 QUIET)
 if (${Catch2_FOUND})
@@ -50,7 +60,8 @@ if (NOT ${Catch2_FOUND})
   add_compile_definitions(CATCH2=2)
 endif()
 
-if(${STRONG_TYPE_IMPORT_STD_LIBRARY})
+if(STRONG_TYPE_IMPORT_STD_LIBRARY)
+    message(STATUS "Building using import std")
     add_compile_definitions(STRONG_TYPE_IMPORT_STD_LIBRARY=1)
 endif()
 
