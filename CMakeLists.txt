@@ -50,10 +50,8 @@ if (${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
   set(MASTER_PROJECT ON)
 endif()
 
-  add_subdirectory(test)
-
 if (${STRONG_TYPE_UNIT_TEST})
-
+  add_subdirectory(test)
 endif()
 
 write_basic_package_version_file(
