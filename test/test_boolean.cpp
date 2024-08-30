@@ -11,9 +11,9 @@
  * Project home: https://github.com/rollbear/strong_type
  */
 
-#include <strong_type/boolean.hpp>
+ #include "catch2.hpp"
 
-#include "catch2.hpp"
+#include <strong_type/boolean.hpp>
 
 TEST_CASE("a boolean value can be tested for truth")
 {

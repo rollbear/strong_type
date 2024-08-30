@@ -38,7 +38,9 @@
 #endif
 
 #if STRONG_HAS_STD_FORMAT
+#if !defined(STRONG_TYPE_IMPORT_STD_LIBRARY)
 #include <format>
+#endif
 #endif
 
 #if STRONG_HAS_FMT_FORMAT

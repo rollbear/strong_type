@@ -11,9 +11,9 @@
  * Project home: https://github.com/rollbear/strong_type
  */
 
-#include <strong_type/bitarithmetic.hpp>
+ #include "catch2.hpp"
 
-#include "catch2.hpp"
+#include <strong_type/bitarithmetic.hpp>
 
 
 TEST_CASE("bitarithmetic types can be bitanded")

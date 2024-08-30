@@ -11,9 +11,9 @@
  * Project home: https://github.com/rollbear/strong_type
  */
 
-#include <strong_type/decrementable.hpp>
-
 #include "catch2.hpp"
+
+#include <strong_type/decrementable.hpp>
 
 TEST_CASE("a decrementable can be decremented")
 {

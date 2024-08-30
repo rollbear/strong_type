@@ -11,16 +11,18 @@
  * Project home: https://github.com/rollbear/strong_type
  */
 
+ #include "catch2.hpp"
 
 // include first to ensure there aren't any unmet header dependencies
 #include "strong_type/strong_type.hpp"
 
+#if !defined(STRONG_TYPE_IMPORT_STD_LIBRARY)
 #include <iomanip>
 #include <unordered_set>
 #include <memory>
 #include <algorithm>
+#endif
 
-#include "catch2.hpp"
 
 template <typename T, typename U>
 using equality_compare = decltype(std::declval<const T&>() == std::declval<const U&>());
@@ -362,7 +364,7 @@ using ri = strong::type<int*, struct ipt, strong::iterator>;
 static_assert(strong::type_is_v<ri, strong::iterator>, "");
 static_assert(strong::type_is_v<ri, strong::equality>, "");
 static_assert(strong::type_is_v<ri, strong::pointer>, "");
-static_assert(strong::type_is_v<ri, strong::affine_point<intptr_t>>, "");
+static_assert(strong::type_is_v<ri, strong::affine_point<std::intptr_t>>, "");
 //static_assert(!strong::type_is_v<ri, strong::regular>, "");
 //static_assert(!std::is_default_constructible<ri>{},"");
 static_assert(std::is_nothrow_constructible<ri, int*>{},"");
@@ -439,7 +441,7 @@ using rhi = rhandle::iterator;
 static_assert(strong::type_is_v<rhi, strong::iterator>, "");
 static_assert(strong::type_is_v<rhi, strong::pointer>, "");
 static_assert(strong::type_is_v<rhi, strong::equality>, "");
-static_assert(strong::type_is_v<rhi, strong::affine_point<intptr_t>>, "");
+static_assert(strong::type_is_v<rhi, strong::affine_point<std::intptr_t>>, "");
 static_assert(std::is_nothrow_copy_constructible<rhi>{},"");
 static_assert(std::is_nothrow_move_constructible<rhi>{},"");
 //static_assert(!std::is_default_constructible<rhi>{},"");
@@ -451,7 +453,7 @@ using crhi = rhandle::const_iterator;
 static_assert(strong::type_is_v<crhi, strong::iterator>, "");
 static_assert(strong::type_is_v<crhi, strong::pointer>, "");
 static_assert(strong::type_is_v<crhi, strong::equality>, "");
-static_assert(strong::type_is_v<crhi, strong::affine_point<intptr_t>>, "");
+static_assert(strong::type_is_v<crhi, strong::affine_point<std::intptr_t>>, "");
 static_assert(std::is_nothrow_copy_constructible<crhi>{},"");
 static_assert(std::is_nothrow_move_constructible<crhi>{},"");
 //static_assert(!std::is_default_constructible<crhi>{},"");

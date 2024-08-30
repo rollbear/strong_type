@@ -11,9 +11,9 @@
  * Project home: https://github.com/rollbear/strong_type
  */
 
-#include <strong_type/convertible_to.hpp>
+ #include "catch2.hpp"
 
-#include "catch2.hpp"
+#include <strong_type/convertible_to.hpp>
 
 #include "test_utils.hpp"
 

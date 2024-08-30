@@ -11,9 +11,9 @@
  * Project home: https://github.com/rollbear/strong_type
  */
 
-#include <strong_type/bicrementable.hpp>
+ #include "catch2.hpp"
 
-#include "catch2.hpp"
+#include <strong_type/bicrementable.hpp>
 
 TEST_CASE("a bicrementable goes both ways")
 {

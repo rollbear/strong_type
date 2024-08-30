@@ -14,10 +14,14 @@
 #ifndef ROLLBEAR_STRONG_TYPE_TYPE_HPP_INCLUDED
 #define ROLLBEAR_STRONG_TYPE_TYPE_HPP_INCLUDED
 
+#if defined(STRONG_TYPE_IMPORT_STD_LIBRARY)
+    import std;
+#else
 
-#include <type_traits>
-#include <initializer_list>
-#include <utility>
+    #include <type_traits>
+    #include <initializer_list>
+    #include <utility>
+#endif
 
 #if defined(_MSC_VER) && !defined(__clang__) && _MSC_VER < 1922
 #define STRONG_CONSTEXPR

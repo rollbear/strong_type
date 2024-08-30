@@ -1,6 +1,6 @@
-#include <strong_type/invocable.hpp>
-
 #include "catch2.hpp"
+
+#include <strong_type/invocable.hpp>
 
 namespace {
 using type = strong::type<int (*)(int), struct type_, strong::invocable>;

@@ -11,11 +11,13 @@
  * Project home: https://github.com/rollbear/strong_type
  */
 
+ #include "catch2.hpp"
+
 #include <strong_type/iostreamable.hpp>
 
-#include "catch2.hpp"
-
+#if !defined(STRONG_TYPE_IMPORT_STD_LIBRARY)
 #include <sstream>
+#endif
 
 TEST_CASE("an iostreamable type can be both read and written using streams")
 {

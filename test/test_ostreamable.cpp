@@ -11,12 +11,14 @@
  * Project home: https://github.com/rollbear/strong_type
  */
 
-#include <strong_type/ostreamable.hpp>
-
 #include "catch2.hpp"
 
+#include <strong_type/ostreamable.hpp>
+
+#if !defined(STRONG_TYPE_IMPORT_STD_LIBRARY)
 #include <sstream>
 #include <iomanip>
+#endif
 
 TEST_CASE("an ostreamable type can be streamed using stream flags")
 {
