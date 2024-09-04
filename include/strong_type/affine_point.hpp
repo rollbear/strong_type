@@ -18,7 +18,7 @@
 
 namespace strong
 {
-template <typename D = void>
+STRONG_TYPE_MODULE_EXPORT template <typename D = void>
 struct affine_point
 {
     template <typename T>
@@ -36,6 +36,7 @@ struct subtractable<T, void_t<decltype(std::declval<const T&>() - std::declval<c
 }
 
 
+STRONG_TYPE_MODULE_EXPORT
 template <typename D>
 template <typename T, typename Tag, typename ... M>
 class affine_point<D>::modifier<::strong::type<T, Tag, M...>>

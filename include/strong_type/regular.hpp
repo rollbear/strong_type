@@ -19,7 +19,7 @@
 
 namespace strong
 {
-struct regular
+STRONG_TYPE_MODULE_EXPORT struct regular
 {
     template <typename T>
     class modifier

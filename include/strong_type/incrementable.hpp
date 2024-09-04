@@ -17,7 +17,7 @@
 #include "type.hpp"
 
 namespace strong {
-struct incrementable
+STRONG_TYPE_MODULE_EXPORT struct incrementable
 {
     template <typename T, typename = void>
     class modifier

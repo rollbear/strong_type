@@ -19,7 +19,7 @@
 
 namespace strong
 {
-struct bicrementable
+STRONG_TYPE_MODULE_EXPORT struct bicrementable
 {
     template <typename T>
     class modifier

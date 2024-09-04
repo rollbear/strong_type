@@ -43,7 +43,7 @@ struct converter<
 
 }
 
-template <typename ... Ts>
+STRONG_TYPE_MODULE_EXPORT template <typename ... Ts>
 struct convertible_to
 {
     template <typename T>

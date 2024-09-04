@@ -64,7 +64,7 @@ namespace internal {
 
     };
 }
-class iterator
+STRONG_TYPE_MODULE_EXPORT class iterator
 {
 public:
     template <typename I,

@@ -21,7 +21,7 @@
 #endif
 namespace strong
 {
-struct ordered
+STRONG_TYPE_MODULE_EXPORT struct ordered
 {
     template <typename T, typename = void>
     class modifier
@@ -31,7 +31,7 @@ struct ordered
     };
 };
 
-
+STRONG_TYPE_MODULE_EXPORT
 template <typename T, typename Tag, typename ... M>
 class ordered::modifier<
     ::strong::type<T, Tag, M...>,
@@ -108,7 +108,7 @@ struct spaceship_ordering {
     struct modifier;
 };
 
-template<typename Ordering>
+STRONG_TYPE_MODULE_EXPORT template<typename Ordering>
 template<typename T, typename Tag, typename ... Ms>
 struct spaceship_ordering<Ordering>::modifier<::strong::type<T, Tag, Ms...>>
 {
@@ -131,9 +131,9 @@ struct spaceship_ordering<Ordering>::modifier<::strong::type<T, Tag, Ms...>>
 
 }
 
-using strongly_ordered = detail::spaceship_ordering<std::strong_ordering>;
-using weakly_ordered = detail::spaceship_ordering<std::weak_ordering>;
-using partially_ordered = detail::spaceship_ordering<std::partial_ordering>;
+STRONG_TYPE_MODULE_EXPORT using strongly_ordered = detail::spaceship_ordering<std::strong_ordering>;
+STRONG_TYPE_MODULE_EXPORT using weakly_ordered = detail::spaceship_ordering<std::weak_ordering>;
+STRONG_TYPE_MODULE_EXPORT using partially_ordered = detail::spaceship_ordering<std::partial_ordering>;
 
 #endif
 

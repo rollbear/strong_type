@@ -51,7 +51,7 @@
 namespace strong
 {
 
-struct formattable
+STRONG_TYPE_MODULE_EXPORT struct formattable
 {
     template <typename T>
     class modifier{};

@@ -76,7 +76,7 @@ public:
 };
 }
 
-template <typename ... Ts>
+STRONG_TYPE_MODULE_EXPORT template <typename ... Ts>
 struct equality_with
 {
     template <typename T>

@@ -19,7 +19,7 @@
 
 namespace strong
 {
-struct iostreamable
+STRONG_TYPE_MODULE_EXPORT struct iostreamable
 {
     template <typename T>
     class modifier

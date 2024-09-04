@@ -85,13 +85,13 @@ public:
     }
 };
 }
-struct difference
+STRONG_TYPE_MODULE_EXPORT struct difference
 {
     template <typename T>
     class modifier;
 };
 
-template <typename T, typename Tag, typename ... M>
+STRONG_TYPE_MODULE_EXPORT template <typename T, typename Tag, typename ... M>
 class difference::modifier<::strong::type<T, Tag, M...>>
     : public impl::conditionally_ordered::modifier<::strong::type<T, Tag, M...>>
     , public equality::modifier<::strong::type<T, Tag, M...>>

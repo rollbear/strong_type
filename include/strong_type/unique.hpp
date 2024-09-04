@@ -18,7 +18,7 @@
 
 namespace strong {
 
-struct unique {
+STRONG_TYPE_MODULE_EXPORT struct unique {
     template<typename T>
     class modifier
         : private impl::valid_type<
