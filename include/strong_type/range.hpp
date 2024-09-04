@@ -128,7 +128,7 @@ constexpr bool is_random_access(std::output_iterator_tag) { return false;}
 #define STRONG_TYPE_CEND(x) x.cend()
 #endif
 
-class range
+STRONG_TYPE_MODULE_EXPORT class range
 {
 public:
     template <
@@ -142,7 +142,7 @@ public:
     class modifier;
 };
 
-template <typename R>
+STRONG_TYPE_MODULE_EXPORT template <typename R>
 class range::modifier<
         R,
         internal::not_an_iterator, internal::not_an_iterator,
@@ -155,7 +155,7 @@ class range::modifier<
 
 };
 
-template <typename T, typename Tag, typename ... M, typename iterator>
+STRONG_TYPE_MODULE_EXPORT template <typename T, typename Tag, typename ... M, typename iterator>
 class range::modifier<
         type<T, Tag, M...>,
         iterator, iterator,
@@ -165,7 +165,7 @@ class range::modifier<
     static_assert(impl::always_false<T>, "the underlying type is lying about its iterator type");
 };
 
-template <typename T, typename Tag, typename ... M, typename r_iterator, typename r_const_iterator>
+STRONG_TYPE_MODULE_EXPORT template <typename T, typename Tag, typename ... M, typename r_iterator, typename r_const_iterator>
 class range::modifier<
     type<T, Tag, M...>,
     r_iterator, r_iterator,
@@ -260,7 +260,7 @@ public:
     }
 };
 
-template <typename T, typename Tag, typename ... M, typename r_iterator, typename r_const_iterator, typename r_sentinel>
+STRONG_TYPE_MODULE_EXPORT template <typename T, typename Tag, typename ... M, typename r_iterator, typename r_const_iterator, typename r_sentinel>
 class range::modifier<
         type<T, Tag, M...>,
         r_iterator, r_sentinel,
@@ -356,7 +356,7 @@ public:
     }
 };
 
-template <typename T, typename Tag, typename ... M, typename r_iterator>
+STRONG_TYPE_MODULE_EXPORT template <typename T, typename Tag, typename ... M, typename r_iterator>
 class range::modifier<
             type<T, Tag, M...>,
             r_iterator, r_iterator,
@@ -401,7 +401,7 @@ class range::modifier<
     }
 };
 
-template <typename T, typename Tag, typename ... M, typename r_iterator, typename r_sentinel>
+STRONG_TYPE_MODULE_EXPORT template <typename T, typename Tag, typename ... M, typename r_iterator, typename r_sentinel>
 class range::modifier<
         type<T, Tag, M...>,
         r_iterator, r_sentinel,
@@ -447,7 +447,7 @@ public:
     }
 };
 
-template <typename T, typename Tag, typename ... M, typename r_const_iterator, typename r_sentinel>
+STRONG_TYPE_MODULE_EXPORT template <typename T, typename Tag, typename ... M, typename r_const_iterator, typename r_sentinel>
 class range::modifier<
         type<T, Tag, M...>,
         internal::not_an_iterator, internal::not_an_iterator,

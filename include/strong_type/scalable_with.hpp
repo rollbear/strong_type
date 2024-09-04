@@ -103,7 +103,7 @@ public:
 };
 }
 
-template <typename ... Ts>
+STRONG_TYPE_MODULE_EXPORT template <typename ... Ts>
 struct scalable_with
 {
     template <typename T>
@@ -115,7 +115,7 @@ struct scalable_with
 };
 }
 
-template <
+STRONG_TYPE_MODULE_EXPORT template <
     typename TT,
     typename UT = strong::underlying_type_t<TT>,
     typename R = typename TT::scalable_modifier_result_type,

@@ -20,13 +20,13 @@
 namespace strong
 {
 
-struct invocable
+STRONG_TYPE_MODULE_EXPORT struct invocable
 {
     template <typename>
     class modifier;
 };
 
-template <typename T, typename Tag, typename ... Ms>
+STRONG_TYPE_MODULE_EXPORT template <typename T, typename Tag, typename ... Ms>
 class invocable::modifier<type<T, Tag, Ms...>>
 {
     using type = strong::type<T, Tag, Ms...>;

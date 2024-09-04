@@ -18,19 +18,19 @@
 
 namespace strong
 {
-struct pointer
+STRONG_TYPE_MODULE_EXPORT struct pointer
 {
     template <typename T, typename = void>
     class modifier;
 };
 
-template <typename T>
+STRONG_TYPE_MODULE_EXPORT template <typename T>
 class pointer::modifier<T, void>
 {
   static_assert(impl::always_false<T>, "Underlying type must support dereferencing with operator*");
 };
 
-template <typename T, typename Tag, typename ... M>
+STRONG_TYPE_MODULE_EXPORT template <typename T, typename Tag, typename ... M>
 class pointer::modifier<::strong::type<T, Tag, M...>, impl::void_t<decltype(*std::declval<T>())>>
 {
     using type = strong::type<T, Tag, M...>;

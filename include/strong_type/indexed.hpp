@@ -18,7 +18,7 @@
 
 namespace strong
 {
-template <typename I = void>
+STRONG_TYPE_MODULE_EXPORT template <typename I = void>
 struct indexed
 {
     template <typename T, typename = void>
@@ -29,7 +29,7 @@ struct indexed
     };
 };
 
-template <>
+STRONG_TYPE_MODULE_EXPORT template <>
 struct indexed<void> {
     template<typename>
     class modifier;
@@ -112,7 +112,7 @@ struct indexed<void> {
     };
 };
 
-template <typename I>
+STRONG_TYPE_MODULE_EXPORT template <typename I>
 template <typename T, typename Tag, typename ... M>
 class indexed<I>::modifier<
     type<T, Tag, M...>,

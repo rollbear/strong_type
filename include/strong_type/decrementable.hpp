@@ -18,7 +18,7 @@
 
 namespace strong
 {
-struct decrementable
+STRONG_TYPE_MODULE_EXPORT struct decrementable
 {
     template <typename T, typename = void>
     class modifier

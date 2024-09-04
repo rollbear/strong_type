@@ -20,7 +20,7 @@
 
 namespace strong
 {
-struct arithmetic {
+STRONG_TYPE_MODULE_EXPORT struct arithmetic {
     template<typename T, typename = void>
     class modifier
     {
@@ -29,7 +29,7 @@ struct arithmetic {
     };
 };
 
-template <typename T, typename Tag, typename ... Ms>
+STRONG_TYPE_MODULE_EXPORT template <typename T, typename Tag, typename ... Ms>
 class arithmetic::modifier<strong::type<T, Tag, Ms...>, impl::void_t<decltype(std::declval<T>() * std::declval<T>() - std::declval<T>() / std::declval<T>())>>
 {
     using type = strong::type<T, Tag, Ms...>;
@@ -170,7 +170,7 @@ public:
 
 }
 
-template <typename T, typename Tag, typename ... Ms>
+STRONG_TYPE_MODULE_EXPORT template <typename T, typename Tag, typename ... Ms>
 #if defined(__cpp_concepts)
 requires strong::type_is_v<strong::type<T, Tag, Ms...>, strong::arithmetic>
 class std::numeric_limits<strong::type<T, Tag, Ms...>>

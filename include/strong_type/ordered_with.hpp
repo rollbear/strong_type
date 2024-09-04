@@ -125,7 +125,7 @@ public:
 };
 }
 
-template <typename ... Ts>
+STRONG_TYPE_MODULE_EXPORT template <typename ... Ts>
 struct ordered_with
 {
     template <typename T>
@@ -171,11 +171,11 @@ struct spaceship_ordering_with
 
 }
 
-template <typename ... Ts>
+STRONG_TYPE_MODULE_EXPORT template <typename ... Ts>
 using strongly_ordered_with = detail::spaceship_ordering_with<std::strong_ordering, Ts...>;
-template <typename ... Ts>
+STRONG_TYPE_MODULE_EXPORT template <typename ... Ts>
 using weakly_ordered_with = detail::spaceship_ordering_with<std::weak_ordering, Ts...>;
-template <typename ... Ts>
+STRONG_TYPE_MODULE_EXPORT template <typename ... Ts>
 using partially_ordered_with = detail::spaceship_ordering_with<std::partial_ordering, Ts...>;
 
 #endif

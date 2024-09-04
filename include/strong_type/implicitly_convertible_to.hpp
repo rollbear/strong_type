@@ -42,7 +42,7 @@ struct implicit_converter<
 };
 }
 
-template <typename ... Ts>
+STRONG_TYPE_MODULE_EXPORT template <typename ... Ts>
 struct implicitly_convertible_to
 {
     template <typename T>

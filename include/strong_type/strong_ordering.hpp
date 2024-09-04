@@ -7,13 +7,13 @@
 
 namespace strong
 {
-struct strong_ordering
+STRONG_TYPE_MODULE_EXPORT struct strong_ordering
 {
     template <typename T>
     class modifier;
 };
 
-template <typename T, typename Tag, typename ... M>
+STRONG_TYPE_MODULE_EXPORT template <typename T, typename Tag, typename ... M>
 class strong_ordering::modifier<::strong::type<T, Tag, M...>>
 {
     using type = ::strong::type<T, Tag, M...>;

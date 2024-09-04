@@ -18,7 +18,7 @@
 
 namespace strong
 {
-struct equality
+STRONG_TYPE_MODULE_EXPORT struct equality
 {
     template <typename T, typename = void>
     class modifier {
@@ -28,7 +28,7 @@ struct equality
 };
 
 
-template <typename T, typename Tag, typename ... M>
+STRONG_TYPE_MODULE_EXPORT template <typename T, typename Tag, typename ... M>
 class equality::modifier<
     ::strong::type<T, Tag, M...>,
     impl::void_t<decltype(std::declval<const T&>() == std::declval<const T&>())>

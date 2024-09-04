@@ -20,7 +20,7 @@
 
 namespace strong
 {
-struct ostreamable
+STRONG_TYPE_MODULE_EXPORT struct ostreamable
 {
     template <typename T, typename = void>
     class modifier
@@ -43,7 +43,7 @@ struct ostreamable
     };
 };
 
-template<typename T>
+STRONG_TYPE_MODULE_EXPORT template<typename T>
 using is_ostreamable = std::is_base_of<ostreamable::modifier<T>, T>;
 
 }

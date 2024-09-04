@@ -20,7 +20,7 @@
 
 namespace strong
 {
-struct istreamable
+STRONG_TYPE_MODULE_EXPORT struct istreamable
 {
     template <typename T, typename = void>
     class  modifier

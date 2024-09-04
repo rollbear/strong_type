@@ -31,13 +31,13 @@ struct require_semiregular
 };
 
 }
-struct semiregular
+STRONG_TYPE_MODULE_EXPORT struct semiregular
 {
     template <typename>
     class modifier;
 };
 
-template <typename T, typename Tag, typename ... M>
+STRONG_TYPE_MODULE_EXPORT template <typename T, typename Tag, typename ... M>
 class semiregular::modifier<::strong::type<T, Tag, M...>>
     : public default_constructible::modifier<T>
         , private impl::require_semiregular<T>

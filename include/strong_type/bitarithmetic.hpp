@@ -18,7 +18,7 @@
 
 namespace strong
 {
-struct bitarithmetic
+STRONG_TYPE_MODULE_EXPORT struct bitarithmetic
 {
     template <typename T, typename = void>
     class modifier
