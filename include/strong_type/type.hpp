@@ -46,6 +46,19 @@ struct default_constructible {
     };
 };
 
+struct immutable {
+    template <typename>
+    class modifier {
+    public:
+        modifier() noexcept = default;
+        modifier(const modifier&) = default;
+        modifier(modifier&&) = default;
+        ~modifier() = default;
+        modifier& operator=(const modifier&) = delete;
+        modifier& operator=(modifier&&) = delete;
+    };
+};
+
 namespace impl {
 template<typename T>
 constexpr bool supports_default_construction(
@@ -56,6 +69,18 @@ constexpr bool supports_default_construction(
 
 template<typename T, typename ... V>
 using WhenConstructible = std::enable_if_t<std::is_constructible<T, V...>::value>;
+}
+
+namespace impl {
+template <typename T>
+constexpr bool is_immutable(const ::strong::immutable::modifier<T>*)
+{
+    return true;
+}
+constexpr bool is_immutable(const void*)
+{
+    return false;
+}
 }
 
 template<typename T, typename Tag, typename ... M>
@@ -109,32 +134,36 @@ public:
         swap(a._val, b._val);
     }
 
+    template<typename type_ = type>
     STRONG_NODISCARD
-    constexpr T &value_of() & noexcept
+    constexpr std::enable_if_t<!impl::is_immutable(static_cast<type_*>(nullptr)), T&>value_of() & noexcept
     { return _val; }
 
     STRONG_NODISCARD
     constexpr const T &value_of() const & noexcept
     { return _val; }
 
+    template <typename type_ = type>
     STRONG_NODISCARD
-    constexpr T &&value_of() && noexcept
+    constexpr std::enable_if_t<!impl::is_immutable(static_cast<type_*>(nullptr)), T&&> value_of() && noexcept
     { return std::move(_val); }
 
     STRONG_NODISCARD
     constexpr const T &&value_of() const && noexcept
     { return std::move(_val); }
 
+    template <typename type_ = type>
     STRONG_NODISCARD
-    friend constexpr T &value_of(type &t) noexcept
+    friend constexpr auto value_of(type &t) noexcept -> std::enable_if_t<!impl::is_immutable(static_cast<type_*>(nullptr)), T&>
     { return t._val; }
 
     STRONG_NODISCARD
     friend constexpr const T &value_of(const type &t) noexcept
     { return t._val; }
 
+    template <typename type_ = type>
     STRONG_NODISCARD
-    friend constexpr T &&value_of(type &&t) noexcept
+    friend constexpr auto value_of(type &&t) noexcept -> std::enable_if_t<!impl::is_immutable(static_cast<type_*>(nullptr)), T&&>
     { return std::move(t)._val; }
 
     STRONG_NODISCARD

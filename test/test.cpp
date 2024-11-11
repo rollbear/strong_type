@@ -643,6 +643,23 @@ static_assert(is_divisible<schdi, int>{},"");
 static_assert(std::is_same<int, decltype(scild{3}/scild{2})>{},"");
 static_assert(std::is_same<handle, decltype(schdi{3} / schdi{1})>{},"");
 
+using immutable_int = strong::type<int, struct immutable_int_, strong::immutable>;
+
+static_assert(! std::is_copy_assignable<immutable_int>{},"");
+static_assert(! std::is_move_assignable<immutable_int>{},"");
+static_assert(std::is_nothrow_copy_constructible<immutable_int>{},"");
+static_assert(std::is_nothrow_move_constructible<immutable_int>{},"");
+
+static_assert(std::is_const<std::remove_reference_t<decltype(value_of(std::declval<immutable_int&&>()))>>{},"");
+static_assert(std::is_const<std::remove_reference_t<decltype(std::declval<immutable_int&&>().value_of())>>{},"");
+static_assert(std::is_const<std::remove_reference_t<decltype(value_of(std::declval<immutable_int&>()))>>{},"");
+static_assert(std::is_const<std::remove_reference_t<decltype(std::declval<immutable_int&>().value_of())>>{},"");
+static_assert(std::is_const<std::remove_reference_t<decltype(value_of(std::declval<const immutable_int&&>()))>>{},"");
+static_assert(std::is_const<std::remove_reference_t<decltype(std::declval<const immutable_int&&>().value_of())>>{},"");
+static_assert(std::is_const<std::remove_reference_t<decltype(value_of(std::declval<const immutable_int&>()))>>{},"");
+static_assert(std::is_const<std::remove_reference_t<decltype(std::declval<const immutable_int&>().value_of())>>{},"");
+
+
 #if STRONG_HAS_STD_FORMAT
 TEST_CASE("format")
 {

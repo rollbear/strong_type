@@ -1,3 +1,7 @@
+        * Added modifier strong::immutable, which disables assignment
+          and makes value_of() always return const references. Thanks
+          David Hunder for the discussion that lead to this.
+
 v15 2024-07-07
 
         * CMake package is now ARCH_INDEPENDENT, as it should be when it's

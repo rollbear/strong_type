@@ -185,6 +185,9 @@ the underlying type can be, for compilers and standards that support it.
 
   Available in `strong_type/hashable.hpp`.
 
+* <A name="immutable"/>`strong::immutable`
+  Disables assignment and makes `value_of` return a `const T&` or `const T&&`.
+  Move construction is still supported.
 
 * <A name="implicitly_convertible_to"/>`strong::implicitly_convertible_to<Ts...>`
   provides an `operator Ts() const` for each type `Ts`, providing the underlying
