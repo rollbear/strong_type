@@ -39,64 +39,59 @@ namespace internal {
 struct not_an_iterator {};
 
 
-template <typename R, typename C, typename ... Ts>
-auto member_function_ret_type(R (C::*)(Ts...)) -> R;
-template <typename R, typename C, typename ... Ts>
-auto const_member_function_ret_type(R (C::*)(Ts...) const) -> R;
-
-#if defined(STRONG_TYPE_HAS_RANGES) && (!defined(__GLIBCXX__) || (__GLIBCXX__ >= 20230601L))
+#if defined(STRONG_TYPE_HAS_RANGES) && (!defined(__GLIBCXX__) || (__GLIBCXX__ >= 20230528L))
 template <typename T>
 auto begin_type(T* t) -> decltype(std::ranges::begin(*t));
 #else
 template <typename T>
-auto begin_type(T*) -> decltype(member_function_ret_type(&T::begin));
+auto begin_type(T* t) -> decltype(t->begin());
 #endif
 
 auto begin_type(...) -> not_an_iterator;
 
-#if defined(STRONG_TYPE_HAS_RANGES) && (!defined(__GLIBCXX__) || (__GLIBCXX__ >= 20230601L))
+#if defined(STRONG_TYPE_HAS_RANGES) && (!defined(__GLIBCXX__) || (__GLIBCXX__ >= 20230528L))
 template <typename T>
 auto const_begin_type(const T* t) -> decltype(std::ranges::begin(*t));
 #else
 template <typename T>
-auto const_begin_type(const T* t) -> decltype(const_member_function_ret_type(&T::begin));
+auto const_begin_type(const T* t) -> decltype(t->begin());
 #endif
 auto const_begin_type(...) -> not_an_iterator;
 
-#if defined(STRONG_TYPE_HAS_RANGES) && (!defined(__GLIBCXX__) || (__GLIBCXX__ >= 20230601L))
+#if defined(STRONG_TYPE_HAS_RANGES) && (!defined(__GLIBCXX__) || (__GLIBCXX__ >= 20230528L))
 template <typename T>
 auto end_type(T* t) -> decltype(std::ranges::end(*t));
 #else
 template <typename T>
-auto end_type(T*) -> decltype(member_function_ret_type(&T::end));
+auto end_type(T* t) -> decltype(t->end());
 #endif
 auto end_type(...) -> not_an_iterator;
 
-#if defined(STRONG_TYPE_HAS_RANGES) && (!defined(__GLIBCXX__) || (__GLIBCXX__ >= 20230601L))
+#if defined(STRONG_TYPE_HAS_RANGES) && (!defined(__GLIBCXX__) || (__GLIBCXX__ >= 20230528L))
 template <typename T>
 auto const_end_type(const T* t) -> decltype(std::ranges::end(*t));
 #else
 template <typename T>
-auto const_end_type(T*) -> decltype(const_member_function_ret_type(&T::end));
+auto const_end_type(const T* t) -> decltype(t->end());
 #endif
 
 auto const_end_type(...) -> not_an_iterator;
 
-#if defined(STRONG_TYPE_HAS_RANGES) && (!defined(__GLIBCXX__) || (__GLIBCXX__ >= 20230601L))
+#if defined(STRONG_TYPE_HAS_RANGES) && (!defined(__GLIBCXX__) || (__GLIBCXX__ >= 20230528L))
 template <typename T>
 auto cbegin_type(const T* t) -> decltype(std::ranges::cbegin(*t));
 #else
 template <typename T>
-auto cbegin_type(T*) -> decltype(const_member_function_ret_type(&T::cbegin));
+auto cbegin_type(const T* t) -> decltype(t->cbegin());
 #endif
 auto cbegin_type(...) -> not_an_iterator;
 
-#if defined(STRONG_TYPE_HAS_RANGES) && (!defined(__GLIBCXX__) || (__GLIBCXX__ >= 20230601L))
+#if defined(STRONG_TYPE_HAS_RANGES) && (!defined(__GLIBCXX__) || (__GLIBCXX__ >= 20230528L))
 template <typename T>
 auto cend_type(const T* t) -> decltype(std::ranges::cend(*t));
 #else
 template <typename T>
-auto cend_type(T*) -> decltype(const_member_function_ret_type(&T::cend));
+auto cend_type(const T* t) -> decltype(t->cend());
 #endif
 auto cend_type(...) -> not_an_iterator;
 
@@ -155,16 +150,78 @@ class range::modifier<
 
 };
 
-template <typename T, typename Tag, typename ... M, typename iterator>
+template <typename T, typename Tag, typename ... M, typename r_iterator>
 class range::modifier<
         type<T, Tag, M...>,
-        iterator, iterator,
-        iterator, iterator,
-        iterator, iterator>
+        r_iterator, r_iterator,
+        r_iterator, r_iterator,
+        r_iterator, r_iterator>
 {
-    static_assert(impl::always_false<T>, "the underlying type is lying about its iterator type");
-};
+    using type = ::strong::type<T, Tag, M...>;
+    static constexpr bool random_access = internal::is_random_access(typename internal::iterator_traits<r_iterator>::iterator_category{});
+public:
+    using const_iterator = std::conditional_t<random_access,
+            ::strong::type<r_iterator, Tag, strong::iterator, strong::default_constructible, strong::equality_with<r_iterator>, strong::ordered_with<r_iterator>>,
+            ::strong::type<r_iterator, Tag, strong::iterator, strong::default_constructible, strong::equality_with<r_iterator>>
+    >;
 
+    STRONG_NODISCARD
+    constexpr
+    const_iterator
+    begin()
+    const
+    noexcept(noexcept(STRONG_TYPE_BEGIN(std::declval<const T&>())))
+    {
+        auto& self = static_cast<const type&>(*this);
+        return const_iterator{STRONG_TYPE_BEGIN(value_of(self))};
+    }
+
+    STRONG_NODISCARD
+    constexpr
+    const_iterator
+    end()
+    const
+    noexcept(noexcept(STRONG_TYPE_END(std::declval<const T&>())))
+    {
+        auto& self = static_cast<const type&>(*this);
+        return const_iterator{STRONG_TYPE_END(value_of(self))};
+    }
+
+    STRONG_NODISCARD
+    constexpr
+    const_iterator
+    cbegin()
+    const
+    noexcept(noexcept(STRONG_TYPE_CBEGIN(std::declval<const T&>())))
+    {
+        auto& self = static_cast<const type&>(*this);
+        return const_iterator{STRONG_TYPE_CBEGIN(value_of(self))};
+    }
+
+    STRONG_NODISCARD
+    constexpr
+    const_iterator
+    cend()
+    const
+    noexcept(noexcept(STRONG_TYPE_CEND(std::declval<const T&>())))
+    {
+        auto& self = static_cast<const type&>(*this);
+        return const_iterator{STRONG_TYPE_CEND(value_of(self))};
+    }
+
+    template <typename TT = const T&>
+    STRONG_NODISCARD
+    constexpr
+    decltype(std::declval<TT>().size())
+    size()
+    const
+    noexcept(noexcept(std::declval<TT>().size()))
+    {
+        auto& self = static_cast<const type&>(*this);
+        return value_of(self).size();
+    }
+
+};
 template <typename T, typename Tag, typename ... M, typename r_iterator, typename r_const_iterator>
 class range::modifier<
     type<T, Tag, M...>,

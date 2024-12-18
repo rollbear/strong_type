@@ -1,3 +1,7 @@
+        * Make strong::range work with range types that only has
+          const_iterator types (e.g. std::set). Thanks David Feltell for
+          reporting the problem.
+
 v15 2024-07-07
 
         * CMake package is now ARCH_INDEPENDENT, as it should be when it's

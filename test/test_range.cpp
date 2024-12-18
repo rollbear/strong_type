@@ -18,6 +18,7 @@
 #include <forward_list>
 #include <array>
 #include <sstream>
+#include <set>
 
 namespace {
     template <typename T>
@@ -116,6 +117,26 @@ TEST_CASE("constexpr size")
     static constexpr ia a{};
     REQUIRE(a.size() == 4);
     STATIC_REQUIRE(a.size() == 4);
+}
+
+TEST_CASE("a range with only const_iterators is still a range")
+{
+    using is = strong::type
+            <
+                    std::set<int>,
+                    struct is_,
+                    strong::range,
+                    strong::default_constructible
+            >;
+    is set{1,3,5,7,9};
+    REQUIRE(set.size() == 5);
+    int v = 1;
+    for (auto x : set)
+    {
+        REQUIRE(x == v);
+        v+= 2;
+    }
+    REQUIRE(v == 11);
 }
 
 #if defined(STRONG_TYPE_HAS_RANGES)
