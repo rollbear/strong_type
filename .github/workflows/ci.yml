@@ -147,7 +147,11 @@ jobs:
           - { std: 14 }
           - { std: 17 }
           - { std: 20 }
-    name: "Windows C++${{matrix.config.std}}"
+          - { std: 20, import_std: "import std" }
+          - { std: 23 }
+          - { std: 23, import_std: "import std" }
+
+    name: "Windows C++${{matrix.config.std}} ${{matrix.config.import_std}}"
     steps:
       - uses: actions/checkout@v4
 
@@ -157,6 +161,11 @@ jobs:
       - name: "setup"
         shell: bash
         run: |
+          EXTRA_FLAGS=""
+          if [ -n "${{matrix.config.import_std}}" ]
+          then
+              EXTRA_FLAGS="${EXTRA_FLAGS} -DSTRONG_TYPE_IMPORT_STD_LIBRARY=yes"
+          fi
           cmake \
             -S . \
             -B build \
@@ -167,6 +176,7 @@ jobs:
             -DCMAKE_BUILD_TYPE=Debug \
             -DCMAKE_VERBOSE_MAKEFILE=yes \
             -DSTRONG_TYPE_UNIT_TEST=yes \
+             ${EXTRA_FLAGS} \
             -G Ninja
 
       - name: "build"
