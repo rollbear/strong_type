@@ -1,3 +1,12 @@
+        * Support for "import std;" is enabled by defining the macro
+          STRONG_TYPE_IMPORT_STD_LIBRARY. This has currently only been
+          tested on MSVC with C++20 and C++23. Other compilers may or
+          may not work at this point. You can also run the unit-tests
+          with "import std;" by adding the CMake option
+          -DSTRONG_TYPE_IMPORT_STD_LIBRARY=yes
+
+          Huge thangs to David Hunter for contributing this addition.
+
         * Make strong::range work with range types that only has
           const_iterator types (e.g. std::set). Thanks David Feltell for
           reporting the problem.

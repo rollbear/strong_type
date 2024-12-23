@@ -68,6 +68,9 @@ A strong type can be used as an NTTP ([Non Type Template
 Parameter](https://en.cppreference.com/w/cpp/language/template_parameters)), if
 the underlying type can be, for compilers and standards that support it.
 
+*strong_type* uses the std library module, with `import std;` if you
+define the macro `STRONG_TYPE_IMPORT_STD_LIBRARY=1`.
+
 # <A name="modifiers"/> Modifiers:
 
 * <A name="affine_point"/>`strong::affine_point<D>` allows instances to be
@@ -681,9 +684,13 @@ cmake <strong_type_dir> -DSTRONG_TYPE_UNIT_TEST=yes
 cmake --build .
 ```
 
-This will produce the test programs `self_test`, and conditionally also
+You can also add the option `-DSTRONG_TYPE_IMPORT_STD_LIBRARY=yes` if your
+development environment supports C++20 "`import std;`" 
+
+The build will produce the test programs `self_test`, and conditionally also
 `test_fmt8`,`test_fmt9`, `test_fmt10` and `test_fmt11`, depending on which version(s) of
 [`{fmt}`](https://fmt.dev/latest/index.html)
+
 
 N.B. Microsoft Visual Studio MSVC compiler < 19.22 does not handle `constexpr`
 correctly. Those found to cause trouble are disabled for those versions.
