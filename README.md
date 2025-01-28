@@ -10,6 +10,7 @@ Boost Software License 1.0
 * [Intro](#intro)
 * [Modifiers](#modifiers)
 * [Utilities](#utilities)
+* [Tips](#tips)
 * [Writing a modifier](#writing_modifier)
 * [Self test](#selftest)
 * [Other libraries](#other)
@@ -414,6 +415,22 @@ A number of small utilities are available directly in `strong_type/type.hpp`.
   ```
 
   All `static_assert`s above pass.
+
+# <A name="tips"></A>Tips!
+
+## <A name="aliases"></A>Using aliases to define similar types
+
+If you want several types that are, in essence, the same, but still distinguished
+as unique types, you can use an alias that takes a tag type. E.g.
+
+```C++
+template <typename Tag>
+using counter = strong::type<uint64_t, Tag, strong::regular, strong::ordered, strong::incrementable, strong::equality_with<uint64_t>>;
+
+using request_counter = counter<struct request_tag>;
+using error_counter = counter<struct error_tag>;
+using timeout_counter = counter<struct timeout_tag>;
+```
 
 # <A name="writing_modifier"></A>Writing a modifier
 
