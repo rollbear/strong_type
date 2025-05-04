@@ -724,12 +724,12 @@ correctly. Those found to cause trouble are disabled for those versions.
 
 ## <A name="presentations"></A>Presentations about defining and using strong types
 
-|                                                                                                                                                     |                                                |
-|-----------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------|
-| [![Strong Types for Strong Interfaces](https://img.youtube.com/vi/WVleZqzTw2k/mqdefault.jpg)](https://img.youtube.com/vi/WVleZqzTw2k/mqdefault.jpg) | Jonathan Boccara from MeetingC++ 2017          |
-| [![Strong Types in C++](https://img.youtube.com/vi/fWcnp7Bulc8/mqdefault.jpg)](https://youtu.be/fWcnp7Bulc8)                                        | Barney Dellar from C++OnSea 2019               |
-| [![Type Safe C++? - LOL! - ;-)](https://img.youtube.com/vi/SWHvNvY-PHw/mqdefault.jpg)](https://youtu.be/SWHvNvY-PHw)                                | Björn Fahller from ACCU 2018                   |
-| [![Curiously Coupled Types](https://img.youtube.com/vi/msi4WNQZyWs/mqdefault.jpg)](https://youtu.be/msi4WNQZyWs)                                    | Adi Shavit & Björn Fahller from NDC{Oslo} 2019 |
+|                                                                                                                              |                                                |
+|------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------|
+| [![Strong Types for Strong Interfaces](https://img.youtube.com/vi/WVleZqzTw2k/mqdefault.jpg)](https://youtu.be/WVleZqzTw2k)  | Jonathan Boccara from MeetingC++ 2017          |
+| [![Strong Types in C++](https://img.youtube.com/vi/fWcnp7Bulc8/mqdefault.jpg)](https://youtu.be/fWcnp7Bulc8)                 | Barney Dellar from C++OnSea 2019               |
+| [![Type Safe C++? - LOL! - ;-)](https://img.youtube.com/vi/SWHvNvY-PHw/mqdefault.jpg)](https://youtu.be/SWHvNvY-PHw)         | Björn Fahller from ACCU 2018                   |
+| [![Curiously Coupled Types](https://img.youtube.com/vi/msi4WNQZyWs/mqdefault.jpg)](https://youtu.be/msi4WNQZyWs)             | Adi Shavit & Björn Fahller from NDC{Oslo} 2019 |
 
 Discussions, pull-requests, flames are welcome.
 
