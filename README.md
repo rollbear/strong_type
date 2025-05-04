@@ -730,6 +730,7 @@ correctly. Those found to cause trouble are disabled for those versions.
 | [![Strong Types in C++](https://img.youtube.com/vi/fWcnp7Bulc8/mqdefault.jpg)](https://youtu.be/fWcnp7Bulc8)                                        | Barney Dellar from C++OnSea 2019               |
 | [![Type Safe C++? - LOL! - ;-)](https://img.youtube.com/vi/SWHvNvY-PHw/mqdefault.jpg)](https://youtu.be/SWHvNvY-PHw)                                | Björn Fahller from ACCU 2018                   |
 | [![Curiously Coupled Types](https://img.youtube.com/vi/msi4WNQZyWs/mqdefault.jpg)](https://youtu.be/msi4WNQZyWs)                                    | Adi Shavit & Björn Fahller from NDC{Oslo} 2019 |
+| [![Keynote: The Real Problem of C++](https://img.youtube.com/vi/vN0U4P4qmRY/mqdefault.jpg)](https://youtu.be/vN0U4P4qmRY)                           | Klaus Iglberger from Using std::cpp 2025       |
 
 Discussions, pull-requests, flames are welcome.
 
