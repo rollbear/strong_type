@@ -38,7 +38,7 @@
 namespace strong {
 struct uninitialized_t {
 };
-static constexpr uninitialized_t uninitialized{};
+constexpr uninitialized_t uninitialized{};
 
 template<typename M, typename T>
 using modifier = typename M::template modifier<T>;
@@ -264,7 +264,7 @@ struct require_move_assignable
 };
 
 template <typename ...>
-static constexpr bool always_false = false;
+constexpr bool always_false = false;
 
 template <bool> struct valid_type;
 template <>
@@ -272,11 +272,10 @@ struct valid_type<true> {};
 
 
 template <typename Needle, typename Type, typename Modifier>
-static constexpr bool modifier_is
+constexpr bool modifier_is
 = std::is_base_of<modifier<Needle, Type>, modifier<Modifier,Type>>::value;
 
 template <typename Needle, typename Type, typename Haystack>
-static
 constexpr
 bool
     type_implements
@@ -289,7 +288,6 @@ template <
     typename Type,
     typename ... Ms
 >
-static
 constexpr
 bool
 modifier_is<Needle, Type, Modifier<Ms...>>
@@ -301,7 +299,6 @@ template <
     typename Type,
     typename ... Haystack
 >
-static
 constexpr
 bool type_implements<Modifier<Needles...>, Type, Modifier<Haystack...>>
 = (modifier_is<Modifier<Needles>, Type, Modifier<Haystack...>> && ...);
@@ -364,15 +361,15 @@ type_implements<Modifier<Needles...>, Type, Modifier<Haystack...>>
 #endif
 
 template <typename T, typename M>
-static constexpr bool type_is = false;
+constexpr bool type_is = false;
 
 #if __cplusplus >= 201703L
 template <typename T, typename Tag, typename ... Ms, typename M>
-static constexpr bool type_is<strong::type<T, Tag, Ms...>, M>
+constexpr bool type_is<strong::type<T, Tag, Ms...>, M>
     = (impl::type_implements<M, strong::type<T, Tag, Ms...>, Ms> || ...);
 #else
 template <typename T, typename Tag, typename ... Ms, typename M>
-static constexpr bool type_is<strong::type<T, Tag, Ms...>, M>
+constexpr bool type_is<strong::type<T, Tag, Ms...>, M>
     = impl::disjunction<std::integral_constant<bool, impl::type_implements<M, strong::type<T, Tag, Ms...>, Ms>>...>::value;
 #endif
 
@@ -384,7 +381,7 @@ using get_strong = decltype(get_strong_(static_cast<T*>(nullptr)));
 }
 
 template <typename T, typename M>
-static constexpr bool type_is_v = impl::type_is<impl::get_strong<T>, M>;
+constexpr bool type_is_v = impl::type_is<impl::get_strong<T>, M>;
 
 template <typename T, typename M>
 using type_is = std::integral_constant<bool, type_is_v<T,M>>;
