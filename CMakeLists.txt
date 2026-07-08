@@ -39,7 +39,9 @@ if(STRONG_TYPE_IMPORT_STD_LIBRARY)
   endif()
 
   # We could do C++ 26 here as well, all compilers have agreed to support the std module in C++ 20 but CMake does not support that yet
-  set(CMAKE_CXX_STANDARD 23)
+  if (NOT CMAKE_CXX_STANDARD)
+    set(CMAKE_CXX_STANDARD 23)
+  endif()
 endif()
 
 project(strong_type)
