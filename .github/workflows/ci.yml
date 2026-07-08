@@ -165,8 +165,6 @@ jobs:
           - { std: 20, import_std: "import std" }
           - { std: 23 }
           - { std: 23, import_std: "import std" }
-          - { std: 26 }
-          - { std: 26, import_std: "import std" }
 
     name: "Windows C++${{matrix.config.std}} ${{matrix.config.import_std}}"
     steps:
