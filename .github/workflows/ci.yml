@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   build_linux:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     container: { image: "ghcr.io/rollbear/${{matrix.config.container}}", options: "--security-opt seccomp=unconfined" }
     strategy:
       fail-fast: false
