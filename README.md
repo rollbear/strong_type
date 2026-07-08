@@ -308,6 +308,16 @@ define the macro `STRONG_TYPE_IMPORT_STD_LIBRARY=1`.
   Available in `strong_type/regular.hpp`
 
 
+* <A name="saturating_arithmetic"></A>`strong::saturating_arithmetic`.
+  Implements [`saturating_cast`](https://cppreference.com/cpp/numeric/saturating_cast)
+  and the operators `+`, `-`, `/`, `*` using C++26
+  [saturating arithmetic](https://cppreference.com/cpp/numeric#Saturation_arithmetic)
+  functions. Requires that the underlying type is a signed or unsigned
+  arithmetic integer type. The constructor clamps the value using `saturating_cast`.
+
+  Available in `strong_type/saturating_arithmetic.hpp`
+
+
 * <A name="scalable_with"></A>`strong::scalable_with<Ts...>` Allows multiplying and
   dividing the value with each type `Ts`, providing the underlying type supports
   it. It also allows dividing instances of `scalable_with<>`, if the underlying
@@ -347,6 +357,7 @@ define the macro `STRONG_TYPE_IMPORT_STD_LIBRARY=1`.
 
   Available in `strong_type/unique.hpp`
 
+
 * <A name="weakly_ordered"></A>`strong::weakly_ordered` provides operator `<=>`
   The strong type offers the same ordering relation as the underlying type. The
   result is [`std::weak_ordering`](https://en.cppreference.com/w/cpp/utility/compare/weak_ordering).
@@ -363,7 +374,6 @@ define the macro `STRONG_TYPE_IMPORT_STD_LIBRARY=1`.
   Note! This does not imply [`strong::equality_with<Ts...>`](#equality_with).
 
   Available in `strong_type/ordered_with.hpp`
-
 
 
 # <A name="utilities"></A>Utilities:

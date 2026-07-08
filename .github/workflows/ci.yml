@@ -32,6 +32,21 @@ jobs:
           - { cxx: clang++-17, std: 17, container: "clang:17" }
           - { cxx: clang++-17, std: 20, container: "clang:17" }
           - { cxx: clang++-17, std: 23, container: "clang:17" }
+          - { cxx: clang++-22, std: 14, container: "clang:22" }
+          - { cxx: clang++-22, std: 17, container: "clang:22" }
+          - { cxx: clang++-22, std: 20, container: "clang:22" }
+          - { cxx: clang++-22, std: 23, container: "clang:22" }
+          - { cxx: clang++-22, std: 26, container: "clang:22" }
+          - { cxx: clang++-22, std: 14, container: "clang:22", stdlib: "libc++", linker: "-fuse-gold -lc++abi" }
+          - { cxx: clang++-22, std: 17, container: "clang:22", stdlib: "libc++", linker: "-fuse-gold -lc++abi" }
+          - { cxx: clang++-22, std: 20, container: "clang:22", stdlib: "libc++", linker: "-fuse-gold -lc++abi" }
+          - { cxx: clang++-22, std: 23, container: "clang:22", stdlib: "libc++", linker: "-fuse-gold -lc++abi" }
+          - { cxx: clang++-22, std: 26, container: "clang:22", stdlib: "libc++", linker: "-fuse-gold -lc++abi" }
+          - { cxx: g++-16, std: 14, container: "gcc:16" }
+          - { cxx: g++-16, std: 17, container: "gcc:16" }
+          - { cxx: g++-16, std: 20, container: "gcc:16" }
+          - { cxx: g++-16, std: 23, container: "gcc:16" }
+          - { cxx: g++-16, std: 26, container: "gcc:16" }
           - { cxx: g++-13, std: 14, container: "gcc:13" }
           - { cxx: g++-13, std: 17, container: "gcc:13" }
           - { cxx: g++-13, std: 20, container: "gcc:13" }
@@ -150,6 +165,8 @@ jobs:
           - { std: 20, import_std: "import std" }
           - { std: 23 }
           - { std: 23, import_std: "import std" }
+          - { std: 26 }
+          - { std: 26, import_std: "import std" }
 
     name: "Windows C++${{matrix.config.std}} ${{matrix.config.import_std}}"
     steps:
@@ -172,7 +189,7 @@ jobs:
             -DCMAKE_CXX_COMPILER=cl \
             -DCMAKE_C_COMPILER=cl \
             -DCMAKE_CXX_STANDARD=${{matrix.config.std}} \
-            -DCMAKE_CXX_FLAGS="'/permissive- /EHsc /W4 /WX'" \
+            -DCMAKE_CXX_FLAGS="'/permissive- /EHsc /W4 /WX /Wv:18'" \
             -DCMAKE_BUILD_TYPE=Debug \
             -DCMAKE_VERBOSE_MAKEFILE=yes \
             -DSTRONG_TYPE_UNIT_TEST=yes \
