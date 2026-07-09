@@ -18,7 +18,9 @@ else()
 endif()
 
 if(STRONG_TYPE_IMPORT_STD_LIBRARY)
-  if("${CMAKE_GENERATOR}" STREQUAL "Visual Studio 17 2022")
+  message(NOTICE "Generator=${CMAKE_GENERATOR}")
+  message(NOTICE "CMake=${CMAKE_VERSION}")
+  if("${CMAKE_GENERATOR}" MATCHES "^Visual Studio.*")
     # This can be done before or after project() on MSVC
     # It works regardless of CMAKE_EXPERIMENTAL_CXX_IMPORT_STD
     # cmake -DSTRONG_TYPE_IMPORT_STD_LIBRARY=ON src_path
@@ -28,12 +30,18 @@ if(STRONG_TYPE_IMPORT_STD_LIBRARY)
     # The CMAKE_EXPERIMENTAL_CXX_IMPORT_STD is required
     # To build on calng you need a command line that uses Ninja points to a clang compiler and switched to use the clang libc++ not GCCs libstdc++
     # cmake -G Ninja -DCMAKE_CXX_FLAGS=-stdlib=libc++ -DSTRONG_TYPE_IMPORT_STD_LIBRARY=ON -DCMAKE_CXX_COMPILER=/usr/lib/llvm-20/bin/clang++ src_path
-    set(CMAKE_EXPERIMENTAL_CXX_IMPORT_STD "0e5b6991-d74f-4b3d-a41c-cf096e0b2508")
+    if ("${CMAKE_VERSION}" STREQUAL "4.3.4")
+      set(CMAKE_EXPERIMENTAL_CXX_IMPORT_STD "451f2fe2-a8a2-47c3-bc32-94786d8fc91b")
+    else()
+      set(CMAKE_EXPERIMENTAL_CXX_IMPORT_STD "f35a9ac6-8463-4d38-8eec-5d6008153e7d")
+    endif()
     set(CMAKE_CXX_MODULE_STD ON)
   endif()
 
   # We could do C++ 26 here as well, all compilers have agreed to support the std module in C++ 20 but CMake does not support that yet
-  set(CMAKE_CXX_STANDARD 23)
+  if (NOT CMAKE_CXX_STANDARD)
+    set(CMAKE_CXX_STANDARD 23)
+  endif()
 endif()
 
 project(strong_type)

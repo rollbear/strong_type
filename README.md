@@ -308,6 +308,16 @@ define the macro `STRONG_TYPE_IMPORT_STD_LIBRARY=1`.
   Available in `strong_type/regular.hpp`
 
 
+* <A name="saturating_arithmetic"></A>`strong::saturating_arithmetic`.
+  Implements [`saturating_cast`](https://cppreference.com/cpp/numeric/saturating_cast)
+  and the operators `+`, `-`, `/`, `*` using C++26
+  [saturating arithmetic](https://cppreference.com/cpp/numeric#Saturation_arithmetic)
+  functions. Requires that the underlying type is a signed or unsigned
+  arithmetic integer type. The constructor clamps the value using `saturating_cast`.
+
+  Available in `strong_type/saturating_arithmetic.hpp`
+
+
 * <A name="scalable_with"></A>`strong::scalable_with<Ts...>` Allows multiplying and
   dividing the value with each type `Ts`, providing the underlying type supports
   it. It also allows dividing instances of `scalable_with<>`, if the underlying
@@ -347,6 +357,7 @@ define the macro `STRONG_TYPE_IMPORT_STD_LIBRARY=1`.
 
   Available in `strong_type/unique.hpp`
 
+
 * <A name="weakly_ordered"></A>`strong::weakly_ordered` provides operator `<=>`
   The strong type offers the same ordering relation as the underlying type. The
   result is [`std::weak_ordering`](https://en.cppreference.com/w/cpp/utility/compare/weak_ordering).
@@ -363,7 +374,6 @@ define the macro `STRONG_TYPE_IMPORT_STD_LIBRARY=1`.
   Note! This does not imply [`strong::equality_with<Ts...>`](#equality_with).
 
   Available in `strong_type/ordered_with.hpp`
-
 
 
 # <A name="utilities"></A>Utilities:
@@ -724,12 +734,12 @@ correctly. Those found to cause trouble are disabled for those versions.
 
 ## <A name="presentations"></A>Presentations about defining and using strong types
 
-|                                                                                                                                                     |                                                |
-|-----------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------|
-| [![Strong Types for Strong Interfaces](https://img.youtube.com/vi/WVleZqzTw2k/mqdefault.jpg)](https://img.youtube.com/vi/WVleZqzTw2k/mqdefault.jpg) | Jonathan Boccara from MeetingC++ 2017          |
-| [![Strong Types in C++](https://img.youtube.com/vi/fWcnp7Bulc8/mqdefault.jpg)](https://youtu.be/fWcnp7Bulc8)                                        | Barney Dellar from C++OnSea 2019               |
-| [![Type Safe C++? - LOL! - ;-)](https://img.youtube.com/vi/SWHvNvY-PHw/mqdefault.jpg)](https://youtu.be/SWHvNvY-PHw)                                | Björn Fahller from ACCU 2018                   |
-| [![Curiously Coupled Types](https://img.youtube.com/vi/msi4WNQZyWs/mqdefault.jpg)](https://youtu.be/msi4WNQZyWs)                                    | Adi Shavit & Björn Fahller from NDC{Oslo} 2019 |
+|                                                                                                                              |                                                |
+|------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------|
+| [![Strong Types for Strong Interfaces](https://img.youtube.com/vi/WVleZqzTw2k/mqdefault.jpg)](https://youtu.be/WVleZqzTw2k)  | Jonathan Boccara from MeetingC++ 2017          |
+| [![Strong Types in C++](https://img.youtube.com/vi/fWcnp7Bulc8/mqdefault.jpg)](https://youtu.be/fWcnp7Bulc8)                 | Barney Dellar from C++OnSea 2019               |
+| [![Type Safe C++? - LOL! - ;-)](https://img.youtube.com/vi/SWHvNvY-PHw/mqdefault.jpg)](https://youtu.be/SWHvNvY-PHw)         | Björn Fahller from ACCU 2018                   |
+| [![Curiously Coupled Types](https://img.youtube.com/vi/msi4WNQZyWs/mqdefault.jpg)](https://youtu.be/msi4WNQZyWs)             | Adi Shavit & Björn Fahller from NDC{Oslo} 2019 |
 | [![Keynote: The Real Problem of C++](https://img.youtube.com/vi/vN0U4P4qmRY/mqdefault.jpg)](https://youtu.be/vN0U4P4qmRY)                           | Klaus Iglberger from Using std::cpp 2025       |
 
 Discussions, pull-requests, flames are welcome.

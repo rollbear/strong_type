@@ -1,3 +1,5 @@
+        * Added strong::saturating_arithmetic for C++26.
+
         * Support for "import std;" is enabled by defining the macro
           STRONG_TYPE_IMPORT_STD_LIBRARY. This has currently only been
           tested on MSVC with C++20 and C++23. Other compilers may or

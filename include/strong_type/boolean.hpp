@@ -29,13 +29,14 @@ struct boolean
     template <typename T>
     class modifier<T, impl::void_t<decltype(static_cast<bool>(std::declval<const underlying_type_t<T>>()))>>
     {
+        static constexpr auto strong_noexcept_convert = noexcept(static_cast<bool>(std::declval<const underlying_type_t<T>>()));
     public:
         STRONG_NODISCARD
         explicit
         STRONG_CONSTEXPR
         operator bool()
         const
-        noexcept(noexcept(static_cast<bool>(value_of(std::declval<const T&>()))))
+        noexcept(strong_noexcept_convert)
         {
             const auto& self = static_cast<const T&>(*this);
             return static_cast<bool>(value_of(self));
