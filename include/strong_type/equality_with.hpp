@@ -80,7 +80,7 @@ template <typename ... Ts>
 struct equality_with
 {
     template <typename T>
-    class modifier : public impl::typed_equality<T, Ts>...
+    class STRONG_EMPTY_BASES modifier : public impl::typed_equality<T, Ts>...
     {
     };
 };

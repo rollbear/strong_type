@@ -2,6 +2,8 @@
           with only const_iterators and no cbegin()/cend(). Thank you
           T-Maxxx for reporting
 
+        * Fixed missing empty base optimization on MSVC.
+
         * Added strong::saturating_arithmetic for C++26.
 
         * Support for "import std;" is enabled by defining the macro

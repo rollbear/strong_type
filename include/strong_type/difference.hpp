@@ -27,7 +27,7 @@ struct conditionally_ordered
     class modifier;
 };
 template <typename T, typename Tag, typename ... M>
-class conditionally_ordered::modifier<::strong::type<T, Tag, M...>>
+class STRONG_EMPTY_BASES conditionally_ordered::modifier<::strong::type<T, Tag, M...>>
 {
     using type = ::strong::type<T, Tag, M...>;
 public:
@@ -88,11 +88,11 @@ public:
 struct difference
 {
     template <typename T>
-    class modifier;
+    class STRONG_EMPTY_BASES modifier;
 };
 
 template <typename T, typename Tag, typename ... M>
-class difference::modifier<::strong::type<T, Tag, M...>>
+class STRONG_EMPTY_BASES difference::modifier<::strong::type<T, Tag, M...>>
     : public impl::conditionally_ordered::modifier<::strong::type<T, Tag, M...>>
     , public equality::modifier<::strong::type<T, Tag, M...>>
 {

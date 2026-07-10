@@ -107,7 +107,7 @@ template <typename ... Ts>
 struct scalable_with
 {
     template <typename T>
-    class modifier : public impl::typed_scalable<T, Ts>...
+    class STRONG_EMPTY_BASES modifier : public impl::typed_scalable<T, Ts>...
     {
     public:
         using scalable_modifier_result_type = impl::first_type_t<Ts...>;

@@ -71,7 +71,7 @@ class iterator
 public:
     template <typename I,
             typename category = typename internal::iterator_traits<underlying_type_t<I>>::iterator_category>
-    class modifier
+    class STRONG_EMPTY_BASES modifier
         : public pointer::modifier<I>
         , public incrementable::modifier<I>
     {
@@ -84,18 +84,18 @@ public:
     };
 
     template <typename I>
-    class modifier<I, std::forward_iterator_tag>
+    class STRONG_EMPTY_BASES modifier<I, std::forward_iterator_tag>
         : public modifier<I, std::input_iterator_tag>
         , public strong::equality::modifier<I>
     {};
     template <typename I>
-    class modifier<I, std::bidirectional_iterator_tag>
+    class STRONG_EMPTY_BASES modifier<I, std::bidirectional_iterator_tag>
         : public modifier<I, std::forward_iterator_tag>
         , public decrementable::modifier<I>
     {
     };
     template <typename I>
-    class modifier<I, std::random_access_iterator_tag>
+    class STRONG_EMPTY_BASES modifier<I, std::random_access_iterator_tag>
         : public modifier<I, std::bidirectional_iterator_tag>
             , public affine_point<typename std::iterator_traits<underlying_type_t<I>>::difference_type>::template modifier<I>
             , public indexed<>::modifier<I>
@@ -105,7 +105,7 @@ public:
 
 #if STRONG_TYPE_CONTIGUOUS_ITERATOR
     template <typename I>
-    class modifier<I, std::contiguous_iterator_tag>
+    class STRONG_EMPTY_BASES modifier<I, std::contiguous_iterator_tag>
             : public modifier<I, std::bidirectional_iterator_tag>
                     , public affine_point<typename std::iterator_traits<underlying_type_t<I>>::difference_type>::template modifier<I>
                     , public indexed<>::modifier<I>

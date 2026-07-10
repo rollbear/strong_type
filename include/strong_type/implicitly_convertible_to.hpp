@@ -46,7 +46,7 @@ template <typename ... Ts>
 struct implicitly_convertible_to
 {
     template <typename T>
-    struct modifier : impl::implicit_converter<T, Ts>...
+    struct STRONG_EMPTY_BASES modifier : impl::implicit_converter<T, Ts>...
     {
     };
 };

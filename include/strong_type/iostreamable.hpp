@@ -22,7 +22,7 @@ namespace strong
 struct iostreamable
 {
     template <typename T>
-    class modifier
+    class STRONG_EMPTY_BASES modifier
         : public ostreamable::modifier<T>
         , public istreamable::modifier<T>
     {
