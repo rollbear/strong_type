@@ -29,7 +29,7 @@ struct equality
 
 
 template <typename T, typename Tag, typename ... M>
-class equality::modifier<
+class STRONG_EMPTY_BASES equality::modifier<
     ::strong::type<T, Tag, M...>,
     impl::void_t<decltype(std::declval<const T&>() == std::declval<const T&>())>
 >

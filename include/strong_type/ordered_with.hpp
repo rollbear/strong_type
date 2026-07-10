@@ -131,7 +131,7 @@ template <typename ... Ts>
 struct ordered_with
 {
     template <typename T>
-    class modifier : public impl::typed_ordering<T, Ts>...
+    class STRONG_EMPTY_BASES modifier : public impl::typed_ordering<T, Ts>...
     {
     };
 };
@@ -166,7 +166,7 @@ template <typename Ordering, typename ... Ts>
 struct spaceship_ordering_with
 {
     template <typename T>
-    struct modifier : public typed_spaceship_ordering_with<Ordering, T, Ts>...
+    struct STRONG_EMPTY_BASES modifier : public typed_spaceship_ordering_with<Ordering, T, Ts>...
     {
     };
 };

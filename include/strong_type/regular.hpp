@@ -22,7 +22,7 @@ namespace strong
 struct regular
 {
     template <typename T>
-    class modifier
+    class STRONG_EMPTY_BASES modifier
         : public semiregular::modifier<T>
         , public equality::modifier<T>
     {

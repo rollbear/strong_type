@@ -35,6 +35,13 @@
 #define STRONG_NODISCARD
 #endif
 
+// the MSVC ABI does not collapse multiple empty base classes unless asked to
+#if defined(_MSC_VER)
+#define STRONG_EMPTY_BASES __declspec(empty_bases)
+#else
+#define STRONG_EMPTY_BASES
+#endif
+
 namespace strong {
 struct uninitialized_t {
 };
@@ -46,7 +53,7 @@ using modifier = typename M::template modifier<T>;
 
 struct default_constructible {
     template<typename T>
-    class modifier {
+    class STRONG_EMPTY_BASES modifier {
     };
 };
 
@@ -80,7 +87,7 @@ struct limiter<M, T, U, impl::void_t<decltype(M::template modifier<T>::limit(std
 }
 
 template<typename T, typename Tag, typename ... M>
-class type : public modifier<M, type<T, Tag, M...>> ... {
+class STRONG_EMPTY_BASES type : public modifier<M, type<T, Tag, M...>> ... {
 public:
     template<typename TT = T, typename = std::enable_if_t<std::is_trivially_constructible<TT>{}>>
     explicit type(uninitialized_t)

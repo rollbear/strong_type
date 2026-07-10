@@ -47,7 +47,7 @@ template <typename ... Ts>
 struct convertible_to
 {
     template <typename T>
-    struct modifier : impl::converter<T, Ts>...
+    struct STRONG_EMPTY_BASES modifier : impl::converter<T, Ts>...
     {
     };
 };

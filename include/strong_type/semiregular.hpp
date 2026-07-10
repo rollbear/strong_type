@@ -38,7 +38,7 @@ struct semiregular
 };
 
 template <typename T, typename Tag, typename ... M>
-class semiregular::modifier<::strong::type<T, Tag, M...>>
+class STRONG_EMPTY_BASES semiregular::modifier<::strong::type<T, Tag, M...>>
     : public default_constructible::modifier<T>
         , private impl::require_semiregular<T>
 {

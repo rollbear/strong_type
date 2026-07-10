@@ -22,7 +22,7 @@ namespace strong
 struct bicrementable
 {
     template <typename T>
-    class modifier
+    class STRONG_EMPTY_BASES modifier
         : public incrementable::modifier<T>
         , public decrementable::modifier<T>
     {

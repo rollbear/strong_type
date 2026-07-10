@@ -98,6 +98,7 @@ add_executable(
         empty.cpp
         test_scalable_with.cpp
         test_saturating.cpp
+        test_size.cpp
         ${CATCH_MAIN}
         )
 
