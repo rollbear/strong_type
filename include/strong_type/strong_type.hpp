@@ -39,5 +39,6 @@
 #include "implicitly_convertible_to.hpp"
 #include "formattable.hpp"
 #include "scalable_with.hpp"
+#include "saturating_arithmetic.hpp"
 
 #endif //ROLLBEAR_STRONG_TYPE_HPP_INCLUDED
