@@ -2,7 +2,8 @@
           with only const_iterators and no cbegin()/cend(). Thank you
           T-Maxxx for reporting
 
-        * Fixed missing empty base optimization on MSVC.
+        * Fixed missing empty base optimization on MSVC. Thank you
+          Mark Gillard for submitting the fix.
 
         * Added strong::saturating_arithmetic for C++26.
 
@@ -13,7 +14,7 @@
           with "import std;" by adding the CMake option
           -DSTRONG_TYPE_IMPORT_STD_LIBRARY=yes
 
-          Huge thangs to David Hunter for contributing this addition.
+          Huge thanks to David Hunter for contributing this addition.
 
         * Make strong::range work with range types that only has
           const_iterator types (e.g. std::set). Thanks David Feltell for
