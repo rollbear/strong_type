@@ -1,3 +1,7 @@
+        * Fixed a bug with strong::range that could not handle types
+          with only const_iterators and no cbegin()/cend(). Thank you
+          T-Maxxx for reporting
+
         * Added strong::saturating_arithmetic for C++26.
 
         * Support for "import std;" is enabled by defining the macro

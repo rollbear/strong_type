@@ -224,6 +224,111 @@ public:
     }
 
 };
+
+template <typename T, typename Tag, typename ... M, typename r_iterator>
+class range::modifier<
+        type<T, Tag, M...>,
+        r_iterator, r_iterator,
+        r_iterator, r_iterator,
+        internal::not_an_iterator, internal::not_an_iterator>
+{
+    using type = ::strong::type<T, Tag, M...>;
+    static constexpr bool random_access = internal::is_random_access(typename internal::iterator_traits<r_iterator>::iterator_category{});
+public:
+    using const_iterator = std::conditional_t<random_access,
+            ::strong::type<r_iterator, Tag, strong::iterator, strong::default_constructible, strong::equality_with<r_iterator>, strong::ordered_with<r_iterator>>,
+            ::strong::type<r_iterator, Tag, strong::iterator, strong::default_constructible, strong::equality_with<r_iterator>>
+    >;
+
+    STRONG_NODISCARD
+    constexpr
+    const_iterator
+    begin()
+    const
+    noexcept(noexcept(STRONG_TYPE_BEGIN(std::declval<const T&>())))
+    {
+        auto& self = static_cast<const type&>(*this);
+        return const_iterator{STRONG_TYPE_BEGIN(value_of(self))};
+    }
+
+    STRONG_NODISCARD
+    constexpr
+    const_iterator
+    end()
+    const
+    noexcept(noexcept(STRONG_TYPE_END(std::declval<const T&>())))
+    {
+        auto& self = static_cast<const type&>(*this);
+        return const_iterator{STRONG_TYPE_END(value_of(self))};
+    }
+
+
+    template <typename TT = const T&>
+    STRONG_NODISCARD
+    constexpr
+    decltype(std::declval<TT>().size())
+    size()
+    const
+    noexcept(noexcept(std::declval<TT>().size()))
+    {
+        auto& self = static_cast<const type&>(*this);
+        return value_of(self).size();
+    }
+
+};
+
+    template <typename T, typename Tag, typename ... M, typename r_iterator, typename sentinel>
+class range::modifier<
+        type<T, Tag, M...>,
+        r_iterator, sentinel,
+        r_iterator, sentinel,
+        internal::not_an_iterator, internal::not_an_iterator>
+    {
+        using type = ::strong::type<T, Tag, M...>;
+        static constexpr bool random_access = internal::is_random_access(typename internal::iterator_traits<r_iterator>::iterator_category{});
+    public:
+        using const_iterator = std::conditional_t<random_access,
+                ::strong::type<r_iterator, Tag, strong::iterator, strong::default_constructible, strong::equality_with<r_iterator, sentinel>, strong::ordered_with<r_iterator>>,
+                ::strong::type<r_iterator, Tag, strong::iterator, strong::default_constructible, strong::equality_with<r_iterator, sentinel>>
+        >;
+
+        STRONG_NODISCARD
+        constexpr
+        const_iterator
+        begin()
+        const
+        noexcept(noexcept(STRONG_TYPE_BEGIN(std::declval<const T&>())))
+        {
+            auto& self = static_cast<const type&>(*this);
+            return const_iterator{STRONG_TYPE_BEGIN(value_of(self))};
+        }
+
+        STRONG_NODISCARD
+        constexpr
+        sentinel
+        end()
+        const
+        noexcept(noexcept(STRONG_TYPE_END(std::declval<const T&>())))
+        {
+            auto& self = static_cast<const type&>(*this);
+            return sentinel{STRONG_TYPE_END(value_of(self))};
+        }
+
+
+        template <typename TT = const T&>
+        STRONG_NODISCARD
+        constexpr
+        decltype(std::declval<TT>().size())
+        size()
+        const
+        noexcept(noexcept(std::declval<TT>().size()))
+        {
+            auto& self = static_cast<const type&>(*this);
+            return value_of(self).size();
+        }
+
+    };
+
 template <typename T, typename Tag, typename ... M, typename r_iterator, typename r_const_iterator>
 class range::modifier<
     type<T, Tag, M...>,

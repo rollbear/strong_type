@@ -141,6 +141,69 @@ TEST_CASE("a range with only const_iterators is still a range")
     REQUIRE(v == 11);
 }
 
+TEST_CASE("a range with only const_iterators but no cbegin/cend is still a range")
+{
+    struct range
+    {
+        range(int v1, int v2) : v{v1,v2} {}
+        const int* begin() const { return std::begin(v);}
+        const int* end() const { return std::end(v);}
+    private:
+        int v[2];
+    };
+
+    using r = strong::type<
+        range,
+        struct r_,
+        strong::range
+    >;
+
+    int v = 1;
+    for (auto x : r{1,2})
+    {
+        REQUIRE(x == v);
+        ++v;
+    }
+}
+
+#if __cplusplus >= 201703L
+
+struct srange
+{
+    struct sentinel
+    {
+        const int* p;
+        friend bool operator==(const int* it, const sentinel& s) { return it == s.p; }
+        friend bool operator==(const sentinel& s, const int* it) { return s.p == it; }
+        friend bool operator!=(const int* it, const sentinel& s) { return !(it == s);}
+        friend bool operator!=(const sentinel& s, const int* it) { return !(s == it);}
+    };
+    srange(int v1, int v2) : v{v1,v2} {}
+    const int* begin() const { return std::begin(v);}
+    sentinel end() const { return {std::end(v)};}
+private:
+    int v[2];
+};
+
+TEST_CASE("a range with const iterator/sentinel and no cbegin/cend")
+{
+
+    using r = strong::type<
+        srange,
+        struct r_,
+        strong::range
+    >;
+
+    int v = 1;
+    for (auto x : r{1,2})
+    {
+        REQUIRE(x == v);
+        ++v;
+    }
+
+}
+#endif
+
 #if defined(STRONG_TYPE_HAS_RANGES)
 #if (!defined(_LIBCPP_VERSION)) || (_LIBCPP_VERSION >= 16000)
 TEST_CASE("a range with a sentinel can be iterated")
