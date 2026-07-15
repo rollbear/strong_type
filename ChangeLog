@@ -1,3 +1,5 @@
+v16 2026-07-15
+
         * Fixed a bug with strong::range that could not handle types
           with only const_iterators and no cbegin()/cend(). Thank you
           T-Maxxx for reporting

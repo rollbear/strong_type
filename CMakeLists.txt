@@ -51,7 +51,7 @@ include(CMakePackageConfigHelpers)
 
 option(STRONG_TYPE_UNIT_TEST "Decide whether to build unit tests or not" OFF)
 
-set(STRONG_TYPE_VERSION 15)
+set(STRONG_TYPE_VERSION 16)
 set(INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(MASTER_PROJECT OFF)
 if (${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
