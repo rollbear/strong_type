@@ -34,9 +34,9 @@ Example use:
 using myint = strong::type<int, struct my_int_>;
 ```
 
-`myint` is a very basic handle. You can initialize it. You can do
-equal/not-equal comparison with other instances of the same type, and you can
-access its underlying `int` instance with `value_of(variable)`.
+`myint` is a very basic handle. You can initialize it, assign to it and
+access its underlying `int` instance with `value_of(variable)`. It is not
+default constructible.
 
 To get the underlying type of a strong type, use
 `typename strong::underlying_type<mytype>::type`, or the convenience alias
