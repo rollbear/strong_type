@@ -1,7 +1,8 @@
 /*
  * strong_type C++14/17/20 strong typedef library
  *
- * Copyright (C) Björn Fahller
+ * Copyright (C) Bjorn Fahller
+ * Copyright (C) 2026 Richard Thomson
  *
  *  Use, modification and distribution is subject to the
  *  Boost Software License, Version 1.0. (See accompanying
@@ -29,12 +30,10 @@ struct decrementable
     template <typename T>
     class modifier<T, impl::void_t<decltype(--std::declval<underlying_type_t<T>&>())>>
     {
+        static constexpr bool is_nothrow = noexcept(--std::declval<underlying_type_t<T>&>());
+
     public:
-        friend
-        STRONG_CONSTEXPR
-        T&
-        operator--(T& t)
-        noexcept(noexcept(--impl::access(t)))
+        friend STRONG_CONSTEXPR T& operator--(T& t) noexcept(is_nothrow)
         {
             --value_of(t);
             return t;
