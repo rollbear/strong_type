@@ -1,7 +1,8 @@
 /*
  * strong_type C++14/17/20 strong typedef library
  *
- * Copyright (C) Björn Fahller
+ * Copyright (C) Bjorn Fahller
+ * Copyright (C) 2026 Richard Thomson
  *
  *  Use, modification and distribution is subject to the
  *  Boost Software License, Version 1.0. (See accompanying
@@ -14,7 +15,7 @@
 #ifndef STRONG_TYPE_RANGE_HPP
 #define STRONG_TYPE_RANGE_HPP
 
-#if __has_include(<ranges>)
+#if (__cplusplus >= 202002L || (defined(_MSVC_LANG) && _MSVC_LANG >= 202002L)) && __has_include(<ranges>)
 #if !defined(STRONG_TYPE_IMPORT_STD_LIBRARY)
 #    include <ranges>
 #endif
